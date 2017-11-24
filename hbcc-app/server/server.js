@@ -5,7 +5,7 @@ const http = require('http');
 const app = express();
 
 // API file for interacting with MongoDB
-const api = require('./routes/api');
+const api = require('./api/api');
 
 // Parsers
 app.use(bodyParser.json());
@@ -23,7 +23,7 @@ app.get('*', (req, res) => {
 });
 
 //Set Port
-const port = process.env.PORT || '3000';
+const port = process.env.PORT || '8080';
 app.set('port', port);
 
 const server = http.createServer(app);
