@@ -21,8 +21,11 @@ let response = {
 };
 
 // Get users
-router.get('/users', (req, res) => {
+router.get('/', (req, res) => {
     connection((db) => {
+        res.json({
+            success: true
+        })
         /*db.collection('users')
             .find()
             .toArray()

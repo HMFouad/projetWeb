@@ -1,5 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const usersRoutes = require('./services/users');
+
+router.use('/users', usersRoutes);
 
 // Error handling
 const sendError = (err, res) => {
