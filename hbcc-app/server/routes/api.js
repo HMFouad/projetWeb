@@ -1,13 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const MongoClient = require('mongodb').MongoClient;
+const mongoose = require('mongoose');
 const ObjectID = require('mongodb').ObjectID;
+const mongooseStruct = require('mongooseStruct');
 
-//const users = require("./users");
+
+//mongooseStruct.Event
 
 // Connect
 const connection = (closure) => {
-    return MongoClient.connect('mongodb://hmfouad:hbcc2017@ds145230.mlab.com:45230/hbcc_db', (err, db) => {
+    return mongoose.connect('mongodb://hmfouad:hbcc2017@ds145230.mlab.com:45230/hbcc_db', (err, db) => {
         if (err) return console.log(err);
 
         closure(db);
