@@ -22,6 +22,8 @@ let response = {
 
 // Get users
 router.get('/', (req, res) => {
+	console.log("TESTS");
+	console.log("TESTS");
     connection((db) => {
         res.json({
             success: true
@@ -38,5 +40,6 @@ router.get('/', (req, res) => {
             });*/
     });
 });
+
 
 module.exports = router;
