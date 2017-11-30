@@ -6,6 +6,7 @@ const app = express();
 
 // API file for interacting with MongoDB
 const api = require('./api/api');
+var registerController=require('./api/register');
 
 // Parsers
 app.use(bodyParser.json());
@@ -21,6 +22,8 @@ app.use('/api', api);
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../dist'));
 });
+
+app.post('/register',registerController.register);
 
 //Set Port
 const port = process.env.PORT || '8080';
