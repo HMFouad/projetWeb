@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -11,7 +12,9 @@ export class HomeComponent implements OnInit {
 
   private loginForm;
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient,
+              private router: Router
+          ) { }
 
   ngOnInit() {
 
@@ -25,11 +28,13 @@ export class HomeComponent implements OnInit {
 
     if (this.loginForm.valid) {
       this.httpClient.post(
-        '/api/token',
+        '/api/tokens',
         this.loginForm.value, {
           responseType: 'json'
         }).subscribe((response) => { // success
           console.log (response);
+          // TODO Save token dans le localStorage ?
+          this.router.navigate(['profile']);
         }, (error) => { // error
           console.log (error);
         })

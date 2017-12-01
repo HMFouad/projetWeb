@@ -6,13 +6,18 @@ const specialitySchema = new Schema({
     url: String
 });
 
+const tokenSchema = new Schema({
+    token: String,
+    expiresAt: Date
+});
+
 const userSchema = new Schema({
     firstName: String,
     lastName: String,
     password: String,
     email: String,
     speciality: specialitySchema,
-    authToken: { token: String, expiresAt: Date}
+    authToken: tokenSchema
 });
 
 const eventSchema = new Schema({
