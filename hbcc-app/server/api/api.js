@@ -34,4 +34,18 @@ router.get('/users', (req, res) => {
     });
 });*/
 
+router.post('/tokens',(req,res)=>{
+    var user=new User();
+    user.email=req.body.email;
+    user.password=req.body.password;
+    if(user.email==null || user.password==null){
+        res.status(422).json({success:false,message:"Missing email or password"});
+    }else{
+        User.findOne({email:user.email,password:user.password},function(err,user){
+            var token= new Access_token();
+            
+        });
+    }
+});
+
 module.exports = router;
