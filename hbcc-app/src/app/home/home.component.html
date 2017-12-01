@@ -1,0 +1,90 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" routerLink="/home">Team HBCC</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" routerLink="/home">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/about">About</a>
+      </li>
+    </ul>
+    <form class="form-inline"
+          novalidate
+          [formGroup]="loginForm">
+      <div class="form-group" ng-controller="myCtrl">
+        <label >Email</label>
+        <input type="text"
+               placeholder="Enter your UserName"
+               class="form-control" name="email"
+               formControlName="email"/>
+
+        <div *ngIf="emailFormControl.invalid && emailFormControl.touched"
+             class="text-danger">
+          <div *ngIf="emailFormControl.errors.required">
+            L'email est requis pour la connexion
+          </div>
+        </div>
+
+        <label>Password:</label>
+        <input type="password"
+               placeholder="Enter your password"
+               class="form-control"
+               name="password"
+               formControlName="password"/>
+      
+        <button (click)="submitLoginForm()" class="btn btn-primary">Sign In</button>
+      </div>
+    </form> 
+  </div>
+</nav>
+
+<!--<form class="signUp" action="http://localhost:3000/register" method="POST">
+  <div class="container1" align="Center">
+    
+      <br/><br/><br/>
+      
+        <h2>Create an account</h2>
+        <div class="form-group">
+          <label for="UserName">Fist Name:</label>
+          <input type="text" placeholder="Enter your first Name" class="form-control" name="firstName" required>
+        </div>
+  
+        <div class="form-group">
+          <label for="UserName">Last Name:</label>
+          <input type="text" placeholder="Enter your last Name" class="form-control" name="lastName" required>
+        </div>
+
+        <div class="form-group">
+          <label for="UserName">Email:</label>
+          <input type="text" placeholder="Enter your Email" class="form-control" name="email" required>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input type="password" placeholder="Enter Password" class="form-control" name="password" required>
+        </div>
+  
+        <div class="form-group">
+          <label for="confirmPassword">Repeat Password:</label>
+          <input type="password" placeholder="Repeat Password" class="form-control" name="rpassword" required>
+        </div>
+
+        <form method="post" action="choiceSpeciality">
+          
+         <label for="le_nom">Speciality:</label><br />
+         <select name="speciality" id="speciality">
+             <option value="ta_valeur">Master 1 Génie Logiciel</option>
+             <option value="ta_valeur">Master 2 Génie Logiciel</option>                 
+        </select>
+           
+  </form>
+    
+        <button ng-click="register" type="submit" class="btn btn-default">Sign up</button>
+        <button type="reset" class="btn btn-default">Reset</button>
+  </div>
+</form>-->

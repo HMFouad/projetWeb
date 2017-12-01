@@ -1,19 +1,37 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
+import { AppComponent } from './app.component';
+import { HomeComponent } from './home/home.component';
+import { ProfileComponent } from './profile/profile.component';
+import { AboutComponent } from './about/about.component';
+import { MapComponent } from './map/map.component';
+import { ReactiveFormsModule} from '@angular/forms';
 
-import { AppComponent } from './components/app/app.component';
+const appRoutes: Routes = [
+  {path: 'home', component: HomeComponent},
+  {path: 'about', component: AboutComponent},
+  {path: 'profile', component: ProfileComponent},
+  {path: 'map', component: MapComponent},
+  {path: '', redirectTo: '/home', pathMatch:'full'},
+  {path: '**', redirectTo: '/home', pathMatch:'full'}
+]
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    HomeComponent,
+    ProfileComponent,
+    AboutComponent,
+    MapComponent
   ],
   imports: [
     BrowserModule,
-    RouterModule.forRoot([
-      { path: '', redirectTo: '/', pathMatch: 'full' },
-      { path: '**', redirectTo: '/', pathMatch: 'full' }
-    ]),
+    ReactiveFormsModule,
+    RouterModule.forRoot(
+      appRoutes,
+      { useHash: true }
+    )
   ],
   providers: [],
   bootstrap: [AppComponent]
