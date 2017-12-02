@@ -1,0 +1,44 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" routerLink="/home">Team HBCC</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" routerLink="/home">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/about">About</a>
+      </li>
+    </ul>
+    <form class="form-inline"
+          novalidate
+          [formGroup]="loginForm">
+      <div class="form-group" ng-controller="myCtrl">
+        <label >Email</label>
+        <input type="text"
+               placeholder="Enter your UserName"
+               class="form-control" name="email"
+               formControlName="email"/>
+
+        <div *ngIf="emailFormControl.invalid && emailFormControl.touched"
+             class="text-danger">
+          <div *ngIf="emailFormControl.errors.required">
+            L'email est requis pour la connexion
+          </div>
+        </div>
+
+        <label>Password:</label>
+        <input type="password"
+               placeholder="Enter your password"
+               class="form-control"
+               name="password"
+               formControlName="password"/>
+
+        <button (click)="submitLoginForm()" class="btn btn-primary">Sign In</button>
+      </div>
+    </form>
+  </div>
+</nav>

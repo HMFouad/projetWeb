@@ -15,8 +15,7 @@
     "forin": true,
     "import-blacklist": [
       true,
-      "rxjs",
-      "rxjs/Rx"
+      "rxjs"
     ],
     "import-spacing": true,
     "indent": [
@@ -34,10 +33,25 @@
       true,
       {
         "order": [
-          "static-field",
-          "instance-field",
-          "static-method",
-          "instance-method"
+          "private-static-field",
+          "protected-static-field",
+          "public-static-field",
+
+          "private-instance-field",
+          "protected-instance-field",
+          "public-instance-field",
+
+          "private-constructor",
+          "protected-constructor",
+          "public-constructor",
+
+          "private-static-method",
+          "protected-static-method",
+          "public-static-method",
+
+          "private-instance-method",
+          "protected-instance-method",
+          "public-instance-method"
         ]
       }
     ],
@@ -57,10 +71,6 @@
     "no-empty": false,
     "no-empty-interface": true,
     "no-eval": true,
-    "no-inferrable-types": [
-      true,
-      "ignore-params"
-    ],
     "no-misused-new": true,
     "no-non-null-assertion": true,
     "no-shadowed-variable": true,
@@ -77,7 +87,6 @@
       true,
       "check-open-brace",
       "check-catch",
-      "check-else",
       "check-whitespace"
     ],
     "prefer-const": true,
@@ -118,13 +127,13 @@
     "directive-selector": [
       true,
       "attribute",
-      "app",
+      "hbcc",
       "camelCase"
     ],
     "component-selector": [
       true,
       "element",
-      "app",
+      "hbcc",
       "kebab-case"
     ],
     "use-input-property-decorator": true,
@@ -137,5 +146,8 @@
     "component-class-suffix": true,
     "directive-class-suffix": true,
     "invoke-injectable": true
-  }
+  },
+  "jsdoc-require": [
+    true
+  ]
 }
