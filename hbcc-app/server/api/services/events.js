@@ -5,21 +5,6 @@ const ObjectID = require('mongodb').ObjectID;
 const mongooseStruct = require('../mongooseStruct');
 const connection = require ('../mongoose-connection');
 
-
-// Error handling
-const sendError = (err, res) => {
-    response.status = 501;
-    response.message = typeof err == 'object' ? err.message : err;
-    res.status(501).json(response);
-};
-
-// Response handling
-let response = {
-    status: 200,
-    data: [],
-    message: null
-};
-
 // Get student events
 router.get('/', function(req, res, next) {
     //On récupère le fichier ICS (ici local) et on le lit
