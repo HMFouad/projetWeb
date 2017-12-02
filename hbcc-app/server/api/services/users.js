@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const connection = require ('../mongoose-connection');
+const connection = require ('../mongoose/connection');
 
 // Get users
 router.get('/', (req, res) => {

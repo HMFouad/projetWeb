@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const ObjectID = require('mongodb').ObjectID;
-const mongooseStruct = require('../mongooseStruct');
-const connection = require ('../mongoose-connection');
+const User = require('../mongoose/model/user.model');
+const connection = require ('../mongoose/connection');
+const fs = require('fs');
 
 // Get student events
 router.get('/', function(req, res, next) {

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../mongooseStruct').User;
+const User = require('../mongoose/model/user.model');
 
 // Sign in service
 router.post('/',(req,res)=>{

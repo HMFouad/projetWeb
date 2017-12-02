@@ -11,6 +11,8 @@ import {AppRoutingModule} from './app-routing.module';
 import { EventsComponent } from './components/events/events.component';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { PlanningComponent } from './components/planning/planning.component';
+import {AuthGuard} from './guards/auth.guard';
 
 @NgModule({
     declarations: [
@@ -21,7 +23,8 @@ import { FooterComponent } from './components/footer/footer.component';
         AboutComponent,
         MapComponent,
         HeaderComponent,
-        FooterComponent
+        FooterComponent,
+        PlanningComponent
     ],
     imports: [
         BrowserModule,
@@ -29,7 +32,9 @@ import { FooterComponent } from './components/footer/footer.component';
         ReactiveFormsModule,
         AppRoutingModule
     ],
-    providers: [],
+    providers: [
+        AuthGuard
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule { }
