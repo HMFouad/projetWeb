@@ -45,8 +45,8 @@ router.post('/', (req, res) => {
         res.json({
             success: true
         })
-        
-        
+
+
 
         firstName=req.body.firstName;
         lastName=req.body.lastName;
@@ -54,9 +54,9 @@ router.post('/', (req, res) => {
         rpassword=req.body.rpassword;
         email=req.body.email;
         //speciality=req.body.speciality;
-    
+
     if (password == rpassword){
-        
+
     mongoose.users.insert( {
         firstName: firstName,
         lastName: lastName,

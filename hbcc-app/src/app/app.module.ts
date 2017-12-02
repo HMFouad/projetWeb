@@ -9,14 +9,17 @@ import { MapComponent } from './components/map/map.component';
 import { ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {AppRoutingModule} from './app-routing.module';
+import { EventsComponent } from './events/events.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
-    ProfileComponent,
-    AboutComponent,
-    MapComponent
+    EventsComponent,
+
+      HomeComponent,
+      ProfileComponent,
+      AboutComponent,
+      MapComponent
   ],
   imports: [
     BrowserModule,
