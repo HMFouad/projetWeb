@@ -30,13 +30,14 @@
     "eslint": "^4.12.1",
     "express": "^4.16.2",
     "fs": "0.0.1-security",
+    "ical": "^0.5.0",
     "jquery": "^3.2.1",
     "mongodb": "^2.2.33",
     "mongoose": "^4.13.4",
     "pm2": "^2.8.0",
     "popper.js": "^1.12.9",
-    "rxjs": "^5.5.2",
-    "zone.js": "^0.8.14"
+    "rxjs": "^5.5.0",
+    "zone.js": "^0.8.4"
   },
   "devDependencies": {
     "@angular/compiler-cli": "^5.0.0",
