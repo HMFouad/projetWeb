@@ -1,47 +1,84 @@
+<div class="container py-3">
+  <div class="row">
+      <div class="col-md-6 col-lg-4 mx-auto">
+              <div class="card card-body">
+                  <h3 class="text-center mb-4">Create an account</h3>
+                    <form class="formGroup"
+                        novalidate
+                        [formGroup]="signUpForm">
+                    <div class="form-group" ng-controller="myCtrl">
+                      <div class="form-group">
+                          <input type="text"
+                          name="firstName"
+                          class="form-control"
+                          placeholder="First Name"
+                          formControlName="firstName"/>
+                      </div>
+                      <div *ngIf="firstNameFormControl.invalid &&firstNameFormControl.touched"
+                      class="text-danger">
+                   <div *ngIf="firstNameFormControl.errors.required">
+                     First Name is required for registration
+                   </div>
+                 </div>
 
+                      <div class="form-group">
+                          <input type="text"
+                          name="lastName"
+                          class="form-control"
+                          placeholder="Last Name"
+                          formControlName="lastName"/>
+                      </div>
 
-<!--<form class="signUp" action="http://localhost:3000/register" method="POST">
-  <div class="container1" align="Center">
-    
-      <br/><br/><br/>
-      
-        <h2>Create an account</h2>
-        <div class="form-group">
-          <label for="UserName">Fist Name:</label>
-          <input type="text" placeholder="Enter your first Name" class="form-control" name="firstName" required>
-        </div>
-  
-        <div class="form-group">
-          <label for="UserName">Last Name:</label>
-          <input type="text" placeholder="Enter your last Name" class="form-control" name="lastName" required>
-        </div>
+                      <div class="form-group">
+                          <input type="email"
+                          name="email"
+                          class="form-control"
+                          placeholder="Email"
+                          formControlName="email"/>
+                      </div>
 
-        <div class="form-group">
-          <label for="UserName">Email:</label>
-          <input type="text" placeholder="Enter your Email" class="form-control" name="email" required>
-        </div>
+                      <div class="form-group">
+                          <select class="form-control input-lg">
+                              <option>Master 2 Génie Logiciel</option>
+                              <option>Master 2 Réseaux de communication et Internet</option>
+                              <option>Master 2 Informatique Fondamentale</option>
+                              <option>Master 2 Informatique pour l'Image et le Son</option>
+                          </select>
+                      </div>
 
-        <div class="form-group">
-          <label for="password">Password:</label>
-          <input type="password" placeholder="Enter Password" class="form-control" name="password" required>
-        </div>
-  
-        <div class="form-group">
-          <label for="confirmPassword">Repeat Password:</label>
-          <input type="password" placeholder="Repeat Password" class="form-control" name="rpassword" required>
-        </div>
+                      <div class="form-group">
+                          <input type="password"
+                          name="password"
+                          class="form-control"
+                          placeholder="Password"
+                          formControlName="password"/>
+                      </div>
 
-        <form method="post" action="choiceSpeciality">
-          
-         <label for="le_nom">Speciality:</label><br />
-         <select name="speciality" id="speciality">
-             <option value="ta_valeur">Master 1 Génie Logiciel</option>
-             <option value="ta_valeur">Master 2 Génie Logiciel</option>                 
-        </select>
-           
-  </form>
-    
-        <button ng-click="register" type="submit" class="btn btn-default">Sign up</button>
-        <button type="reset" class="btn btn-default">Reset</button>
+                      <div class="form-group">
+                          <input type="password"
+                          name="cPassword"
+                          class="form-control"
+                          placeholder="Confirm Password"
+                          formControlName="cPassword"/>
+                      </div>
+
+                      <div align="center">
+                          <button class="btn btn-success"
+                          type="submit"
+                          name="createAccount"
+                          (click)="submitSignUpForm()" 
+                          >Sign Up</button>
+
+                          <button class="btn btn-danger"
+                              type="reset"
+                              name="reset"
+                              (click)="reset()" 
+                              >Reset</button>
+                        </div> 
+                      </div>
+                    </form>
+
+              </div>
+      </div>
   </div>
-</form>-->
+</div>
