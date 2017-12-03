@@ -17,20 +17,21 @@
           novalidate
           [formGroup]="loginForm">
       <div class="form-group" ng-controller="myCtrl">
-        <label >Email</label>
+          <div *ngIf="emailFormControl.invalid && emailFormControl.touched"
+          class="text-danger">
+       <div *ngIf="emailFormControl.errors.required">
+         L'email est requis pour la connexion!  
+       </div>
+     </div>
+        <label >Email : </label>
         <input type="text"
-               placeholder="Enter your UserName"
+               placeholder="Enter your email"
                class="form-control" name="email"
                formControlName="email"/>
 
-        <div *ngIf="emailFormControl.invalid && emailFormControl.touched"
-             class="text-danger">
-          <div *ngIf="emailFormControl.errors.required">
-            L'email est requis pour la connexion
-          </div>
-        </div>
 
-        <label>Password:</label>
+
+        <label>Password : </label>
         <input type="password"
                placeholder="Enter your password"
                class="form-control"
