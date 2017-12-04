@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const connection = require ('../mongoose/connection');
 
 // Get users
-router.get('/', (req, res) => {
+router.get('/users/:id', (req, res) => {
     connection((db) => {
         res.json({
             success: true
@@ -23,7 +23,7 @@ router.get('/', (req, res) => {
 });
 
 // Registration service
-router.post('/', (req, res) => {
+router.post('/users', (req, res) => {
     connection((db) => {
         res.json({ success: true });
 

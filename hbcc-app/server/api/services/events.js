@@ -9,7 +9,7 @@ const FILE_PATH = "../Master2_4TGL901S_iCalendar.ics";
 
 
 // Get student events
-router.get('/', (req, res, next) => {
+router.get('/events', (req, res, next) => {
     console.log ('Api service call: GET events');
     const ICS_TYPE_WANTED = 'VEVENT';
 
