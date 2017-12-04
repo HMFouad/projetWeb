@@ -1,3 +1,9 @@
+/* You can add global styles to this file, and also import other style files */
+
+.container1{
+    padding-top: 100px;
+    
+}
 
 footer{
     padding-top: 150px;
@@ -23,3 +29,5 @@ input[type=contact], select, textarea {
     margin-bottom: 16px; /* Bottom margin */
     resize: vertical /* Allow the user to vertically resize the textarea (not horizontally) */
 }
+
+
