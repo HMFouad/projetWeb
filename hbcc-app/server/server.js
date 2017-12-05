@@ -3,13 +3,13 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const http = require('http');
 const app = express();
-
+const connection = require ('./api/mongoose/connection');
 // API file for interacting with MongoDB
 const api = require('./api/api');
 
 // Parsers
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // Angular DIST output folder
 app.use(express.static(path.join(__dirname, '../dist')));
@@ -29,3 +29,4 @@ app.set('port', port);
 const server = http.createServer(app);
 
 server.listen(port, () => console.log(`Running on localhost:${port}`));
+connection((db) => {});
