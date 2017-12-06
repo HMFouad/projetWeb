@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const connection = require ('../mongoose/connection');
+const checkAuth = require ('../check-auth');
 
 // Get users
 router.get('/users/:id', (req, res) => {
-    connection((db) => {
+    checkAuth(req, res, (user) => {
         res.json({
             success: true
         })
@@ -24,30 +24,24 @@ router.get('/users/:id', (req, res) => {
 
 // Registration service
 router.post('/users', (req, res) => {
-    connection((db) => {
-        res.json({ success: true });
+    res.json({ success: true });
+    firstName=req.body.firstName;
+    lastName=req.body.lastName;
+    password=req.body.password;
+    rpassword=req.body.rpassword;
+    email=req.body.email;
+    //speciality=req.body.speciality;
 
+if (password == rpassword){
 
-
-        firstName=req.body.firstName;
-        lastName=req.body.lastName;
-        password=req.body.password;
-        rpassword=req.body.rpassword;
-        email=req.body.email;
-        //speciality=req.body.speciality;
-
-    if (password == rpassword){
-
-    mongoose.users.insert( {
-        firstName: firstName,
-        lastName: lastName,
-        password: password, email: email, speciality: "Master 2 Génie Logiciel" } );
+mongoose.users.insert( {
+    firstName: firstName,
+    lastName: lastName,
+    password: password, email: email, speciality: "Master 2 Génie Logiciel" } );
+}
+else{
+    console.log("password not match!!!");
     }
-    else{
-        console.log("password not match!!!");
-      }
-
-    });
 });
 
 module.exports = router;
