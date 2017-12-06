@@ -17,17 +17,13 @@ export class HomeComponent implements OnInit {
 
     public ngOnInit (): void {
       this.signUpForm = new FormGroup({
-        'firstName': new FormControl('', [Validators.required, Validators.firstName]),
-        'lastName': new FormControl('', [Validators.required, Validators.lastName]),
         'email': new FormControl('', [Validators.required, Validators.email]),
-        'speciality': new FormControl('', [Validators.required, Validators.speciality]),
         'password': new FormControl('', [Validators.required]),
 
     });
     }
 
     public submitSignUpForm () {
-      
               if (this.signUpForm.valid) {
                   this.httpClient.post(
                       this.signUpForm.value, {
@@ -38,7 +34,6 @@ export class HomeComponent implements OnInit {
                       console.log (error);
                   });
               }
-      
           }
 public get firstNameFormControl () {
   return this.signUpForm.get('firstName');
