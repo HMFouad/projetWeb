@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {HttpClient} from '@angular/common/http';
+import {ActivatedRoute} from '@angular/router';
 import {HttpClient} from '@angular/common/http';
 import {Router} from '@angular/router';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
@@ -14,58 +13,56 @@ export class HomeComponent implements OnInit {
 
     private signUpForm;
 
-    public constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {
-    }
-    specialities: any
+    private specialities: any;
+
+    public constructor(private httpClient: HttpClient) {}
 
     public ngOnInit(): void {
         this.signUpForm = new FormGroup({
-            'firstName': new FormControl('', [Validators.required, Validators.firstName]),
-            'lastName': new FormControl('', [Validators.required, Validators.lastName]),
+            'firstName': new FormControl('', [Validators.required]),
+            'lastName': new FormControl('', [Validators.required]),
             'email': new FormControl('', [Validators.required, Validators.email]),
-            'speciality': new FormControl('', [Validators.required, Validators.speciality]),
+            'speciality': new FormControl('', [Validators.required]),
             'password': new FormControl('', [Validators.required]),
 
 
         });
-        this.http.get('/api/specialities').subscribe(data => {
+        this.httpClient.get('/api/specialities').subscribe(data => {
             this.specialities = data;
         });
     }
-}
+
 
     public submitSignUpForm () {
+        if (this.signUpForm.valid) {
+            this.httpClient.post(
+                this.signUpForm.value, {
+                    responseType: 'json'
+                }).subscribe((response) => { // success
+                console.log(response);
+            }, (error) => { // error
+                console.log(error);
+            });
+        }
+    }
+    public get firstNameFormControl () {
+      return this.signUpForm.get('firstName');
+    }
 
-              if (this.signUpForm.valid) {
-                  this.httpClient.post(
-                      this.signUpForm.value, {
-                          responseType: 'json'
-                      }).subscribe((response) => { // success
-                      console.log (response);
-                  }, (error) => { // error
-                      console.log (error);
-                  });
-              }
+    public get lastNameFormControl () {
+      return this.signUpForm.get('lastName');
+    }
 
-          }
-public get firstNameFormControl () {
-  return this.signUpForm.get('firstName');
-}
+    public get emailFormControl () {
+      return this.signUpForm.get('lastName');
+    }
 
-public get lastNameFormControl () {
-  return this.signUpForm.get('lastName');
-}
+    public get specialityFormControl () {
+      return this.signUpForm.get('speciality');
+    }
 
-public get emailFormControl () {
-  return this.signUpForm.get('lastName');
-}
-
-public get specialityFormControl () {
-  return this.signUpForm.get('speciality');
-}
-
-public get passwordFormControl () {
-  return this.signUpForm.get('lastName');
-}
+    public get passwordFormControl () {
+      return this.signUpForm.get('lastName');
+    }
 }
 

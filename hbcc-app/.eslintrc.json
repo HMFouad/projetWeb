@@ -32,7 +32,6 @@
         "arrow-spacing": "error",
         "semi": "error",
         "object-curly-spacing": ["error", "always", { "arraysInObjects": true, "objectsInObjects": true }],
-        "array-bracket-spacing": ["error", "always", { "arraysInArrays": true, "objectsInArrays": true }],
         "key-spacing": ["error"],
         "keyword-spacing": ["error"],
         "brace-style": ["error", "stroustrup"],
