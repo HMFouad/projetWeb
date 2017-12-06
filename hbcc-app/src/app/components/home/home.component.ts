@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {HttpClient} from '@angular/common/http';
 import {HttpClient} from '@angular/common/http';
 import {Router} from '@angular/router';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
@@ -12,22 +14,28 @@ export class HomeComponent implements OnInit {
 
     private signUpForm;
 
-    public constructor (private httpClient: HttpClient,
-      private router: Router) {}
-
-    public ngOnInit (): void {
-      this.signUpForm = new FormGroup({
-        'firstName': new FormControl('', [Validators.required, Validators.firstName]),
-        'lastName': new FormControl('', [Validators.required, Validators.lastName]),
-        'email': new FormControl('', [Validators.required, Validators.email]),
-        'speciality': new FormControl('', [Validators.required, Validators.speciality]),
-        'password': new FormControl('', [Validators.required]),
-
-    });
+    public constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {
     }
+    specialities: any
+
+    public ngOnInit(): void {
+        this.signUpForm = new FormGroup({
+            'firstName': new FormControl('', [Validators.required, Validators.firstName]),
+            'lastName': new FormControl('', [Validators.required, Validators.lastName]),
+            'email': new FormControl('', [Validators.required, Validators.email]),
+            'speciality': new FormControl('', [Validators.required, Validators.speciality]),
+            'password': new FormControl('', [Validators.required]),
+
+
+        });
+        this.http.get('/api/specialities').subscribe(data => {
+            this.specialities = data;
+        });
+    }
+}
 
     public submitSignUpForm () {
-      
+
               if (this.signUpForm.valid) {
                   this.httpClient.post(
                       this.signUpForm.value, {
@@ -38,7 +46,7 @@ export class HomeComponent implements OnInit {
                       console.log (error);
                   });
               }
-      
+
           }
 public get firstNameFormControl () {
   return this.signUpForm.get('firstName');

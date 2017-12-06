@@ -14,6 +14,7 @@ module.exports = (closure) => {
             return console.log(err);
         }
 
+        console.log("Connextion établie");
         // call given handler
         closure(db);
     });

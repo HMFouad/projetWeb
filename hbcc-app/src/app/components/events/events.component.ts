@@ -23,14 +23,14 @@ export class EventsComponent implements OnInit {
   endDate:string[];
   location:string[];
 
-  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) { }
+  constructor(private http: HttpClient) { }
 
   ngOnInit() {
    this.getData();
   }
  getData() {
     this.http.get('/api/events').subscribe(data => {
-    this.data=data;
+    this.data = data;
     this.description = this.data.description;
     this.beginDate = this.data.beginDate;
     this.endDate = this.data.endDate;
