@@ -3,9 +3,12 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const http = require('http');
 const app = express();
-const connection = require ('./api/mongoose/connection');
-// API file for interacting with MongoDB
-const api = require('./api/api');
+const dbConnection = require ('./api/mongoose/connection');
+const mongoose = require('mongoose');
+const apiRouting = require('./api/api');
+
+// set mongoose promise
+mongoose.Promise = global.Promise;
 
 // Parsers
 app.use(bodyParser.json());
@@ -15,7 +18,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, '../dist')));
 
 // API location
-app.use('/api', api);
+app.use('/api', apiRouting);
 
 // Send all other requests to the Angular app
 app.get('*', (req, res) => {
@@ -29,4 +32,6 @@ app.set('port', port);
 const server = http.createServer(app);
 
 server.listen(port, () => console.log(`Running on localhost:${port}`));
-connection((db) => {});
+
+// Connection to the database
+dbConnection();
