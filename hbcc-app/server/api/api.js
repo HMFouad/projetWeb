@@ -4,8 +4,8 @@ const usersRoutes = require('./services/users');
 const tokensRoutes = require('./services/tokens');
 const eventsRoutes = require('./services/events');
 
-router.use('/users', usersRoutes);
-router.use('/tokens', tokensRoutes);
-router.use('/events', eventsRoutes);
+router.use('/', usersRoutes);
+router.use('/', tokensRoutes);
+router.use('/', eventsRoutes);
 
 module.exports = router;

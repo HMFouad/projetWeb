@@ -3,7 +3,7 @@ const router = express.Router();
 const User = require('../mongoose/model/user.model');
 
 // Sign in service
-router.post('/',(req,res)=>{
+router.post('/tokens',(req,res)=>{
     console.log ("Service POST /tokens");
 
     var user=new User();
@@ -14,13 +14,17 @@ router.post('/',(req,res)=>{
     }else{
         User.findOne({email:user.email,password:user.password},function(err,user){
             if (err) {
-
+                res.status(401).json({success:false,message:"Invalid login or password"});
             }
             //var token= new Access_token();
 
         });
         res.status(200).json({success:true,message:"SUCCESS"});
     }
+});
+
+// Sign in service
+router.delete('/tokens', (req, res)=>{
 });
 
 module.exports = router;
