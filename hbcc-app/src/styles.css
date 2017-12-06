@@ -1,33 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 
-.container1{
-    padding-top: 100px;
-    
-}
-
 footer{
-    padding-top: 150px;
+    padding-top: 100px;
     text-align: center;
 }
-
-input[type="userame"] , input[type="text"], input[type="password"]{
-	width: 300px;
-}
-
-input[type="username_co"], input[type="password_co"] {
-	width: 170px;
-}
-
- /* Style inputs with type="text", select elements and textareas */
-input[type=contact], select, textarea {
-    width: 30%; /* Full width */
-    padding: 12px; /* Some padding */ 
-    border: 1px solid #ccc; /* Gray border */
-    border-radius: 4px; /* Rounded borders */
-    box-sizing: border-box; /* Make sure that padding and width stays in place */
-    margin-top: 6px; /* Add a top margin */
-    margin-bottom: 16px; /* Bottom margin */
-    resize: vertical /* Allow the user to vertically resize the textarea (not horizontally) */
-}
-
-
