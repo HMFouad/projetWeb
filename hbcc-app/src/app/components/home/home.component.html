@@ -3,11 +3,10 @@
       <div class="col-md-6 col-lg-4 mx-auto">
               <div class="card card-body">
                   <h3 class="text-center mb-4">Create an account</h3>
-                    <form class="formGroup"
-                        novalidate
-                        [formGroup]="signUpForm">
+                    <form [formGroup]="signUpForm"
+                        novalidate>
                     <div class="form-group">
-                      <div class="form-group">
+                        <div class="input-group">
                           <input type="text"
                           name="firstName"
                           class="form-control"
@@ -15,15 +14,16 @@
                           formControlName="firstName"/>
                       </div>
 
-                      <div class="form-group">
+                      <div class="input-group">
                           <input type="text"
+                          ng-model="lastName"
                           name="lastName"
                           class="form-control"
                           placeholder="Last Name"
                           formControlName="lastName"/>
                       </div>
 
-                      <div class="form-group">
+                      <div class="input-group">
                           <input type="email"
                           name="email"
                           class="form-control"
@@ -31,7 +31,7 @@
                           formControlName="email"/>
                       </div>
 
-                      <div class="form-group">
+                      <div class="input-group">
                           <select class="form-control input-lg">
                               <option>Master 2 Génie Logiciel</option>
                               <option>Master 2 Réseaux de communication et Internet</option>
@@ -40,7 +40,7 @@
                           </select>
                       </div>
 
-                      <div class="form-group">
+                      <div class="input-group">
                           <input type="password"
                           name="password"
                           class="form-control"
@@ -48,12 +48,12 @@
                           formControlName="password"/>
                       </div>
 
-                      <div class="form-group">
+                      <div class="input-group">
                           <input type="password"
                           name="cPassword"
                           class="form-control"
                           placeholder="Confirm Password"
-                          formControlName="cPassword"/>
+                          formControlName="cpassword"/>
                       </div>
 
                       <div align="center">
@@ -66,7 +66,6 @@
                           <button class="btn btn-danger"
                               type="reset"
                               name="reset"
-                              (click)="reset()" 
                               >Reset</button>
                         </div> 
                       </div>
