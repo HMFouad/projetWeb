@@ -10,8 +10,8 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 })
 export class HeaderComponent implements OnInit {
 
-    private loginForm;
 
+    private loginForm;
     public constructor(private httpClient: HttpClient,
                        private router: Router) {}
 

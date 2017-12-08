@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const connection = require ('../mongoose/connection');
+const checkAuth = require ('../check-auth');
 
 // Get users
-router.get('/', (req, res) => {
-    connection((db) => {
+router.get('/users/:id', (req, res) => {
+    checkAuth(req, res, (user) => {
         res.json({
             success: true
         })
