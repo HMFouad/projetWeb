@@ -22,21 +22,17 @@ export class HomeComponent implements OnInit {
         firstName: new FormControl('', [Validators.required]),
         lastName: new FormControl('', [Validators.required]),
         email: new FormControl('', [Validators.required, Validators.email]),
-        // 'speciality': new FormControl('', [Validators.required]),
+        speciality: new FormControl('', [Validators.required]),
         password: new FormControl('', [Validators.required]),
-        cpassword: new FormControl('', [Validators.required])
-<<<<<<< HEAD
-=======
-
->>>>>>> a27f77f70b34c3e9f9c396a19ad8400477eb5562
+        confirmPassword: new FormControl('', [Validators.required])
 
         });
+        this.speciality.setValue(null);
         this.httpClient.get('/api/specialities').subscribe(data => {
             this.specialities = data;
         });
     }
 
-<<<<<<< HEAD
 public get firstName () {
   return this.signUpForm.get('firstName');
 }
@@ -57,50 +53,8 @@ public get password () {
   return this.signUpForm.get('password');
 }
 
-public get cpassword () {
-  return this.signUpForm.get('cpassword');
-=======
-    public get firstName () {
-        return this.signUpForm.get('firstName');
-    }
-
-    public get lastName () {
-        return this.signUpForm.get('lastName');
-    }
-
-    public get email () {
-        return this.signUpForm.get('email');
-    }
-
-    public get speciality () {
-        return this.signUpForm.get('speciality');
-    }
-
-    public get password () {
-        return this.signUpForm.get('password');
-    }
-
-    public get cpassword () {
-        return this.signUpForm.get('cpassword');
-    }
-
-    public submitSignUpForm () {
-        console.log ('Test0!!!!!!!!!!!!!!!!!');
-        // if (this.signUpForm.valid) {
-
-        this.httpClient.post(
-            this.signUpForm.value, {
-                responseType: 'json'
-            }).subscribe((response) => { // success
-            console.log ('Réponse!!!!!!!!!!!!!!!!!');
-            console.log (response);
-        }, (error) => { // error
-            console.log ('Erreur!!!!!!!!!!!!!!!!!');
-            // console.log (error);
-        });
-        // }
-    }
->>>>>>> a27f77f70b34c3e9f9c396a19ad8400477eb5562
+public get confirmPassword () {
+  return this.signUpForm.get('confirmPassword');
 }
 
 public submitSignUpForm () {

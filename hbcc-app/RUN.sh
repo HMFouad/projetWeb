@@ -2,6 +2,9 @@
 
 if [[ "$1" == "dev" ]]; then
 
+    # Update dependencies
+    yarn
+
     # build angular app
     ng build -dev --watch &
 
