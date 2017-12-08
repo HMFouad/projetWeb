@@ -51,7 +51,6 @@ router.get('/events', (req, res, next) => {
                });
         }
         else {
-
             for (const indexEvent in parsedEvents) {
                 if (parsedEvents.hasOwnProperty(indexEvent) &&
                     parsedEvents[indexEvent].type === ICS_TYPE_WANTED) {

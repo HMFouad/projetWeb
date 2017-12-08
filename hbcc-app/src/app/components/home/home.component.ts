@@ -18,12 +18,13 @@ export class HomeComponent implements OnInit {
     public constructor(private httpClient: HttpClient) {}
 
     public ngOnInit (): void {
-        this.signUpForm = new FormGroup({
-            'firstName': new FormControl('', [Validators.required]),
-            'lastName': new FormControl('', [Validators.required]),
-            'email': new FormControl('', [Validators.required, Validators.email]),
-            'speciality': new FormControl('', [Validators.required]),
-            'password': new FormControl('', [Validators.required]),
+      this.signUpForm = new FormGroup({
+        firstName: new FormControl('', [Validators.required]),
+        lastName: new FormControl('', [Validators.required]),
+        email: new FormControl('', [Validators.required, Validators.email]),
+        // 'speciality': new FormControl('', [Validators.required]),
+        password: new FormControl('', [Validators.required]),
+        cpassword: new FormControl('', [Validators.required])
 
 
         });
@@ -32,41 +33,45 @@ export class HomeComponent implements OnInit {
         });
     }
 
-    public get firstNameFormControl () {
-      return this.signUpForm.get('firstName');
+    public get firstName () {
+        return this.signUpForm.get('firstName');
     }
 
-    public get lastNameFormControl () {
-      return this.signUpForm.get('lastName');
+    public get lastName () {
+        return this.signUpForm.get('lastName');
     }
 
-    public get emailFormControl () {
-      return this.signUpForm.get('lastName');
+    public get email () {
+        return this.signUpForm.get('email');
     }
 
-    public get specialityFormControl () {
-      return this.signUpForm.get('speciality');
+    public get speciality () {
+        return this.signUpForm.get('speciality');
     }
 
-    public get passwordFormControl () {
-      return this.signUpForm.get('lastName');
+    public get password () {
+        return this.signUpForm.get('password');
+    }
+
+    public get cpassword () {
+        return this.signUpForm.get('cpassword');
     }
 
     public submitSignUpForm () {
-      console.log ('Test0!!!!!!!!!!!!!!!!!');
-      // if (this.signUpForm.valid) {
+        console.log ('Test0!!!!!!!!!!!!!!!!!');
+        // if (this.signUpForm.valid) {
 
-          this.httpClient.post(
-              this.signUpForm.value, {
-                  responseType: 'json'
-              }).subscribe((response) => { // success
-                console.log ('Réponse!!!!!!!!!!!!!!!!!');
-                console.log (response);
-          }, (error) => { // error
-              console.log ('Erreur!!!!!!!!!!!!!!!!!');
-              // console.log (error);
-          });
-      // }
+        this.httpClient.post(
+            this.signUpForm.value, {
+                responseType: 'json'
+            }).subscribe((response) => { // success
+            console.log ('Réponse!!!!!!!!!!!!!!!!!');
+            console.log (response);
+        }, (error) => { // error
+            console.log ('Erreur!!!!!!!!!!!!!!!!!');
+            // console.log (error);
+        });
+        // }
     }
-
 }
+
