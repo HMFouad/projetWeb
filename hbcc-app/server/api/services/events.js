@@ -3,15 +3,17 @@ const router = express.Router();
 const fs = require('fs');
 const icalParser = require('ical');
 const Event = require('../mongoose/model/event.model');
+const status_code = require('../../status-code');
 
 // get static file
 const FILE_PATH = "Master2_4TGL901S_iCalendar.ics";
 
 /**
- * Get student events
+ * Get student events,
+ * Select events according to the given date: events should take place in the given period
  * Request GET params should contain:
- *  * beginDate (ISO Date)
- *  * endDate (ISO Date)
+ *  * beginDate (ISO Date) (optional)
+ *  * endDate (ISO Date) (optional)
  */
 router.get('/events', (req, res, next) => {
     console.log ('Api service call: GET events');
@@ -27,42 +29,64 @@ router.get('/events', (req, res, next) => {
 
         const parsedEvents = icalParser.parseICS(data);
 
-        const beginDate = new Date (req.params.beginDate);
-        const endDate = new Date (req.params.endDate);
+        const beginRequestedDate = new Date (req.query.beginDate);
+        const endRequestedDate = new Date (req.query.endDate);
 
-        // check if beginDate is valid
-        if (!(beginDate instanceof Date) ||
-            isNaN(beginDate.getTime())) {
-            res.status();
+        // if beginRequestedDate given, check if it is valid
+        if (typeof req.query.beginDate === typeof '' &&
+            (!(beginRequestedDate instanceof Date) || isNaN(beginRequestedDate.getTime()))) {
+            res.status(status_code.BAD_REQUEST)
+               .json({
+                   success: false,
+                   message: 'beginDate parameter should follow ISO standard.'
+               });
         }
+        // if endRequestedDate given, check if it is valid
+        else if (typeof req.query.beginDate === typeof '' &&
+                 (!(endRequestedDate instanceof Date) || isNaN(endRequestedDate.getTime()))) {
+            res.status(status_code.BAD_REQUEST)
+               .json({
+                   success: false,
+                   message: 'endDate parameter should follow ISO standard.'
+               });
+        }
+        else {
 
-        for (const indexEvent in parsedEvents) {
-            if (parsedEvents.hasOwnProperty(indexEvent) &&
-                parsedEvents[indexEvent].type === ICS_TYPE_WANTED) {
-                const currentEvent = new Event();
+            for (const indexEvent in parsedEvents) {
+                if (parsedEvents.hasOwnProperty(indexEvent) &&
+                    parsedEvents[indexEvent].type === ICS_TYPE_WANTED) {
 
-                if (parsedEvents[indexEvent].description) {
-                    currentEvent.title = parsedEvents[indexEvent].description;
+                    const eventBeginDate = new Date(parsedEvents[indexEvent].start);
+                    const eventEndDate = new Date(parsedEvents[indexEvent].end);
+
+                    if ((typeof req.query.beginDate !== typeof '' || eventEndDate.getTime() > beginRequestedDate.getTime()) &&
+                        (typeof req.query.endDate !== typeof '' || eventBeginDate.getTime() < endRequestedDate.getTime())) {
+                        const currentEvent = new Event();
+
+                        if (parsedEvents[indexEvent].description) {
+                            currentEvent.title = parsedEvents[indexEvent].description;
+                        }
+
+                        if (parsedEvents[indexEvent].start) {
+                            currentEvent.beginDate = eventBeginDate;
+                        }
+
+                        if (parsedEvents[indexEvent].end) {
+                            currentEvent.endDate = eventEndDate;
+                        }
+
+                        if (parsedEvents[indexEvent].location) {
+                            currentEvent.location = parsedEvents[indexEvent].location;
+                        }
+
+                        events.push(currentEvent);
+                    }
                 }
-
-                if (parsedEvents[indexEvent].start) {
-                    currentEvent.beginDate = new Date(parsedEvents[indexEvent].start);
-                }
-
-                if (parsedEvents[indexEvent].end) {
-                    currentEvent.endDate = new Date (parsedEvents[indexEvent].end);
-                }
-
-                if (parsedEvents[indexEvent].location) {
-                    currentEvent.location = parsedEvents[indexEvent].location;
-                }
-
-                events.push(currentEvent);
             }
-        }
 
-        // send result
-        res.json (events);
+            // send result
+            res.json (events);
+        }
     });
 
 });
