@@ -11,11 +11,22 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 })
 export class HomeComponent implements OnInit {
 
-    private signUpForm;
+    private signUpForm: FormGroup;
 
     private specialities: any;
 
+<<<<<<< .merge_file_5pdp4G
     public constructor(private httpClient: HttpClient) {}
+=======
+    public ngOnInit (): void {
+      this.signUpForm = new FormGroup({
+        firstName: new FormControl('', [Validators.required]),
+        lastName: new FormControl('', [Validators.required]),
+        email: new FormControl('', [Validators.required, Validators.email]),
+        // 'speciality': new FormControl('', [Validators.required]),
+        password: new FormControl('', [Validators.required]),
+        cpassword: new FormControl('', [Validators.required])
+>>>>>>> .merge_file_qsFyXG
 
     public ngOnInit(): void {
         this.signUpForm = new FormGroup({
@@ -32,6 +43,7 @@ export class HomeComponent implements OnInit {
         });
     }
 
+<<<<<<< .merge_file_5pdp4G
 
     public submitSignUpForm () {
         if (this.signUpForm.valid) {
@@ -64,5 +76,46 @@ export class HomeComponent implements OnInit {
     public get passwordFormControl () {
       return this.signUpForm.get('lastName');
     }
+=======
+public get firstName () {
+  return this.signUpForm.get('firstName');
 }
 
+public get lastName () {
+  return this.signUpForm.get('lastName');
+}
+
+public get email () {
+  return this.signUpForm.get('email');
+}
+
+public get speciality () {
+  return this.signUpForm.get('speciality');
+}
+
+public get password () {
+  return this.signUpForm.get('password');
+}
+
+public get cpassword () {
+  return this.signUpForm.get('cpassword');
+>>>>>>> .merge_file_qsFyXG
+}
+
+public submitSignUpForm () {
+  console.log ('Test0!!!!!!!!!!!!!!!!!');
+  // if (this.signUpForm.valid) {
+
+      this.httpClient.post(
+          this.signUpForm.value, {
+              responseType: 'json'
+          }).subscribe((response) => { // success
+            console.log ('Réponse!!!!!!!!!!!!!!!!!');
+            console.log (response);
+      }, (error) => { // error
+          console.log ('Erreur!!!!!!!!!!!!!!!!!');
+          // console.log (error);
+      });
+  // }
+}
+}
