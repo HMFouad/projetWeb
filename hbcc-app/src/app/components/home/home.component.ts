@@ -53,9 +53,10 @@ public get cpassword () {
 
 public submitSignUpForm () {
   console.log ('Test0!!!!!!!!!!!!!!!!!');
-  // if (this.signUpForm.valid) {
+   if (this.signUpForm.valid) {
 
       this.httpClient.post(
+        '/api/users',
           this.signUpForm.value, {
               responseType: 'json'
           }).subscribe((response) => { // success
@@ -63,8 +64,9 @@ public submitSignUpForm () {
             console.log (response);
       }, (error) => { // error
           console.log ('Erreur!!!!!!!!!!!!!!!!!');
-          // console.log (error);
+          console.log (error);
       });
-  // }
+   }else {console.log ('Not Valid');
+  }
 }
 }
