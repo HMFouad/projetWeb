@@ -23,7 +23,7 @@ router.get('/users/:id', (req, res) => {
 });
 
 // Registration service
-router.post('/', (req, res) => {
+router.post('/users', (req, res) => {
     console.log('11111111111111111111')
     res.json("Message!!!!!!!!!!!!")
         firstName=req.body.firstName;

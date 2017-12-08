@@ -1,11 +1,8 @@
 # WebApp
 
-Commandes pour lancer l'application en dev (toutes dans `hbcc-app/`):
-* `npm install` ou `yarn` : installe les librairies
-* dans deux terminaux : 
-    * `ng build -dev --watch` : compile l'application angular dans le répertoire `dist/`
-    * `./node_modules/pm2/bin/pm2-dev start server/server.js` : lance le serveur nodejs/express
+## Installation
 
-Si la commande pour l'api ne marche pas (OK sous Linux) :
-    * `npm install -g pm2` ou `yarn global add pm2`
-    * puis  `pm2-dev start server/server.js`
+Commandes pour lancer l'application (à exécuter dans `hbcc-app/`):
+* `npm install` ou `yarn` : installe les librairies
+* `./RUN.sh <MODE>` pour lancer toute l'application
+    * `<MODE>` = dev : lancer le serveur et l'application angular avec un "watch", qui permet de relancer s'il y a modification des fichiers sources
