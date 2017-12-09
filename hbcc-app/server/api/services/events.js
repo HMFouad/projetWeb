@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const fs = require('fs');
-//const icalParser = require('ical');
+const icalParser = require('ical');
 const Event = require('../mongoose/model/event.model');
 const status_code = require('../../status-code');
 
