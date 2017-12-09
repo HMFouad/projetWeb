@@ -2,10 +2,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const eventSchema = new Schema({
-    title:  String,
+    title: String,
     location: String,
     beginDate: Date,
-    endDate:   Date
+    endDate: Date
 });
 
 module.exports = mongoose.model('events', eventSchema);

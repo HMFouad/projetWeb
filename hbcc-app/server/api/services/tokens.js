@@ -6,18 +6,17 @@ const Token = require("../mongoose/model/token.model");
 const tokendelay = require("../token_config");
 const secretcode = require("../secret_code");
 const jwt = require("jsonwebtoken");
-const mongoose = require ("mongoose");
-const ObjectId = mongoose.Schema.Types.ObjectId;
-/*const ObjectId = require ("mongoose").ObjectId; */
 
 /**
- * @param {function(string)} handleCreation Function which handle the new token
+ * @param {function(string)} handleCreation Function which handles the new token
  */
 function createToken (handleCreation) {
-    const newToken = jwt.sign('grr', secretcode.SECRET_CODE);
-    User.findOne({ authtoken: { value: newToken } }, (err, user) => {
+    const newToken = jwt.sign('newToken', secretcode.SECRET_CODE);
+    User.findOne({ authtoken: { value: newToken } }, (err, res, user) => {
         if (err) {
-            // TODO handle
+            res
+            .status(statuscode.NOT_FOUND)
+            .json({ success: false, message: "error" });
         }
 
         if (user) {
@@ -28,6 +27,7 @@ function createToken (handleCreation) {
         }
     });
 }
+
 // Sign in service
 router.post("/tokens", (req, res) => {
     console.log("Service POST /tokens");
@@ -48,12 +48,6 @@ router.post("/tokens", (req, res) => {
                 .status(statuscode.UNAUTHORIZED)
                 .json({ success: false, message: "Invalid login or password" });
             }
-            /*
-            console.log(token.value);
-            token.expiresAt = tokendelay;
-            //checkToken(user, token);
-            user.authtoken = token;*/
-
             createToken((tokenValue) => {
 
                 const expiresAt = new Date ();
@@ -68,14 +62,20 @@ router.post("/tokens", (req, res) => {
 
                 newToken.save((tokenErr, token) => {
                     if (tokenErr) {
-                        // TODO
+                        res
+                        .status(statuscode.NOT_FOUND)
+                        .json({ success: false, message: "error" });
                     }
                     else {
                         console.log("on update le user");
                         User.update({ _id: user._id }, {
                              authToken: token._id
                         }, (userUpdateErr, userUpdated) => {
-                            // handle err
+                            if (userUpdateErr) {
+                                res
+                                .status(statuscode.NOT_FOUND)
+                                .json({ success: false, message: "error" });
+                            }
                             console.log("catch");
                             console.log(user._id);
                             console.log(userUpdateErr);
