@@ -6,17 +6,16 @@ const Token = require("../mongoose/model/token.model");
 const tokendelay = require("../token_config");
 const secretcode = require("../secret_code");
 const jwt = require("jsonwebtoken");
+const Encrypt = require('./encrypt');
 
 /**
  * @param {function(string)} handleCreation Function which handles the new token
  */
 function createToken (handleCreation) {
     const newToken = jwt.sign('newToken', secretcode.SECRET_CODE);
-    User.findOne({ authtoken: { value: newToken } }, (err, res, user) => {
-        if (err) {
-            res
-            .status(statuscode.NOT_FOUND)
-            .json({ success: false, message: "error" });
+    User.findOne({ authToken: { value: newToken } }, (err, user) => {
+       if (err) {
+            console.log(statuscode.NOT_FOUND + ": not found");
         }
 
         if (user) {
@@ -90,7 +89,7 @@ router.post("/tokens", (req, res) => {
                     .json({
                         success: true,
                         message: "SUCCESS",
-                        authtoken: user.authtoken,
+                        authToken: user.authToken,
                         user: user._id
                     });
             });
