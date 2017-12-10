@@ -1,19 +1,24 @@
 import { Routes, RouterModule } from '@angular/router';
-import { HomeComponent } from './components/home/home.component';
-import { ProfileComponent } from './components/profile/profile.component';
+import { RegistrationComponent } from './components/registration/registration.component';
 import { AboutComponent } from './components/about/about.component';
 import { MapComponent } from './components/map/map.component';
 import {AuthGuard} from './guards/auth.guard';
-import {PlanningComponent} from './components/planning/planning.component';
+import {UserPlanningComponent} from '@app/components/user/user-planning/user-planning.component';
+import {UserComponent} from '@app/components/user/user.component';
+import {UnAuthGuard} from '@app/guards/un-auth.guard';
+import {UserProfileComponent} from '@app/components/user/user-profile/user-profile.component';
 
 const appRoutes: Routes = [
-  {path: 'home', component: HomeComponent},
-  {path: 'about', component: AboutComponent},
-  {path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
-  {path: 'map', component: MapComponent, canActivate: [AuthGuard]},
-  {path: 'planning', component: PlanningComponent, canActivate: [AuthGuard]},
-  {path: '', redirectTo: '/home', pathMatch: 'full'},
-  {path: '**', redirectTo: '/home', pathMatch: 'full'}
+    { path: 'registration', canActivate: [UnAuthGuard], component: RegistrationComponent },
+    { path: 'user', component: UserComponent, canActivate: [AuthGuard], children: [
+        { path: 'planning', component: UserPlanningComponent },
+        { path: 'profile', component: UserProfileComponent },
+    ]},
+
+    {path: 'about', component: AboutComponent},
+    {path: 'map', component: MapComponent, },
+    {path: '', redirectTo: '/registration', pathMatch: 'full'},
+    {path: '**', redirectTo: '/registration', pathMatch: 'full'}
 ];
 
 export const AppRoutingModule = RouterModule.forRoot(

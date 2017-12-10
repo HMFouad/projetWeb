@@ -71,34 +71,39 @@ router.post("/tokens", (req, res) => {
                         // TODO
                     }
                     else {
-                        console.log("on update le user");
                         User.update({ _id: user._id }, {
-                             authToken: token._id
+                             $set: { authToken: token._id }
                         }, (userUpdateErr, userUpdated) => {
-                            // handle err
-                            console.log("catch");
-                            console.log(user._id);
-                            console.log(userUpdateErr);
-                            console.log(userUpdated);
+                            // TODO handle err
+
+                            res.status(statuscode.SUCCESS)
+                               .json({
+                                   success: true,
+                                   message: "SUCCESS",
+                                   authtoken: user.authtoken,
+                                   user: user._id,
+                                   authToken: {
+                                       value: token.value,
+                                       expiresAt: token.expiresAt
+                                   }
+                               });
                         });
                     }
                 });
-
-
-                res
-                    .status(statuscode.SUCCESS)
-                    .json({
-                        success: true,
-                        message: "SUCCESS",
-                        authtoken: user.authtoken,
-                        user: user._id
-                    });
             });
         });
     }
 });
 
 // Sign in service
-router.delete("/tokens", (req, res) => {});
+router.delete("/tokens", (req, res) => {
+    // TODO implements
+    res
+        .status(statuscode.BAD_REQUEST)
+        .json({
+            success: false,
+            message: "Service not implemented"
+        });
+});
 
 module.exports = router;

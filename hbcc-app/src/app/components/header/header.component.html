@@ -13,7 +13,8 @@
                 <a class="nav-link" routerLink="/about">About</a>
             </li>
         </ul>
-        <form class="form-inline"
+        <form *ngIf="!userConnected"
+              class="form-inline"
               novalidate
               [formGroup]="loginForm">
             <div class="form-group">
@@ -37,7 +38,10 @@
                        name="password"
                        formControlName="password"/>
             </div>
-            <button (click)="submitLoginForm()" class="btn btn-primary">Sign In</button>
+            <button (click)="submitLoginForm()" class="btn btn-primary">Se connecter</button>
         </form>
+        <ng-container *ngIf="userConnected">
+            <button (click)="logout()" class="btn btn-primary">Se déconnecter</button>
+        </ng-container>
     </div>
 </nav>

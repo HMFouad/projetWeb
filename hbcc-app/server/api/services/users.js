@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const checkAuth = require ('../check-auth');
 const User = require('../mongoose/model/user.model');
 const Speciality = require('../mongoose/model/speciality.model');
-const Encrypt = require('./encrypt');
+const Encrypt = require('../utils/encrypt');
 
 // Get users
 router.get('/users/:id', (req, res) => {
@@ -28,7 +28,7 @@ router.get('/users/:id', (req, res) => {
 // Registration service
 router.post('/users', (req, res) => {
     Speciality.findOne({ name: req.body.speciality }, (speciality_err, spec) => {
-        if (speciality_err) { 
+        if (speciality_err) {
             console.log("Speciality Error : " + speciality_err);
         } else {
                 const user = new User({

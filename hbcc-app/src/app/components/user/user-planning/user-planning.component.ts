@@ -1,13 +1,13 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {EventData} from '@app/model/event-data.model';
+import {EventData} from 'app/model/event-data.model';
 
 @Component({
-  selector: 'hbcc-planning',
-  templateUrl: './planning.component.html',
-  styleUrls: ['./planning.component.css']
+  selector: 'hbcc-user-planning',
+  templateUrl: './user-planning.component.html',
+  styleUrls: ['./user-planning.component.css']
 })
-export class PlanningComponent implements OnInit {
+export class UserPlanningComponent implements OnInit {
 
     @ViewChild('rootElement')
     private rootElement: ElementRef;
@@ -40,6 +40,8 @@ export class PlanningComponent implements OnInit {
         this.locale = 'fr';
         this.viewDate = new Date();
         this.displayedEvents = [];
+
+        // TODO GET User events
         this.httpClient.get('/api/events').subscribe((events: Array<any>) => {
             this.displayedEvents = [];
             for (const eventObj of events) {

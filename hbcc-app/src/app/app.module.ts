@@ -1,8 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './components/app/app.component';
-import { HomeComponent } from './components/home/home.component';
-import { ProfileComponent } from './components/profile/profile.component';
 import { AboutComponent } from './components/about/about.component';
 import { MapComponent } from './components/map/map.component';
 import { ReactiveFormsModule} from '@angular/forms';
@@ -11,8 +9,12 @@ import {AppRoutingModule} from './app-routing.module';
 import { EventsComponent } from './components/events/events.component';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
-import { PlanningComponent } from './components/planning/planning.component';
 import {AuthGuard} from './guards/auth.guard';
+import {RegistrationComponent} from './components/registration/registration.component';
+import { UserComponent } from './components/user/user.component';
+import {UserProfileComponent} from "@app/components/user/user-profile/user-profile.component";
+import {UserPlanningComponent} from "@app/components/user/user-planning/user-planning.component";
+import {UnAuthGuard} from "@app/guards/un-auth.guard";
 
 @NgModule({
     imports: [
@@ -24,16 +26,18 @@ import {AuthGuard} from './guards/auth.guard';
     declarations: [
         AppComponent,
         EventsComponent,
-        HomeComponent,
-        ProfileComponent,
+        RegistrationComponent,
+        UserProfileComponent,
         AboutComponent,
         MapComponent,
         HeaderComponent,
         FooterComponent,
-        PlanningComponent
+        UserPlanningComponent,
+        UserComponent
     ],
     providers: [
-        AuthGuard
+        AuthGuard,
+        UnAuthGuard
     ],
     bootstrap: [AppComponent]
 })

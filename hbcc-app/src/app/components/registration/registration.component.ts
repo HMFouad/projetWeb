@@ -6,10 +6,10 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'hbcc-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  templateUrl: './registration.component.html',
+  styleUrls: ['./registration.component.css']
 })
-export class HomeComponent implements OnInit {
+export class RegistrationComponent implements OnInit {
 
     private signUpForm: FormGroup;
 
