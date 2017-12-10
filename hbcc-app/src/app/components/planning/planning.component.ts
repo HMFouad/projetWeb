@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {ActivatedRoute, Router} from "@angular/router";
+import {EventData} from '@app/model/event-data.model';
 
 @Component({
   selector: 'hbcc-planning',
@@ -9,93 +9,96 @@ import {ActivatedRoute, Router} from "@angular/router";
 })
 export class PlanningComponent implements OnInit {
 
-    /*calendar : any;
+    @ViewChild('rootElement')
+    private rootElement: ElementRef;
 
-    lundi : {day:string,events:any[]};
-    mardi : {day:string,events:any[]};
-    mercredi : {day:string,events:any[]};
-    jeudi : {day:string,events:any[]};
-    vendredi : {day:string,events:any[]};
-
-    data:any;
-    description:string[];
-    beginDate:string[];
-    endDate:string[];
-    location:string[];*/
+    public viewDate: Date;
+    public locale: string;
+    public displayedEvents: EventData[];
 
     public constructor(private httpClient: HttpClient) { }
 
+    private customizeJQueryHeader ($header: any) {
+        $header.find('th.fc-day-header').each(function() {
+
+            const newDayLabelSplitted = $(this)
+                .text()
+                .replace(/([a-zA-Z]+)\. ([0-9]{1,2}).*/, '$1|$2')
+                .split('|');
+            $(this).html(`
+                <p>
+                    ${newDayLabelSplitted[0].charAt(0).toUpperCase()}${newDayLabelSplitted[0].slice(1)}
+                </p>
+                &nbsp;
+                <p>${newDayLabelSplitted[1]}</p>
+            `);
+        });
+        return $header;
+    }
+
     public ngOnInit(): void {
-        this.httpClient.get('/api/events').subscribe(response => {
-            console.log (response);
+        this.locale = 'fr';
+        this.viewDate = new Date();
+        this.displayedEvents = [];
+        this.httpClient.get('/api/events').subscribe((events: Array<any>) => {
+            this.displayedEvents = [];
+            for (const eventObj of events) {
+                this.displayedEvents.push({
+                    start: new Date (eventObj.start),
+                    end: new Date (eventObj.end),
+                    title: eventObj.description
+                });
+            }
+
+            const localDisplayedEvents = this.displayedEvents;
+
+            // delete old header
+            jQuery(this.rootElement.nativeElement)
+                .find('.planning-container > .planning-header')
+                .remove();
+
+            // $ doesn't have fullCalendar method
+            jQuery(this.rootElement.nativeElement)
+                .find('.planning-container')
+                .fullCalendar('destroy')
+                .fullCalendar({
+                    header: false,
+                    footer: false,
+                    firstDay: 1,
+                    defaultView: 'agendaWeek',
+                    locale: 'fr',
+                    allDaySlot: false,
+                    slotDuration: '00:30:00',
+                    slotLabelFormat: 'H:mm',
+                    events: localDisplayedEvents,
+                    themeSystem: 'bootstrap3',
+                    dragScroll: false,
+                    eventClick: () => {
+
+                    },
+                    eventAfterAllRender: ($calendar) => {
+                        const $header = $calendar.el
+                            .find('.fc-head > tr > .fc-head-container > div')
+                            .detach()
+                            .addClass('planning-header');
+
+                        $(this.rootElement.nativeElement)
+                            .find('.planning-container')
+                            .prepend(this.customizeJQueryHeader($header));
+
+                        // remove fullCalendar header container.
+                        $calendar.el
+                            .find('.fc-head')
+                            .remove();
+
+
+                        // scroll to the current hour
+                        const now = new Date();
+                        const $mainContainer = $('.main-container');
+                        const maxScrollTop = $mainContainer.prop('scrollHeight') - $mainContainer.outerHeight();
+                        $mainContainer.scrollTop((now.getHours() * maxScrollTop) / 23);
+                    }
+                });
         });
     }
-
-
-    /*ngOnInit() {
-        this.getData();
-    }
-    getData() {
-
-    }
-    getWeekEvents() {
-        this.lundi= {day:"27/11/2017", events:new Array()};
-        this.mardi=  {day:"28/11/2017", events:new Array()};
-        this.mercredi=  {day:"29/11/2017", events:new Array()};
-        this.jeudi=  {day:"30/11/2017", events:new Array()};
-        this.vendredi=  {day:"01/12/2017", events:new Array()};
-
-
-        // console.log(this.data.description);
-        // console.log(this.data.description.length);
-        for (var i = 0; i < this.description.length; i++) {
-            //On crée un nouvel évènement
-            //console.log("On crée un évènement");
-            var beginDateSplited=this.beginDate[i].split(",");
-            var endDateSplited=this.endDate[i].split(",");
-            var newEvent ={   description:this.description[i],
-                beginDate:new Date(beginDateSplited[0]+"-"+beginDateSplited[1]+"-"+beginDateSplited[2]+"T"+beginDateSplited[3]+":"+beginDateSplited[4]+":00Z"),
-                endDate:  new Date(endDateSplited[0]+"-"+endDateSplited[1]+"-"+endDateSplited[2]+"T"+endDateSplited[3]+":"+endDateSplited[4]+":00Z"),
-                location: this.location[i] };
-            //console.log(newEvent);
-            //On l'ajout dans la liste des évènements de la journée de la semaine qui lui correspond
-            console.log("On l'ajoute dans la liste des évènements du jour de la smeaine qui lui correspond s'il y en a un.");
-            console.log(beginDateSplited[2]+"/"+beginDateSplited[1]+"/"+beginDateSplited[0]);
-            console.log(new Date(beginDateSplited[0]+"-"+beginDateSplited[1]+"-"+beginDateSplited[2]+"T"+beginDateSplited[3]+":"+beginDateSplited[4]+":00Z"));
-            var comp =beginDateSplited[2]+"/"+beginDateSplited[1]+"/"+beginDateSplited[0]
-            switch(comp) {
-                case this.lundi.day:
-                    console.log(this.lundi.day+"  -> Correspondance");
-                    this.lundi.events.push(newEvent);
-                    break;
-                case this.mardi.day:
-                    console.log(this.mardi.day+"  -> Correspondance");
-                    this.mardi.events.push(newEvent);
-                    break;
-                case this.mercredi.day:
-                    console.log(this.mercredi.day+"  -> Correspondance");
-                    this.mercredi.events.push(newEvent);
-                    break;
-                case this.jeudi.day:
-                    console.log(this.jeudi.day+"  -> Correspondance");
-                    this.jeudi.events.push(newEvent);
-                    break;
-                case this.vendredi.day:
-                    console.log(this.vendredi.day+"  -> Correspondance");
-                    this.vendredi.events.push(newEvent);
-                    break;
-                default:
-            }
-        }
-
-        //On redéfinit le calendrier avec les nouvelles listes d'évènements
-        this.calendar = {		lundi:this.lundi.events,
-            mardi:this.mardi.events,
-            mercredi:this.mercredi.events,
-            jeudi:this.jeudi.events,
-            vendredi:this.vendredi.events };
-    }*/
-
-
-
 }

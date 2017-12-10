@@ -15,6 +15,12 @@ import { PlanningComponent } from './components/planning/planning.component';
 import {AuthGuard} from './guards/auth.guard';
 
 @NgModule({
+    imports: [
+        BrowserModule,
+        HttpClientModule,
+        ReactiveFormsModule,
+        AppRoutingModule
+    ],
     declarations: [
         AppComponent,
         EventsComponent,
@@ -25,12 +31,6 @@ import {AuthGuard} from './guards/auth.guard';
         HeaderComponent,
         FooterComponent,
         PlanningComponent
-    ],
-    imports: [
-        BrowserModule,
-        HttpClientModule,
-        ReactiveFormsModule,
-        AppRoutingModule
     ],
     providers: [
         AuthGuard

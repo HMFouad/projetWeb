@@ -63,20 +63,16 @@ router.get('/events', (req, res, next) => {
                         const currentEvent = new Event();
 
                         if (parsedEvents[indexEvent].description) {
-                            currentEvent.title = parsedEvents[indexEvent].description;
-                        }
-
-                        if (parsedEvents[indexEvent].start) {
-                            currentEvent.beginDate = eventBeginDate;
-                        }
-
-                        if (parsedEvents[indexEvent].end) {
-                            currentEvent.endDate = eventEndDate;
+                            const splittedDescription = parsedEvents[indexEvent].description.split('\n');
+                            currentEvent.description = splittedDescription[0];
                         }
 
                         if (parsedEvents[indexEvent].location) {
                             currentEvent.location = parsedEvents[indexEvent].location;
                         }
+
+                        currentEvent.start = eventBeginDate;
+                        currentEvent.end = eventEndDate;
 
                         events.push(currentEvent);
                     }

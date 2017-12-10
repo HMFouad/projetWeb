@@ -1,0 +1,105 @@
+
+:host ::ng-deep .fc-event {
+    color: #fff !important;
+    cursor: pointer;
+}
+
+:host ::ng-deep .fc-event >  .fc-content {
+    display: flex;
+    flex-flow: column;
+}
+
+:host ::ng-deep .fc-event > .fc-content > .fc-title { order: 1 }
+:host ::ng-deep .fc-event > .fc-content > .fc-time { order: 2 }
+
+:host ::ng-deep .fc-event .fc-title {
+    font-weight: bold;
+}
+
+:host ::ng-deep .fc-divider {
+    display: none !important;
+}
+
+:host ::ng-deep .fc-scroller.fc-time-grid-container {
+    height: 599px !important;
+}
+
+:host ::ng-deep td.fc-time {
+    border-top: 0;
+}
+
+:host ::ng-deep tr > td.fc-time > span {
+    position: relative;
+    top: -13px;
+    font-size: 10px;
+}
+
+:host ::ng-deep tr:first-child > td.fc-time > span {
+    opacity: 0;
+}
+
+:host ::ng-deep .planning-header th:first-child {
+    width: 37px !important;
+}
+:host ::ng-deep .planning-header th.fc-day-header {
+    text-align: left;
+    padding: 12px 12px 12px 20px;
+}
+:host ::ng-deep .planning-header th.fc-day-header * {
+    font-weight: normal;
+    line-height: 20px;
+}
+:host ::ng-deep .planning-header th.fc-day-header :first-child {
+    font-size: 12px;
+    margin: 0;
+}
+:host ::ng-deep .planning-header th.fc-day-header :last-child {
+    font-size: 40px;
+}
+
+:host ::ng-deep .planning-header {
+    position: fixed;
+    z-index: 11;
+    background-color: white;
+    border-bottom: 1px solid #e9ecef;
+    border-right: 1px solid #e9ecef;
+}
+
+@media (min-width: 576px) {
+    :host ::ng-deep .planning-header {
+        max-width: 540px;
+    }
+}
+
+@media (min-width: 768px) {
+    :host ::ng-deep .planning-header {
+        max-width: 720px;
+    }
+}
+
+@media (min-width: 992px) {
+    :host ::ng-deep .planning-header {
+        max-width: 960px;
+    }
+}
+
+@media (min-width: 1200px) {
+    :host ::ng-deep .planning-header {
+        max-width: 1140px;
+    }
+}
+
+:host ::ng-deep .fc-view-container > .fc-view > .table-bordered,
+:host ::ng-deep .fc-view-container .fc-body > tr > td {
+    border-top-width: 0;
+}
+:host ::ng-deep .fc-view-container {
+    margin-top: 104px;
+}
+
+/* remove body scroller */
+:host ::ng-deep .fc-body .fc-scroller {
+    height: 100% !important;
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+}
