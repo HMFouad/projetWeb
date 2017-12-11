@@ -5,14 +5,12 @@ const Speciality = require('../mongoose/model/speciality.model');
 
 // Get users
 router.get('/specialities', (req, res, next) => {
-    console.log("On essaye de récup les spe");
 
     Speciality.find(function (err, specialities) {
         if (err) {
             console.log("err");
             return next(err);
         }
-        console.log(specialities);
         return res.json(specialities);
     });
 });

@@ -7,12 +7,13 @@ import {UserPlanningComponent} from '@app/components/user/user-planning/user-pla
 import {UserComponent} from '@app/components/user/user.component';
 import {UnAuthGuard} from '@app/guards/un-auth.guard';
 import {UserProfileComponent} from '@app/components/user/user-profile/user-profile.component';
+import {EventFormComponent} from '@app/event-form/event-form.component';
 
 const appRoutes: Routes = [
     { path: 'registration', canActivate: [UnAuthGuard], component: RegistrationComponent },
     { path: 'user', component: UserComponent, canActivate: [AuthGuard], children: [
         { path: 'planning', component: UserPlanningComponent },
-        { path: 'profile', component: UserProfileComponent },
+        { path: 'profile', component: UserProfileComponent }
     ]},
 
     {path: 'about', component: AboutComponent},

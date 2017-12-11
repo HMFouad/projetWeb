@@ -12,16 +12,21 @@ import { FooterComponent } from './components/footer/footer.component';
 import {AuthGuard} from './guards/auth.guard';
 import {RegistrationComponent} from './components/registration/registration.component';
 import { UserComponent } from './components/user/user.component';
-import {UserProfileComponent} from "@app/components/user/user-profile/user-profile.component";
-import {UserPlanningComponent} from "@app/components/user/user-planning/user-planning.component";
-import {UnAuthGuard} from "@app/guards/un-auth.guard";
+import {UserProfileComponent} from '@app/components/user/user-profile/user-profile.component';
+import {UserPlanningComponent} from '@app/components/user/user-planning/user-planning.component';
+import {UnAuthGuard} from '@app/guards/un-auth.guard';
+import { EventFormComponent } from './event-form/event-form.component';
+import { Ng2DatetimePickerModule } from 'ng2-datetime-picker';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
     imports: [
         BrowserModule,
         HttpClientModule,
         ReactiveFormsModule,
-        AppRoutingModule
+        AppRoutingModule,
+        Ng2DatetimePickerModule,
+        FormsModule
     ],
     declarations: [
         AppComponent,
@@ -33,7 +38,8 @@ import {UnAuthGuard} from "@app/guards/un-auth.guard";
         HeaderComponent,
         FooterComponent,
         UserPlanningComponent,
-        UserComponent
+        UserComponent,
+        EventFormComponent
     ],
     providers: [
         AuthGuard,

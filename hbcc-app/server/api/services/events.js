@@ -4,6 +4,7 @@ const fs = require('fs');
 const icalParser = require('ical');
 const Event = require('../mongoose/model/event.model');
 const status_code = require('../../status-code');
+const checkAuth = require ('../check-auth');
 
 // get static file
 const FILE_PATH = "Master2_4TGL901S_iCalendar.ics";
@@ -85,5 +86,27 @@ router.get('/events', (req, res, next) => {
     });
 
 });
+
+
+
+router.post('/events', (req, res) => {
+    checkAuth(req, res, (user) => {
+        console.log(user);
+       /* const event = new Event({ description: req.body.description,
+                                location: req.body.location,
+                                start: req.body.start,
+                                end: req.body.end,
+                                userId: user._id });
+        console.log(event);*/
+        //On insère
+        /*event.save(function (err) {
+            if (err) {
+                throw err;
+            }
+        });*/
+    });
+});
+
+
 
 module.exports = router;
