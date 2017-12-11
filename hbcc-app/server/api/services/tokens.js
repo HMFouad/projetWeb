@@ -6,7 +6,11 @@ const Token = require("../mongoose/model/token.model");
 const tokendelay = require("../token_config");
 const secretcode = require("../secret_code");
 const jwt = require("jsonwebtoken");
+<<<<<<< HEAD
 const internalServerError = require("../utils/internal_server_error");
+=======
+const encrypt = require("../utils/encrypt");
+>>>>>>> 648dd01e731cf635e5c8aa8ca400c815e5a5e59d
 
 /**
  * Call handleCreation function with a newToken which doesn't already exist
@@ -50,9 +54,7 @@ router.post("/tokens", (req, res) => {
         .json({ success: false, message: "Missing email or password" });
     }
     else {
-        // TODO encrypt password form mohammed file
-
-        User.findOne({ email: user.email, password: user.password }, function(err, user) {
+        User.findOne({ email: user.email, password: encrypt(user.password) }, function(err, user) {
             if (err) {
                 internalServerError(res);
             }
