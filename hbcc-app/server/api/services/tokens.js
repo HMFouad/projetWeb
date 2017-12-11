@@ -6,8 +6,8 @@ const Token = require("../mongoose/model/token.model");
 const tokendelay = require("../token_config");
 const secretcode = require("../secret_code");
 const jwt = require("jsonwebtoken");
-const mongoose = require ("mongoose");
-const ObjectId = mongoose.Schema.Types.ObjectId;
+const encrypt = require("../utils/encrypt");
+
 /*const ObjectId = require ("mongoose").ObjectId; */
 
 /**
@@ -42,7 +42,7 @@ router.post("/tokens", (req, res) => {
     else {
         // TODO encrypt password form mohammed file
 
-        User.findOne({ email: user.email, password: user.password }, function(err, user) {
+        User.findOne({ email: user.email, password: encrypt(user.password) }, function(err, user) {
             if (err || !user) {
                 res
                 .status(statuscode.UNAUTHORIZED)
