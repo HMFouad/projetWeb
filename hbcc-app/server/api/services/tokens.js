@@ -6,21 +6,31 @@ const Token = require("../mongoose/model/token.model");
 const tokendelay = require("../token_config");
 const secretcode = require("../secret_code");
 const jwt = require("jsonwebtoken");
+const internalServerError = require("../utils/internal_server_error");
 
 /**
+ * Call handleCreation function with a newToken which doesn't already exist
  * @param {function(string)} handleCreation Function which handles the new token
+ * @param {*} serviceRes result of the express service
  */
-function createToken (handleCreation, serviceRes) {
+function createToken (serviceRes, handleCreation) {
     const newToken = jwt.sign('newToken', secretcode.SECRET_CODE);
-    User.findOne({ authToken: { value: newToken } }, (err, user) => {
-       if (err) {
-            serviceRes
-            .status(statuscode.INTERNAL_SERVER_ERROR)
-            .json({ success: false, message: "Internal server error" });
+    Token.findOne({ value: newToken }, (errToken, token) => {
+        if (errToken) {
+            internalServerError(serviceRes);
         }
-
-        if (user) {
-            createToken(handleCreation, serviceRes);
+        else if (token) {
+            User.findOne({ authToken: token._id }, (errUser, user) => {
+                if (errUser) {
+                    internalServerError(serviceRes);
+                }
+                else if (user) {
+                    createToken(serviceRes, handleCreation);
+                }
+                else {
+                    handleCreation (newToken);
+                }
+            });
         }
         else {
             handleCreation (newToken);
@@ -44,9 +54,7 @@ router.post("/tokens", (req, res) => {
 
         User.findOne({ email: user.email, password: user.password }, function(err, user) {
             if (err) {
-                res
-                .status(statuscode.INTERNAL_SERVER_ERROR)
-                .json({ success: false, message: "Internal server error" });
+                internalServerError(res);
             }
             else if (!user) {
                 res
@@ -54,7 +62,7 @@ router.post("/tokens", (req, res) => {
                 .json({ success: false, message: "Invalid login or password" });
             }
             else {
-                createToken((tokenValue, res) => {
+                createToken(res, (tokenValue) => {
 
                     const expiresAt = new Date ();
 
@@ -68,9 +76,7 @@ router.post("/tokens", (req, res) => {
 
                     newToken.save((tokenErr, token) => {
                         if (tokenErr) {
-                            res
-                            .status(statuscode.INTERNAL_SERVER_ERROR)
-                            .json({ success: false, message: "Internal server error" });
+                            internalServerError(res);
                         }
                         else {
                             console.log("on update le user");
@@ -78,9 +84,7 @@ router.post("/tokens", (req, res) => {
                                 authToken: token._id
                             }, (userUpdateErr, userUpdated) => {
                                 if (userUpdateErr) {
-                                    res
-                                    .status(statuscode.INTERNAL_SERVER_ERROR)
-                                    .json({ success: false, message: "Internal server error" });
+                                    internalServerError(res);
                                 }
                                 console.log("catch");
                                 console.log(user._id);
