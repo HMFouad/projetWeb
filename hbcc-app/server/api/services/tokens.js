@@ -6,20 +6,21 @@ const Token = require("../mongoose/model/token.model");
 const tokendelay = require("../token_config");
 const secretcode = require("../secret_code");
 const jwt = require("jsonwebtoken");
-const Encrypt = require('./encrypt');
 
 /**
  * @param {function(string)} handleCreation Function which handles the new token
  */
-function createToken (handleCreation) {
+function createToken (handleCreation, serviceRes) {
     const newToken = jwt.sign('newToken', secretcode.SECRET_CODE);
     User.findOne({ authToken: { value: newToken } }, (err, user) => {
        if (err) {
-            console.log(statuscode.NOT_FOUND + ": not found");
+            serviceRes
+            .status(statuscode.INTERNAL_SERVER_ERROR)
+            .json({ success: false, message: "Internal server error" });
         }
 
         if (user) {
-            createToken(handleCreation);
+            createToken(handleCreation, serviceRes);
         }
         else {
             handleCreation (newToken);
@@ -42,57 +43,62 @@ router.post("/tokens", (req, res) => {
         // TODO encrypt password form mohammed file
 
         User.findOne({ email: user.email, password: user.password }, function(err, user) {
-            if (err || !user) {
+            if (err) {
+                res
+                .status(statuscode.INTERNAL_SERVER_ERROR)
+                .json({ success: false, message: "Internal server error" });
+            }
+            else if (!user) {
                 res
                 .status(statuscode.UNAUTHORIZED)
                 .json({ success: false, message: "Invalid login or password" });
             }
-            createToken((tokenValue) => {
+            else {
+                createToken((tokenValue, res) => {
 
-                const expiresAt = new Date ();
+                    const expiresAt = new Date ();
 
-                // one second in milliseconds
-                const oneSecond = 1000;
+                    // one second in milliseconds
+                    const oneSecond = 1000;
 
-                const newToken = new Token({
-                    value: tokenValue,
-                    expiresAt: new Date (expiresAt.getTime() + tokendelay.TOKEN_DELAY * oneSecond)
-                });
-
-                newToken.save((tokenErr, token) => {
-                    if (tokenErr) {
-                        res
-                        .status(statuscode.NOT_FOUND)
-                        .json({ success: false, message: "error" });
-                    }
-                    else {
-                        console.log("on update le user");
-                        User.update({ _id: user._id }, {
-                             authToken: token._id
-                        }, (userUpdateErr, userUpdated) => {
-                            if (userUpdateErr) {
-                                res
-                                .status(statuscode.NOT_FOUND)
-                                .json({ success: false, message: "error" });
-                            }
-                            console.log("catch");
-                            console.log(user._id);
-                            console.log(userUpdateErr);
-                            console.log(userUpdated);
-                        });
-                    }
-                });
-
-
-                res
-                    .status(statuscode.SUCCESS)
-                    .json({
-                        success: true,
-                        message: "SUCCESS",
-                        authToken: user.authToken,
-                        user: user._id
+                    const newToken = new Token({
+                        value: tokenValue,
+                        expiresAt: new Date (expiresAt.getTime() + tokendelay.TOKEN_DELAY * oneSecond)
                     });
-            });
+
+                    newToken.save((tokenErr, token) => {
+                        if (tokenErr) {
+                            res
+                            .status(statuscode.INTERNAL_SERVER_ERROR)
+                            .json({ success: false, message: "Internal server error" });
+                        }
+                        else {
+                            console.log("on update le user");
+                            User.update({ _id: user._id }, {
+                                authToken: token._id
+                            }, (userUpdateErr, userUpdated) => {
+                                if (userUpdateErr) {
+                                    res
+                                    .status(statuscode.INTERNAL_SERVER_ERROR)
+                                    .json({ success: false, message: "Internal server error" });
+                                }
+                                console.log("catch");
+                                console.log(user._id);
+                                console.log(userUpdateErr);
+                                console.log(userUpdated);
+                            });
+                        }
+                    });
+                    res
+                        .status(statuscode.SUCCESS)
+                        .json({
+                            success: true,
+                            message: "SUCCESS",
+                            authToken: user.authToken,
+                            user: user._id
+                        });
+                });
+            }
         });
     }
 });
