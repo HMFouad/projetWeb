@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const checkAuth = require ('../check-auth');
+const checkAuth = require ('../utils/check-auth');
 const User = require('../mongoose/model/user.model');
 const Speciality = require('../mongoose/model/speciality.model');
 const encrypt = require('../utils/encrypt');

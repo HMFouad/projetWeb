@@ -1,6 +1,6 @@
-const statuscode = require('../status-code');
-const User = require('./mongoose/model/user.model');
-const Token = require('./mongoose/model/token.model');
+const statuscode = require('../../status-code');
+const User = require('../mongoose/model/user.model');
+const Token = require('../mongoose/model/token.model');
 
 module.exports = (req, res, success_handler) => {
     const token = req.token;
