@@ -59,6 +59,8 @@ public get confirmPassword () {
 
 public submitSignUpForm () {
   console.log ('Test0!!!!!!!!!!!!!!!!!');
+    console.log (this.signUpForm.value)
+
    if (this.signUpForm.valid) {
 
       this.httpClient.post(

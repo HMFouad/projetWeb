@@ -8,12 +8,22 @@ router.get('/specialities', (req, res, next) => {
     console.log("On essaye de récup les spe");
 
     Speciality.find(function (err, specialities) {
+        // TODO gestion d'erreur
         if (err) {
             console.log("err");
             return next(err);
         }
-        console.log(specialities);
-        return res.json(specialities);
+
+        const returned = [];
+
+        for (const spe of specialities) {
+            returned.push({
+                name: spe.name,
+                _id: spe._id
+            });
+        }
+
+        res.json(returned);
     });
 });
 /*

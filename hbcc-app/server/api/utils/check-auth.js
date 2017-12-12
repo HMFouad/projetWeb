@@ -1,7 +1,7 @@
-const statuscode = require('../status-code');
-const User = require('./mongoose/model/user.model');
-const Token = require('./mongoose/model/token.model');
-const internalServerError = require('./utils/internal_server_error');
+const statuscode = require('../../status-code');
+const User = require('../mongoose/model/user.model');
+const Token = require('../mongoose/model/token.model');
+const internalServerError = require('../utils/internal_server_error');
 
 /**
  * Check given authentification token & return api error if invalid
@@ -11,7 +11,9 @@ const internalServerError = require('./utils/internal_server_error');
  */
 module.exports = (req, res, success_handler) => {
 
-    const splittedAuthorization = req.headers.authorization ? req.headers.authorization.split(' ') : [];
+    const splittedAuthorization = req.headers.authorization ?
+        req.headers.authorization.split(' ') :
+        [];
 
     if (splittedAuthorization[0] &&
         splittedAuthorization[1] &&
