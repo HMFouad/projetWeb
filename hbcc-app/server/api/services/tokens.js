@@ -15,23 +15,14 @@ const encrypt = require("../utils/encrypt");
  * @param {*} serviceRes result of the express service
  */
 function createToken (serviceRes, handleCreation) {
-    const newToken = jwt.sign('newToken', secretcode.SECRET_CODE);
+    const newToken = jwt.sign(Math.random(), secretcode.SECRET_CODE);
     Token.findOne({ value: newToken }, (errToken, token) => {
         if (errToken) {
             internalServerError(serviceRes);
         }
         else if (token) {
-            User.findOne({ authToken: token._id }, (errUser, user) => {
-                if (errUser) {
-                    internalServerError(serviceRes);
-                }
-                else if (user) {
-                    createToken(serviceRes, handleCreation);
-                }
-                else {
-                    handleCreation (newToken);
-                }
-            });
+            console.log('!!!!!!!!!!!!!!!!!');
+            createToken(serviceRes, handleCreation);
         }
         else {
             handleCreation (newToken);
@@ -47,8 +38,8 @@ router.post("/tokens", (req, res) => {
     user.password = req.body.password;
     if (user.email === null || user.password === null) {
         res
-        .status(statuscode.BAD_REQUEST)
-        .json({ success: false, message: "Missing email or password" });
+            .status(statuscode.BAD_REQUEST)
+            .json({ success: false, message: "Missing email or password" });
     }
     else {
         User.findOne({ email: user.email, password: encrypt(user.password) }, function(err, user) {
@@ -74,6 +65,7 @@ router.post("/tokens", (req, res) => {
                     });
 
                     newToken.save((tokenErr, token) => {
+                        console.log (token)
                         if (tokenErr) {
                             internalServerError(res);
                         }
@@ -82,24 +74,26 @@ router.post("/tokens", (req, res) => {
                             User.update({ _id: user._id }, {
                                 authToken: token._id
                             }, (userUpdateErr, userUpdated) => {
-                                if (userUpdateErr) {
+                                if (userUpdateErr || !userUpdated) {
                                     internalServerError(res);
                                 }
-                                console.log("catch");
-                                console.log(user._id);
-                                console.log(userUpdateErr);
-                                console.log(userUpdated);
+                                else {
+                                    res
+                                        .status(statuscode.SUCCESS)
+                                        .json({
+                                            success: true,
+                                            message: "SUCCESS",
+                                            authToken: {
+                                                value: token.value,
+                                                expiresAt: token.expiresAt
+                                            },
+                                            user: user._id
+                                        });
+                                }
                             });
                         }
                     });
-                    res
-                        .status(statuscode.SUCCESS)
-                        .json({
-                            success: true,
-                            message: "SUCCESS",
-                            authToken: user.authToken,
-                            user: user._id
-                        });
+                   
                 });
             }
         });
