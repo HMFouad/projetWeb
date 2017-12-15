@@ -1,37 +1,21 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const path = require('path');
 const http = require('http');
-const app = express();
-const dbConnection = require ('./api/mongoose/connection');
-const mongoose = require('mongoose');
-const apiRouting = require('./api/api');
+const constants = require('./constants');
+const router = require('./router');
 
-// set mongoose promise
-mongoose.Promise = global.Promise;
+const server = http.createServer(router);
+const dbConnection = require('./mongoose/db-connection').connect;
+const dbDisconnect = require('./mongoose/db-connection').disconnect;
+const dbConfig = require('./mongoose/db-config').default;
 
-// Parsers
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+const port = constants.HOST_PORT;
 
-// Angular DIST output folder
-app.use(express.static(path.join(__dirname, '../dist')));
-
-// API location
-app.use('/api', apiRouting);
-
-// Send all other requests to the Angular app
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../dist'));
+server.listen(port, () => {
+    console.log(`Running on localhost:${port}`);
+    dbConnection(dbConfig)
+        .then(() => console.log(`Database connection launched`),
+              () => console.log(`Database connection failed`));
 });
 
-//Set Port
-const port = process.env.PORT || '8080';
-app.set('port', port);
-
-const server = http.createServer(app);
-
-server.listen(port, () => console.log(`Running on localhost:${port}`));
-
-// Connection to the database
-dbConnection();
+process.on('SIGINT', () => {
+    dbDisconnect();
+});

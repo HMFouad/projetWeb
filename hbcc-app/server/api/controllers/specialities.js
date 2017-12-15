@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const Speciality = require('../mongoose/model/speciality.model');
+const Speciality = require('../../mongoose/model/speciality.model');
 
 // Get users
 router.get('/specialities', (req, res, next) => {

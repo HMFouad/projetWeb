@@ -1,6 +1,6 @@
 const statuscode = require('../../status-code');
-const User = require('../mongoose/model/user.model');
-const Token = require('../mongoose/model/token.model');
+const User = require('../../mongoose/model/user.model');
+const Token = require('../../mongoose/model/token.model');
 const internalServerError = require('../utils/internal_server_error');
 
 /**

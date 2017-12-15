@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../mongoose/model/user.model");
+const User = require("../../mongoose/model/user.model");
 const statuscode = require("../../status-code");
-const Token = require("../mongoose/model/token.model");
-const tokendelay = require("../token_config");
-const secretcode = require("../secret_code");
+const Token = require("../../mongoose/model/token.model");
+const constants = require("../../constants");
+const secretcode = require("../../constants");
 const jwt = require("jsonwebtoken");
 const internalServerError = require("../utils/internal_server_error");
 const encrypt = require("../utils/encrypt");
@@ -21,7 +21,6 @@ function createToken (serviceRes, handleCreation) {
             internalServerError(serviceRes);
         }
         else if (token) {
-            console.log('!!!!!!!!!!!!!!!!!');
             createToken(serviceRes, handleCreation);
         }
         else {
@@ -32,11 +31,11 @@ function createToken (serviceRes, handleCreation) {
 
 // Sign in service
 router.post("/tokens", (req, res) => {
-    console.log("Service POST /tokens");
     const user = new User();
     user.email = req.body.email;
     user.password = req.body.password;
-    if (user.email === null || user.password === null) {
+
+    if (!user.email || !user.password) {
         res
             .status(statuscode.BAD_REQUEST)
             .json({ success: false, message: "Missing email or password" });
@@ -61,11 +60,10 @@ router.post("/tokens", (req, res) => {
 
                     const newToken = new Token({
                         value: tokenValue,
-                        expiresAt: new Date (expiresAt.getTime() + tokendelay.TOKEN_DELAY * oneSecond)
+                        expiresAt: new Date (expiresAt.getTime() + constants.TOKEN_DELAY * oneSecond)
                     });
 
                     newToken.save((tokenErr, token) => {
-                        console.log (token)
                         if (tokenErr) {
                             internalServerError(res);
                         }
@@ -93,7 +91,7 @@ router.post("/tokens", (req, res) => {
                             });
                         }
                     });
-                   
+
                 });
             }
         });
