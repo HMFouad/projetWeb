@@ -59,6 +59,7 @@ export class HeaderComponent implements OnInit {
             this.httpClient.post('/api/tokens', this.loginForm.value, {
                 responseType: 'json'
             }).subscribe((response: any) => { // success
+                this.loginForm.reset();
                 localStorage.setItem(AppConstants.AUTH_TOKEN_VALUE_NAME, response.authToken.value);
                 localStorage.setItem(AppConstants.AUTH_TOKEN_EXPIRATION_NAME, response.authToken.expiresAt);
                 localStorage.setItem(AppConstants.USER_ID_NAME, response.user);

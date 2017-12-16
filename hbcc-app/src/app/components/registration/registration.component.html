@@ -19,6 +19,7 @@
                                    id="field-first-name"
                                    name="firstName"
                                    class="form-control"
+                                   [ngClass]="{'is-invalid': firstName.invalid && (firstName.touched || signUpFormSubmitted)}"
                                    formControlName="firstName"/>
 
                             <div *ngIf="firstName.invalid && (firstName.touched || signUpFormSubmitted)"
@@ -35,6 +36,7 @@
                                    id="field-last-name"
                                    name="lastName"
                                    class="form-control"
+                                   [ngClass]="{'is-invalid': lastName.invalid && (lastName.touched || signUpFormSubmitted)}"
                                    formControlName="lastName"/>
 
                             <div *ngIf="lastName.invalid && (lastName.touched || signUpFormSubmitted)"
@@ -51,6 +53,7 @@
                             <input id="field-email"
                                    type="email"
                                    name="email"
+                                   [ngClass]="{'is-invalid': email.invalid && (email.touched || signUpFormSubmitted)}"
                                    class="form-control"
                                    formControlName="email"/>
 
@@ -74,6 +77,7 @@
                         <div class="col-md-7">
                             <select name="speciality"
                                     id="field-speciality"
+                                    [ngClass]="{'is-invalid': speciality.invalid && (speciality.touched || signUpFormSubmitted)}"
                                     class="form-control custom-select"
                                     [formControlName]="'speciality'">
                                 <option *ngFor="let speciality of specialities" [value]="speciality._id">{{ speciality.name }}</option>
@@ -95,6 +99,7 @@
                             <input type="password"
                                    name="password"
                                    class="form-control"
+                                   [ngClass]="{'is-invalid': password.invalid && (password.touched || signUpFormSubmitted)}"
                                    id="field-password"
                                    formControlName="password"/>
 
@@ -115,6 +120,7 @@
                             <input type="password"
                                    name="confirmPassword"
                                    class="form-control"
+                                   [ngClass]="{'is-invalid': confirmPassword.invalid && (confirmPassword.touched || signUpFormSubmitted)}"
                                    id="field-confirm-password"
                                    formControlName="confirmPassword"/>
 

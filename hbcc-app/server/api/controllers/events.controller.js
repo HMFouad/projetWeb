@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const fs = require('fs');
 const icalParser = require('ical');
 const Event = require('../../mongoose/model/event.model');
+const Speciality = require('../../mongoose/model/speciality.model');
 const statusCodes = require('../../status-codes');
 const checkAuth = require ('../utils/check-auth');
-const throwInternalServerError = require("../utils/internal_server_error");
+const throwInternalServerError = require("../utils/throw-internal-server-error");
 
 /**
  * Get student events,
@@ -14,74 +14,84 @@ const throwInternalServerError = require("../utils/internal_server_error");
  *  * beginDate (ISO Date) (optional)
  *  * endDate (ISO Date) (optional)
  */
-router.get('/events', (req, res, next) => {
-    console.log ('Api service call: GET events');
+router.get('/events', (req, res) => {
+    console.log('Api service call: GET events');
 
     const ICS_TYPE_WANTED = 'VEVENT';
 
-    // TODO
-    fs.readFile(FILE_PATH, { encoding: "utf8" }, (err, data) => {
-        if (err) {
-            return next(err);
-        }
-
-        const events = [];
-
-        const parsedEvents = icalParser.parseICS(data);
-
-        const beginRequestedDate = new Date (req.query.beginDate);
-        const endRequestedDate = new Date (req.query.endDate);
+    // TODO GET User events
+    checkAuth(req).then((user) => {
+        const beginRequestedDate = new Date(req.query.beginDate);
+        const endRequestedDate = new Date(req.query.endDate);
 
         // if beginRequestedDate given, check if it is valid
         if (typeof req.query.beginDate === typeof '' &&
             (!(beginRequestedDate instanceof Date) || isNaN(beginRequestedDate.getTime()))) {
             res.status(statusCodes.BAD_REQUEST)
-               .json({
-                   success: false,
-                   message: `'beginDate' parameter should follow ISO standard.`
-               });
+                .json({
+                    success: false,
+                    message: `'beginDate' parameter should follow ISO standard.`
+                });
         }
         // if endRequestedDate given, check if it is valid
         else if (typeof req.query.beginDate === typeof '' &&
-                 (!(endRequestedDate instanceof Date) || isNaN(endRequestedDate.getTime()))) {
+            (!(endRequestedDate instanceof Date) || isNaN(endRequestedDate.getTime()))) {
             res.status(statusCodes.BAD_REQUEST)
-               .json({
-                   success: false,
-                   message: 'endDate parameter should follow ISO standard.'
-               });
+                .json({
+                    success: false,
+                    message: 'endDate parameter should follow ISO standard.'
+                });
         }
         else {
-            for (const indexEvent in parsedEvents) {
-                if (parsedEvents.hasOwnProperty(indexEvent) &&
-                    parsedEvents[indexEvent].type === ICS_TYPE_WANTED) {
-
-                    const eventBeginDate = new Date(parsedEvents[indexEvent].start);
-                    const eventEndDate = new Date(parsedEvents[indexEvent].end);
-
-                    if ((typeof req.query.beginDate !== typeof '' || eventEndDate.getTime() > beginRequestedDate.getTime()) &&
-                        (typeof req.query.endDate !== typeof '' || eventBeginDate.getTime() < endRequestedDate.getTime())) {
-                        const currentEvent = new Event();
-
-                        if (parsedEvents[indexEvent].description) {
-                            const splittedDescription = parsedEvents[indexEvent].description.split('\n');
-                            currentEvent.description = splittedDescription[0];
-                        }
-
-                        if (parsedEvents[indexEvent].location) {
-                            currentEvent.location = parsedEvents[indexEvent].location;
-                        }
-
-                        currentEvent.start = eventBeginDate;
-                        currentEvent.end = eventEndDate;
-
-                        events.push(currentEvent);
-                    }
+            Speciality.findOne({ _id: user.speciality }, (speErr, speciality) => {
+                if (speErr || !speciality) {
+                    throwInternalServerError(res);
                 }
-            }
+                else {
+                    icalParser.fromURL(speciality.url, {}, (errIcs, parsedEvents) => {
+                        if (errIcs) {
+                            throwInternalServerError(res);
+                        }
+                        else {
+                            const events = [];
 
-            // send result
-            res.json (events);
+                            for (const indexEvent in parsedEvents) {
+                                if (parsedEvents.hasOwnProperty(indexEvent) &&
+                                    parsedEvents[indexEvent].type === ICS_TYPE_WANTED) {
+
+                                    const eventBeginDate = new Date(parsedEvents[indexEvent].start);
+                                    const eventEndDate = new Date(parsedEvents[indexEvent].end);
+
+                                    if ((typeof req.query.beginDate !== typeof '' || eventEndDate.getTime() > beginRequestedDate.getTime()) &&
+                                        (typeof req.query.endDate !== typeof '' || eventBeginDate.getTime() < endRequestedDate.getTime())) {
+                                        const currentEvent = new Event();
+
+                                        if (parsedEvents[indexEvent].description) {
+                                            const splittedDescription = parsedEvents[indexEvent].description.split('\n');
+                                            currentEvent.description = splittedDescription[0];
+                                        }
+
+                                        if (parsedEvents[indexEvent].location) {
+                                            currentEvent.location = parsedEvents[indexEvent].location;
+                                        }
+
+                                        currentEvent.start = eventBeginDate;
+                                        currentEvent.end = eventEndDate;
+
+                                        events.push(currentEvent);
+                                    }
+                                }
+                            }
+
+                            // send result
+                            res.json(events);
+                        }
+                    });
+                }
+            });
         }
+    }).catch((throwErr) => {
+        throwErr(res);
     });
 
 });
@@ -90,7 +100,7 @@ router.get('/events', (req, res, next) => {
 
 router.post('/events', (req, res) => {
     console.log ('Api service call: POST events');
-    if (!req.body.description || !req.body.start || !req.body.end ){
+    if (!req.body.description || !req.body.start || !req.body.end ) {
         res.status(statusCodes.BAD_REQUEST)
             .json({
                 success: false,
@@ -98,28 +108,32 @@ router.post('/events', (req, res) => {
             });
     }
     else {
-        checkAuth(req, res, (user) => {
-            //Create event
-            const event = new Event({
-                description: req.body.description,
-                location: req.body.location,
-                start: req.body.start,
-                end: req.body.end,
-                userId: user._id
+        checkAuth(req)
+            .then((user) => {
+                //Create event
+                const event = new Event({
+                    description: req.body.description,
+                    location: req.body.location,
+                    start: req.body.start,
+                    end: req.body.end,
+                    userId: user._id
+                });
+                //Insert in db
+                event.save(function (err) {
+                    if (err) {
+                        throwInternalServerError(res);
+                    }
+                    else {
+                        res.status(statusCodes.SUCCESS)
+                            .json({
+                                success: true,
+                                message: "SUCCESS" } );
+                    }
+                });
+            })
+            .catch((throwError) => {
+                throwError(res);
             });
-            //Insert in db
-            event.save(function (err) {
-                if (err) {
-                    throwInternalServerError(res);
-                }
-                else {
-                    res.status(statusCodes.SUCCESS)
-                        .json({
-                            success: true,
-                            message: "SUCCESS" } );
-                }
-            });
-        });
     }
 });
 

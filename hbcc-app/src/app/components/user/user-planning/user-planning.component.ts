@@ -1,6 +1,7 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {EventData} from 'app/model/event-data.model';
+import {AppConstants} from "@app/app-constants";
 
 @Component({
   selector: 'hbcc-user-planning',
@@ -41,8 +42,12 @@ export class UserPlanningComponent implements OnInit {
         this.viewDate = new Date();
         this.displayedEvents = [];
 
-        // TODO GET User events
-        this.httpClient.get('/api/events').subscribe((events: Array<any>) => {
+        this.httpClient.get('/api/events', {
+            headers: {
+                responseType: 'json',
+                Authorization: `Bearer ${localStorage.getItem(AppConstants.AUTH_TOKEN_VALUE_NAME)}`
+            }
+        }).subscribe((events: Array<any>) => {
             this.displayedEvents = [];
             for (const eventObj of events) {
                 this.displayedEvents.push({
