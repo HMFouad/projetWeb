@@ -19,7 +19,7 @@ describe('Tests for tokens', () => {
                 .post(servicePath)
                 .end((err, res) => {
                     // TODO
-                    //done();
+                    done();
                 });
         });
     });

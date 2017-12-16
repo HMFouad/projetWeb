@@ -49,7 +49,7 @@ router.post('/users', (req, res) => {
         !givenLastName ||
         !givenSpecialityId) {
         res.status(statusCodes.BAD_REQUEST)
-           .json({ success: false, message: 'un paramètre est manquant.' });
+           .json({ success: false, message: 'un paramètre est manquant.', body: req.body });
     }
     else if (!validator.isEmail(givenEmail)) {
         res.status(statusCodes.BAD_REQUEST)
