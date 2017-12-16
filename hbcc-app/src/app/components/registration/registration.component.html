@@ -42,7 +42,7 @@
                                 class="form-control custom-select"
                                 formControlName="speciality">
                             <option selected="selected" [ngValue]="null">speciality</option>
-                            <option *ngFor="let speciality of specialities" [value]="speciality.name">{{ speciality.name }}</option>
+                            <option *ngFor="let speciality of specialities" [value]="speciality._id">{{ speciality.name }}</option>
                         </select>
                     </div>
 

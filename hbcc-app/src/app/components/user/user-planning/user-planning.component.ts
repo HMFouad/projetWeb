@@ -75,9 +75,6 @@ export class UserPlanningComponent implements OnInit {
                     events: localDisplayedEvents,
                     themeSystem: 'bootstrap3',
                     dragScroll: false,
-                    eventClick: () => {
-
-                    },
                     eventAfterAllRender: ($calendar) => {
                         const $header = $calendar.el
                             .find('.fc-head > tr > .fc-head-container > div')
