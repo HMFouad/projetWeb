@@ -4,6 +4,10 @@
     "license": "MIT",
     "scripts": {
         "start": "./RUN.sh prod",
+        "start:prod": "./RUN.sh prod",
+        "start:dev": "./RUN.sh dev",
+        "start:api:dev": "cd server && pm2-dev start server.js",
+        "build:app:dev": "ng build -dev --watch",
         "e2e": "ng e2e",
         "test:api": "mocha --reporter spec --timeout 10000 ./server/tests/setup.js ./server/tests/**/*.spec.js"
     },

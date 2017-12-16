@@ -40,9 +40,8 @@ router.post("/tokens", (req, res) => {
     };
 
     if (!user.email || !user.password) {
-        res
-            .status(statusCodes.BAD_REQUEST)
-            .json({ success: false, message: "Missing email or password" });
+        res.status(statusCodes.BAD_REQUEST)
+           .json({ success: false, message: "Missing email or password" });
     }
     else {
         User.findOne({ email: user.email, password: encrypt(user.password) }, function(err, user) {

@@ -20,8 +20,6 @@ paths:
       summary: Add a new user
       description: ''
       operationId: addUser
-      produces:
-        - application/json
       parameters:
         - name: body
           in: body
@@ -38,41 +36,31 @@ paths:
           description: Bad request
           schema:
             $ref: '#/definitions/ApiResponse'
-securityDefinitions:
-  petstore_auth:
-    type: oauth2
-    authorizationUrl: 'http://petstore.swagger.io/oauth/dialog'
-    flow: implicit
-    scopes:
-      'write:pets': modify pets in your account
-      'read:pets': read your pets
-  api_key:
-    type: apiKey
-    name: api_key
-    in: header
 definitions:
   User:
     type: object
     properties:
-      id:
-        type: string
-        required: false
       email:
         type: string
         pattern: '^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)+$'
         description: 'The email of the user. Shoul be format as an email.'
+        example: 'hbxx@example.com'
       firstName:
         type: string
-        description: The first name of the user.
+        description: 'The first name of the user.'
+        example: 'User'
       lastName:
         type: string
-        description: The last name of the user.
+        description: 'The last name of the user.'
+        example: 'Test'
       plainPassword:
         type: string
-        description: The plain password of the user.
+        description: 'The plain password of the user.'
+        example: '123456'
       speciality:
         type: string
-        description: Id of the user speciality.
+        description: 'Id of the user speciality.'
+        example: '564d68d761121zd'
   Speciality:
     type: object
     properties:

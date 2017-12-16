@@ -1,4 +1,4 @@
-const statuscode = require("../../status-codes");
+const statusCodes = require("../../status-codes");
 
 /**
  * Send the error 500 (internal server error), with the given result object.
@@ -6,7 +6,7 @@ const statuscode = require("../../status-codes");
  */
 function throwInternalServerError(serverRes) {
     serverRes
-        .status(statuscode.INTERNAL_SERVER_ERROR)
+        .status(statusCodes.INTERNAL_SERVER_ERROR)
         .json({ success: false, message: "Internal server error" });
 }
 

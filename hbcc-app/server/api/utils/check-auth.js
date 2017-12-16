@@ -1,4 +1,4 @@
-const statuscode = require('../../status-codes');
+const statusCodes = require('../../status-codes');
 const User = require('../../mongoose/model/user.model');
 const Token = require('../../mongoose/model/token.model');
 const internalServerError = require('./throw-internal-server-error');
@@ -25,7 +25,7 @@ module.exports = (req, res, success_handler) => {
                 internalServerError(res);
             }
             else if (!token) {
-                res.status(statuscode.FORBIDDEN).json({ success: false, message: "Can't access" });
+                res.status(statusCodes.FORBIDDEN).json({ success: false, message: "Can't access" });
             }
             else {
                 const tokenExpiration = new Date (token.expiresAt);
@@ -36,7 +36,7 @@ module.exports = (req, res, success_handler) => {
                             internalServerError(res);
                         }
                         else if (!user) {
-                            res.status(statuscode.FORBIDDEN).json({ success: false, message: "Can't access" });
+                            res.status(statusCodes.FORBIDDEN).json({ success: false, message: "Can't access" });
                         }
                         else {
                             success_handler(user);
@@ -44,12 +44,12 @@ module.exports = (req, res, success_handler) => {
                     });
                 }
                 else { // token invalid
-                    res.status(statuscode.FORBIDDEN).json({ success: false, message: "Token has expired" });
+                    res.status(statusCodes.FORBIDDEN).json({ success: false, message: "Token has expired" });
                 }
             }
         });
     }
     else {
-        res.status(statuscode.FORBIDDEN).json({ success: false, message: "Can't access" });
+        res.status(statusCodes.FORBIDDEN).json({ success: false, message: "Can't access" });
     }
 };

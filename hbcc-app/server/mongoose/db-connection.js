@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 
-let db;
-
 /**
  * Make a database connection.
  * Set all default config for mongoose.
