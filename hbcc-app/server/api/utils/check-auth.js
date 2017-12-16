@@ -1,7 +1,7 @@
-const statuscode = require('../../status-code');
+const statuscode = require('../../status-codes');
 const User = require('../../mongoose/model/user.model');
 const Token = require('../../mongoose/model/token.model');
-const internalServerError = require('../utils/internal_server_error');
+const internalServerError = require('./throw-internal-server-error');
 
 /**
  * Check given authentification token & return api error if invalid

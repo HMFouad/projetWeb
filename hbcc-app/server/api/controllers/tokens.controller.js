@@ -1,13 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../../mongoose/model/user.model");
-const statuscode = require("../../status-code");
+const statusCodes = require("../../status-codes");
 const Token = require("../../mongoose/model/token.model");
 const constants = require("../../constants");
-const secretcode = require("../../constants");
-const jwt = require("jsonwebtoken");
-const internalServerError = require("../utils/internal_server_error");
+const throwInternalServerError = require("../utils/throw-internal-server-error");
 const encrypt = require("../utils/encrypt");
+const generateToken = require('../utils/generate-token');
 
 /**
  * Call handleCreation function with a newToken which doesn't already exist
@@ -15,40 +14,44 @@ const encrypt = require("../utils/encrypt");
  * @param {*} serviceRes result of the express service
  */
 function createToken (serviceRes, handleCreation) {
-    const newToken = jwt.sign(Math.random(), secretcode.SECRET_CODE);
-    Token.findOne({ value: newToken }, (errToken, token) => {
+    const newTokenValue = generateToken();
+    Token.findOne({ value: newTokenValue }, (errToken, token) => {
         if (errToken) {
-            internalServerError(serviceRes);
+            throwInternalServerError(serviceRes);
         }
         else if (token) {
             createToken(serviceRes, handleCreation);
         }
         else {
-            handleCreation (newToken);
+            handleCreation (newTokenValue);
         }
     });
 }
 
-// Sign in service
+/**
+ * Save an authentication tokens if given credentials correspond.
+ * Required parameters:
+ *  * body -> email (string), password (string)
+ */
 router.post("/tokens", (req, res) => {
-    const user = new User();
-    user.email = req.body.email;
-    user.password = req.body.password;
+    const user = {
+        email: req.body.email,
+        password: `${req.body.password}`
+    };
 
     if (!user.email || !user.password) {
         res
-            .status(statuscode.BAD_REQUEST)
+            .status(statusCodes.BAD_REQUEST)
             .json({ success: false, message: "Missing email or password" });
     }
     else {
         User.findOne({ email: user.email, password: encrypt(user.password) }, function(err, user) {
             if (err) {
-                internalServerError(res);
+                throwInternalServerError(res);
             }
             else if (!user) {
-                res
-                .status(statuscode.UNAUTHORIZED)
-                .json({ success: false, message: "Invalid login or password" });
+                res.status(statusCodes.UNAUTHORIZED)
+                   .json({ success: false, message: 'Invalid login or password.' });
             }
             else {
                 createToken(res, (tokenValue) => {
@@ -65,19 +68,18 @@ router.post("/tokens", (req, res) => {
 
                     newToken.save((tokenErr, token) => {
                         if (tokenErr) {
-                            internalServerError(res);
+                            throwInternalServerError(res);
                         }
                         else {
-                            console.log("on update le user");
                             User.update({ _id: user._id }, {
                                 authToken: token._id
                             }, (userUpdateErr, userUpdated) => {
                                 if (userUpdateErr || !userUpdated) {
-                                    internalServerError(res);
+                                    throwInternalServerError(res);
                                 }
                                 else {
                                     res
-                                        .status(statuscode.SUCCESS)
+                                        .status(statusCodes.SUCCESS)
                                         .json({
                                             success: true,
                                             message: "SUCCESS",
@@ -98,11 +100,13 @@ router.post("/tokens", (req, res) => {
     }
 });
 
-// Sign in service
+/**
+ * TODO
+ */
 router.delete("/tokens", (req, res) => {
     // TODO implements
     res
-        .status(statuscode.BAD_REQUEST)
+        .status(statusCodes.BAD_REQUEST)
         .json({
             success: false,
             message: "Service not implemented"

@@ -3,18 +3,14 @@
     "version": "0.0.0",
     "license": "MIT",
     "scripts": {
-        "ng": "ng",
-        "start": "ng serve",
-        "build": "ng build",
-        "test": "ng test",
-        "lint": "ng lint",
+        "start": "./RUN.sh prod",
         "e2e": "ng e2e",
         "test:api": "mocha --reporter spec --timeout 10000 ./server/tests/setup.js ./server/tests/**/*.spec.js"
     },
     "private": true,
     "dependencies": {
         "@angular/animations": "^5.0.0",
-        "@angular/cli": "^1.5.5",
+        "@angular/cli": "^1.6.1",
         "@angular/common": "^5.0.0",
         "@angular/compiler": "5.0.3",
         "@angular/core": "5.0.3",
@@ -23,6 +19,7 @@
         "@angular/platform-browser": "^5.0.0",
         "@angular/platform-browser-dynamic": "^5.0.0",
         "@angular/router": "^5.0.0",
+        "base64url": "^2.0.0",
         "body-parser": "^1.18.2",
         "bootstrap": "^4.0.0-beta.2",
         "chai": "^4.1.2",
@@ -44,6 +41,7 @@
         "popper.js": "^1.12.9",
         "request": "^2.83.0",
         "rxjs": "^5.5.0",
+        "validator": "^9.2.0",
         "zone.js": "^0.8.4"
     },
     "devDependencies": {

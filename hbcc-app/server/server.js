@@ -20,7 +20,7 @@ server.listen(port, () => {
               () => console.log(`Database connection failed`));
 });
 
-// disconnect on ^C
+// disconnect on Ctrl-C
 process.on('SIGINT', () => {
     dbDisconnect();
 });

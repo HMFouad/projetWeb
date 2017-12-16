@@ -26,8 +26,8 @@ router.get('/specialities', (req, res, next) => {
         res.json(returned);
     });
 });
-/*
-router.post('/specialities',(req,res)=>{
+
+/*router.post('/specialities', (req, res) => {
     const tab = [ { name: "4TGL901S", url: "https://hackjack.info/et/Master2_4TGL901S/ical" },
                   { name: "INF501 A", url: "https://hackjack.info/et/INF501_A/ical" },
                   { name: "INF501 A1 ", url: "https://hackjack.info/et/INF501_A1/ical" },
@@ -55,7 +55,7 @@ router.post('/specialities',(req,res)=>{
         }
         res.status(200).json({success: true, message: "SUCCESS" });
 
-});*/
-
+});
+*/
 
 module.exports = router;

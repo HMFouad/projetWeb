@@ -11,9 +11,9 @@ module.exports = {
         password: 'hbcc2017'
     },
     test: {
-        host: 'ds145230.mlab.com',
-        port: '45230',
-        name: 'hbcc_db',
+        host: 'ds059546.mlab.com',
+        port: '59546',
+        name: 'hbcc_test_db',
         username: 'hbcc',
         password: 'hbcc2017'
     }

@@ -3,7 +3,7 @@ const router = express.Router();
 const fs = require('fs');
 const icalParser = require('ical');
 const Event = require('../../mongoose/model/event.model');
-const status_code = require('../../status-code');
+const status_code = require('../../status-codes');
 
 // get static file
 const FILE_PATH = "Master2_4TGL901S_iCalendar.ics";
@@ -38,7 +38,7 @@ router.get('/events', (req, res, next) => {
             res.status(status_code.BAD_REQUEST)
                .json({
                    success: false,
-                   message: 'beginDate parameter should follow ISO standard.'
+                   message: `'beginDate' parameter should follow ISO standard.`
                });
         }
         // if endRequestedDate given, check if it is valid

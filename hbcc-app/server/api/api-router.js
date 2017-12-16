@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const usersRoutes = require('./controllers/users');
-const tokensRoutes = require('./controllers/tokens');
-const eventsRoutes = require('./controllers/events');
-const specialitiesRoutes = require('./controllers/specialities');
+const usersRoutes = require('./controllers/users.controller');
+const tokensRoutes = require('./controllers/tokens.controller');
+const eventsRoutes = require('./controllers/events.controller');
+const specialitiesRoutes = require('./controllers/specialities.controller');
 
 const EMPTY_ROUTE = '/';
 
