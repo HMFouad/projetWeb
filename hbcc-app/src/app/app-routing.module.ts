@@ -13,7 +13,8 @@ const appRoutes: Routes = [
     { path: 'registration', canActivate: [UnAuthGuard], component: RegistrationComponent },
     { path: 'user', component: UserComponent, canActivate: [AuthGuard], children: [
         { path: 'planning', component: UserPlanningComponent },
-        { path: 'profile', component: UserProfileComponent }
+        { path: 'profile', component: UserProfileComponent },
+        { path: 'event', component: EventFormComponent }
     ]},
 
     {path: 'about', component: AboutComponent},

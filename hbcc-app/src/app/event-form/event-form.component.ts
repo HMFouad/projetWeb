@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import {AppConstants} from '@app/app-constants';
 
 @Component({
     selector: 'hbcc-event-form',
@@ -19,16 +20,20 @@ export class EventFormComponent implements OnInit {
     ngOnInit() {
     }
     saveEvent() {
-        console.log("Title "+this.description);
-        console.log("Location "+this.location);
-        console.log("Start date "+this.start);
-        console.log("End date "+this.end);
         const event = {description : this.description,
                         location: this.location,
-                        startDate: this.start,
-                        endDate: this.end};
-        console.log(event);
-        this.http.post('/api/events' , event).subscribe();
-        this.router.navigate(['/home']);
+                        start: this.start,
+                        end: this.end};
+        this.http.post('/api/events' , event,
+            {responseType: 'json', headers : { Authorization: `Bearer ${localStorage.getItem(AppConstants.AUTH_TOKEN_VALUE_NAME)}`}})
+            .subscribe((response) => { // success
+                this.router.navigate(['/user/planning']); },
+
+            (error) => { // error
+                this.router.navigate(['/user/planning']);
+            });
+
+
+
     }
 }

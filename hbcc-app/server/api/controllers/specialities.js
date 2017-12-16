@@ -1,19 +1,19 @@
 const express = require('express');
 const router = express.Router();
-
+const statuscode = require("../../status-code");
 const Speciality = require('../../mongoose/model/speciality.model');
+const internalServerError = require("../utils/internal_server_error");
+
 
 // Get users
-router.get('/specialities', (req, res, next) => {
+router.get('/specialities', (req, res) => {
     console.log("On essaye de récup les spe");
 
     Speciality.find(function (err, specialities) {
-        // TODO gestion d'erreur
         if (err) {
-            console.log("err");
-            return next(err);
-        }
+            return internalServerError(res);
 
+        }
         const returned = [];
 
         for (const spe of specialities) {
@@ -22,8 +22,21 @@ router.get('/specialities', (req, res, next) => {
                 _id: spe._id
             });
         }
-
-        res.json(returned);
+        if (returned === []) {
+            return res
+                .status(statuscode.NOT_FOUND)
+                .json({
+                    success: false,
+                    message: "SPECIALITIES NOT FOUND",
+                });
+        }
+       return res
+           .status(statuscode.SUCCESS)
+           .json({
+               success: true,
+               message: "SUCCESS",
+               returned: returned
+           });
     });
 });
 /*
