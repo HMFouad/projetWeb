@@ -1,15 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const usersRoutes = require('./controllers/users');
-const tokensRoutes = require('./controllers/tokens');
-const eventsRoutes = require('./controllers/events');
-const specialitiesRoutes = require('./controllers/specialities');
+const controllers = [
+    require('./controllers/users.controller'),
+    require('./controllers/tokens.controller'),
+    require('./controllers/events.controller'),
+    require('./controllers/specialities.controller')
+];
 
-const EMPTY_ROUTE = '/';
-
-router.use(EMPTY_ROUTE, usersRoutes);
-router.use(EMPTY_ROUTE, tokensRoutes);
-router.use(EMPTY_ROUTE, eventsRoutes);
-router.use(EMPTY_ROUTE, specialitiesRoutes);
+// attach all controllers
+for (const controller of controllers) {
+    router.use('/', controller);
+}
 
 module.exports = router;

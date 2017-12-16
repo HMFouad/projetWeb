@@ -2,12 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const router = express();
-const dbConnection = require ('./mongoose/db-connection');
 const apiRouting = require('./api/api-router');
-const constants = require('./constants');
-
-const dbConfigProd = require('./mongoose/db-config');
-const dbConfigTest = require('./mongoose/db-config');
+const statusCodes = require('./status-codes');
 
 // Parsers
 router.use(bodyParser.json());
@@ -22,6 +18,12 @@ router.use('/api', apiRouting);
 // Send all other requests to the Angular router
 router.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../dist'));
+});
+
+// throw error if path is not known
+router.use((req, res) => {
+    res.status(statusCodes.NOT_FOUND)
+       .json({ message: 'Page not found.' });
 });
 
 module.exports = router;

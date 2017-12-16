@@ -8,11 +8,11 @@ if [[ "$1" == "dev" || "$1" == "prod" ]]; then
     if [[ "$1" == "dev" ]]; then
 
         # build angular app with dev mode and watch
-        ng build -dev --watch &
+        yarn run build:app:dev &
 
         # deploy express app with a watch
         # cd server to watch exclusively servers files
-        (cd server && ../node_modules/pm2/bin/pm2-dev start server.js) &
+        yarn run start:api:dev &
 
         # for the RUN.sh process stay alive
         while :

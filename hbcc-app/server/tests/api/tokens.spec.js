@@ -14,12 +14,12 @@ describe('Tests for tokens', () => {
     describe('POST /tokens', () => {
         const servicePath = `${apiPath}/tokens`;
 
-        it('Test: successful request', (done) => {
+        it('Successful request', (done) => {
             request(routerServer)
                 .post(servicePath)
                 .end((err, res) => {
                     // TODO
-                    //done();
+                    done();
                 });
         });
     });

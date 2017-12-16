@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const statuscode = require("../../status-code");
+const statuscode = require("../../status-codes");
 const Speciality = require('../../mongoose/model/speciality.model');
 const internalServerError = require("../utils/internal_server_error");
 

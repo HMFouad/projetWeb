@@ -1,7 +1,7 @@
-const statuscode = require('../../status-code');
+const statusCodes = require('../../status-codes');
 const User = require('../../mongoose/model/user.model');
 const Token = require('../../mongoose/model/token.model');
-const internalServerError = require('../utils/internal_server_error');
+const internalServerError = require('./throw-internal-server-error');
 
 /**
  * Check given authentification token & return api error if invalid
@@ -24,36 +24,32 @@ module.exports = (req, res, success_handler) => {
             if (tokenErr) {
                 internalServerError(res);
             }
+            else if (!token) {
+                res.status(statusCodes.FORBIDDEN).json({ success: false, message: "Can't access" });
+            }
             else {
-                if (!token) {
-                    res.status(statuscode.FORBIDDEN).json({success: false, message: "Can't access"});
+                const tokenExpiration = new Date (token.expiresAt);
+                const now = new Date ();
+                if (tokenExpiration.getTime() > now.getTime()) {
+                    User.findOne({ authToken: token._id }, (userError, user) => {
+                        if (userError) {
+                            internalServerError(res);
+                        }
+                        else if (!user) {
+                            res.status(statusCodes.FORBIDDEN).json({ success: false, message: "Can't access" });
+                        }
+                        else {
+                            success_handler(user);
+                        }
+                    });
                 }
-                else {
-                    const tokenExpiration = new Date(token.expiresAt);
-                    const now = new Date();
-                    if (tokenExpiration.getTime() > now.getTime()) {
-                        User.findOne({authToken: token._id}, (userError, user) => {
-                            if (userError) {
-                                internalServerError(res);
-                            }
-                            else {
-                                if (!user) {
-                                    res.status(statuscode.FORBIDDEN).json({success: false, message: "Can't access"});
-                                }
-                                else {
-                                    success_handler(user);
-                                }
-                            }
-                        });
-                    }
-                    else { // token invalid
-                        res.status(statuscode.FORBIDDEN).json({success: false, message: "Token has expired"});
-                    }
+                else { // token invalid
+                    res.status(statusCodes.FORBIDDEN).json({ success: false, message: "Token has expired" });
                 }
             }
         });
     }
     else {
-        res.status(statuscode.FORBIDDEN).json({ success: false, message: "Can't access" });
+        res.status(statusCodes.FORBIDDEN).json({ success: false, message: "Can't access" });
     }
 };
