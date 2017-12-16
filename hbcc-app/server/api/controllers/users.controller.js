@@ -15,12 +15,19 @@ const router = express.Router();
 
 // Get users
 router.get('/users/:id', (req, res) => {
-    checkAuth(req, res, (user) => {
-        res.json({
-            success: true,
-            user: user
+    checkAuth(req)
+        .then((user) => {
+            if (user._id === req.params.id) {
+                res.json(user);
+            }
+            else {
+                res.status(statusCodes.UNAUTHORIZED)
+                    .json({ success: false, message: `Current user is not allowed to see other users` });
+            }
+        })
+        .catch((throwErr) => {
+            throwErr(res);
         });
-    });
 });
 
 /**
@@ -49,7 +56,7 @@ router.post('/users', (req, res) => {
         !givenLastName ||
         !givenSpecialityId) {
         res.status(statusCodes.BAD_REQUEST)
-           .json({ success: false, message: 'un paramètre est manquant.', body: req.body });
+           .json({ success: false, message: 'Un paramètre est manquant.', body: req.body });
     }
     else if (!validator.isEmail(givenEmail)) {
         res.status(statusCodes.BAD_REQUEST)
@@ -73,43 +80,47 @@ router.post('/users', (req, res) => {
                     }
                     else if (!speciality) {
                         res.status(statusCodes.BAD_REQUEST)
-                            .json({ success: false, message: 'La spécialité est inconnue.' });
+                            .json({ success: false, message: 'La spécialité donnée est inconnue.' });
                     }
                     else {
-                        // we create user
-                        const user = new User({
-                            email: givenEmail,
-                            password: encrypt(givenPassword.toString()),
-                            firstName: givenFirstName,
-                            lastName: givenLastName,
-                            speciality: speciality._id
-                        });
+                        encrypt(givenPassword.toString()).then((encryptedPassword) => {
+                            // we create user
+                            const user = new User({
+                                email: givenEmail,
+                                password: encryptedPassword,
+                                firstName: givenFirstName,
+                                lastName: givenLastName,
+                                speciality: speciality._id
+                            });
 
-                        user.save(function (userErr, results) {
-                            if (userErr || !results) {
-                                throwInternalServerError(res);
-                            }
-                            else {
-                                // if inscription succeed we call the POST tokens Service
-                                const authenticationRequest = {
-                                    url: `http://${req.headers.host}/api/tokens`,
-                                    method: 'POST',
-                                    form: {
-                                        email: req.body.email,
-                                        password: req.body.password
-                                    }
-                                };
+                            user.save(function (userErr, results) {
+                                if (userErr || !results) {
+                                    throwInternalServerError(res);
+                                }
+                                else {
+                                    // if inscription succeed we call the POST tokens Service
+                                    const authenticationRequest = {
+                                        url: `http://${req.headers.host}/api/tokens`,
+                                        method: 'POST',
+                                        form: {
+                                            email: req.body.email,
+                                            password: req.body.password
+                                        }
+                                    };
 
-                                request(authenticationRequest, (authErr, response, body) => {
-                                    if (authErr || response.status) {
-                                        throwInternalServerError(res);
-                                    }
-                                    else {
-                                        // we return exactly the response of POST tokens
-                                        res.json(JSON.parse(body));
-                                    }
-                                });
-                            }
+                                    request(authenticationRequest, (authErr, response, body) => {
+                                        if (authErr || response.status) {
+                                            throwInternalServerError(res);
+                                        }
+                                        else {
+                                            // we return exactly the response of POST tokens
+                                            res.json(JSON.parse(body));
+                                        }
+                                    });
+                                }
+                            });
+                        }).catch(() => {
+                            throwInternalServerError(res);
                         });
                     }
                 });

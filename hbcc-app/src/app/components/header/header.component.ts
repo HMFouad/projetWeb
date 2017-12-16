@@ -3,7 +3,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Router} from '@angular/router';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {AppConstants} from '@app/app-constants';
-import {AuthGuard} from "@app/guards/auth.guard";
+import {AuthGuard} from '@app/guards/auth.guard';
 
 @Component({
   selector: 'hbcc-header',
@@ -59,11 +59,11 @@ export class HeaderComponent implements OnInit {
             this.httpClient.post('/api/tokens', this.loginForm.value, {
                 responseType: 'json'
             }).subscribe((response: any) => { // success
+                this.loginForm.reset();
                 localStorage.setItem(AppConstants.AUTH_TOKEN_VALUE_NAME, response.authToken.value);
                 localStorage.setItem(AppConstants.AUTH_TOKEN_EXPIRATION_NAME, response.authToken.expiresAt);
                 localStorage.setItem(AppConstants.USER_ID_NAME, response.user);
                 this.checkUserConnected();
-
                 this.router.navigate(['user/planning']);
             }, (error) => { // error
                 console.log (error);

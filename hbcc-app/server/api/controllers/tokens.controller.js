@@ -1,11 +1,12 @@
 const express = require("express");
+const bcrypt = require('bcrypt');
 const router = express.Router();
 const User = require("../../mongoose/model/user.model");
 const statusCodes = require("../../status-codes");
 const Token = require("../../mongoose/model/token.model");
 const constants = require("../../constants");
+const checkAuth = require('../utils/check-auth');
 const throwInternalServerError = require("../utils/throw-internal-server-error");
-const encrypt = require("../utils/encrypt");
 const generateToken = require('../utils/generate-token');
 
 /**
@@ -34,81 +35,110 @@ function createToken (serviceRes, handleCreation) {
  *  * body -> email (string), password (string)
  */
 router.post("/tokens", (req, res) => {
-    const user = {
-        email: req.body.email,
-        password: `${req.body.password}`
-    };
+    const givenEmail = req.body.email;
+    const givenPassword = `${req.body.password}`;
 
-    if (!user.email || !user.password) {
+
+    if (!givenEmail || !givenPassword) {
         res.status(statusCodes.BAD_REQUEST)
-           .json({ success: false, message: "Missing email or password" });
+           .json({ success: false, message: "L'email et le mot de passe sont requis." });
     }
     else {
-        User.findOne({ email: user.email, password: encrypt(user.password) }, function(err, user) {
-            if (err) {
+        User.findOne({ email: givenEmail }, (errErr, user) => {
+            if (errErr) {
                 throwInternalServerError(res);
             }
             else if (!user) {
-                res.status(statusCodes.UNAUTHORIZED)
-                   .json({ success: false, message: 'Invalid login or password.' });
+                res.status(statusCodes.BAD_REQUEST)
+                    .json({
+                        success: false,
+                        message: `L'email et le mot de passe ne correspondent pas.`
+                    });
             }
             else {
-                createToken(res, (tokenValue) => {
+                bcrypt.compare(givenPassword, user.password, (errPassword, isRightPassword) => {
+                    if (errPassword) {
+                        throwInternalServerError(res);
+                    }
+                    else if (!isRightPassword) {
+                        res.status(statusCodes.BAD_REQUEST)
+                           .json({
+                               success: false,
+                               message: `L'email et le mot de passe ne correspondent pas.`
+                           });
+                    }
+                    else {
+                        createToken(res, (tokenValue) => {
 
-                    const expiresAt = new Date ();
+                            const expiresAt = new Date();
 
-                    // one second in milliseconds
-                    const oneSecond = 1000;
+                            // one second in milliseconds
+                            const oneSecond = 1000;
 
-                    const newToken = new Token({
-                        value: tokenValue,
-                        expiresAt: new Date (expiresAt.getTime() + constants.TOKEN_DELAY * oneSecond)
-                    });
+                            const newToken = new Token({
+                                value: tokenValue,
+                                expiresAt: new Date(expiresAt.getTime() + constants.TOKEN_DELAY * oneSecond)
+                            });
 
-                    newToken.save((tokenErr, token) => {
-                        if (tokenErr) {
-                            throwInternalServerError(res);
-                        }
-                        else {
-                            User.update({ _id: user._id }, {
-                                authToken: token._id
-                            }, (userUpdateErr, userUpdated) => {
-                                if (userUpdateErr || !userUpdated) {
+                            newToken.save((tokenErr, token) => {
+                                if (tokenErr) {
                                     throwInternalServerError(res);
                                 }
                                 else {
-                                    res
-                                        .status(statusCodes.SUCCESS)
-                                        .json({
-                                            success: true,
-                                            message: "SUCCESS",
-                                            authToken: {
-                                                value: token.value,
-                                                expiresAt: token.expiresAt
-                                            },
-                                            user: user._id
-                                        });
+                                    User.update({ _id: user._id }, {
+                                        authToken: token._id
+                                    }, (userUpdateErr, userUpdated) => {
+                                        if (userUpdateErr || !userUpdated) {
+                                            throwInternalServerError(res);
+                                        }
+                                        else {
+                                            res
+                                                .status(statusCodes.SUCCESS)
+                                                .json({
+                                                    success: true,
+                                                    message: "SUCCESS",
+                                                    authToken: {
+                                                        value: token.value,
+                                                        expiresAt: token.expiresAt
+                                                    },
+                                                    user: user._id
+                                                });
+                                        }
+                                    });
                                 }
                             });
-                        }
-                    });
 
+                        });
+                    }
                 });
             }
+        }).catch(() => {
+            // throw errer for password encryption
+            throwInternalServerError(res);
         });
     }
 });
 
 /**
- * TODO
+ * Logout service.
+ * Delete the given token in the database.
+ * The access token must be given in header Authorization field.
  */
 router.delete("/tokens", (req, res) => {
-    // TODO implements
-    res
-        .status(statusCodes.BAD_REQUEST)
-        .json({
-            success: false,
-            message: "Service not implemented"
+    checkAuth(req)
+        .then((user) => {
+            Token.remove({ _id: user.authToken._id }, (err) => {
+                if (err) {
+                    throwInternalServerError(res);
+                }
+                else {
+                    res.status(statusCodes.SUCCESS)
+                        .json({ success: true, message: "SUCCESS" });
+                }
+            });
+        })
+        .catch((throwErr) => {
+            throwErr(res);
         });
 });
 
