@@ -41,6 +41,7 @@
         "moment": "^2.19.3",
         "mongodb": "^2.2.33",
         "mongoose": "^4.13.4",
+        "ng2-datetime-picker": "^0.15.1",
         "pm2": "^2.8.0",
         "popper.js": "^1.12.9",
         "request": "^2.83.0",

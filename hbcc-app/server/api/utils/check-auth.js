@@ -1,7 +1,7 @@
 const statusCodes = require('../../status-codes');
 const User = require('../../mongoose/model/user.model');
 const Token = require('../../mongoose/model/token.model');
-const internalServerError = require('./throw-internal-server-error');
+const throwInternalServerError = require('./throw-internal-server-error');
 
 /**
  * Check given authentification token & return api error if invalid
@@ -22,7 +22,7 @@ module.exports = (req, res, success_handler) => {
         const token = splittedAuthorization[1];
         Token.findOne({ value: token }, (tokenErr, token) => {
             if (tokenErr) {
-                internalServerError(res);
+                throwInternalServerError(res);
             }
             else if (!token) {
                 res.status(statusCodes.FORBIDDEN).json({ success: false, message: "Can't access" });

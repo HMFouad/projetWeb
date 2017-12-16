@@ -3,10 +3,9 @@ const router = express.Router();
 const fs = require('fs');
 const icalParser = require('ical');
 const Event = require('../../mongoose/model/event.model');
-const status_code = require('../../status-codes');
-
-// get static file
-const FILE_PATH = "Master2_4TGL901S_iCalendar.ics";
+const statusCodes = require('../../status-codes');
+const checkAuth = require ('../utils/check-auth');
+const throwInternalServerError = require("../utils/internal_server_error");
 
 /**
  * Get student events,
@@ -20,6 +19,7 @@ router.get('/events', (req, res, next) => {
 
     const ICS_TYPE_WANTED = 'VEVENT';
 
+    // TODO
     fs.readFile(FILE_PATH, { encoding: "utf8" }, (err, data) => {
         if (err) {
             return next(err);
@@ -35,7 +35,7 @@ router.get('/events', (req, res, next) => {
         // if beginRequestedDate given, check if it is valid
         if (typeof req.query.beginDate === typeof '' &&
             (!(beginRequestedDate instanceof Date) || isNaN(beginRequestedDate.getTime()))) {
-            res.status(status_code.BAD_REQUEST)
+            res.status(statusCodes.BAD_REQUEST)
                .json({
                    success: false,
                    message: `'beginDate' parameter should follow ISO standard.`
@@ -44,7 +44,7 @@ router.get('/events', (req, res, next) => {
         // if endRequestedDate given, check if it is valid
         else if (typeof req.query.beginDate === typeof '' &&
                  (!(endRequestedDate instanceof Date) || isNaN(endRequestedDate.getTime()))) {
-            res.status(status_code.BAD_REQUEST)
+            res.status(statusCodes.BAD_REQUEST)
                .json({
                    success: false,
                    message: 'endDate parameter should follow ISO standard.'
@@ -85,5 +85,44 @@ router.get('/events', (req, res, next) => {
     });
 
 });
+
+
+
+router.post('/events', (req, res) => {
+    console.log ('Api service call: POST events');
+    if (!req.body.description || !req.body.start || !req.body.end ){
+        res.status(statusCodes.BAD_REQUEST)
+            .json({
+                success: false,
+                message: "Mauvaise réception des données de l'évènement."
+            });
+    }
+    else {
+        checkAuth(req, res, (user) => {
+            //Create event
+            const event = new Event({
+                description: req.body.description,
+                location: req.body.location,
+                start: req.body.start,
+                end: req.body.end,
+                userId: user._id
+            });
+            //Insert in db
+            event.save(function (err) {
+                if (err) {
+                    throwInternalServerError(res);
+                }
+                else {
+                    res.status(statusCodes.SUCCESS)
+                        .json({
+                            success: true,
+                            message: "SUCCESS" } );
+                }
+            });
+        });
+    }
+});
+
+
 
 module.exports = router;
