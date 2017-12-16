@@ -23,15 +23,17 @@ describe('Tests for users', () => {
 
         it('Test: successful request', (done) => {
             getOneSpeciality().then((speciality) => {
+                const userToInsert = {
+                    email: "test@test.fr",
+                    password: 123,
+                    firstName: "Bernard",
+                    lastName: "Toc",
+                    speciality: `${speciality._id}`
+                };
+
                 request(routerServer)
                     .post(servicePath)
-                    .send({
-                        "email": "test@test.fr",
-                        "password": 123,
-                        "firstName": "Bernard",
-                        "lastName": "Toc",
-                        "speciality": `${speciality._id}`
-                    })
+                    .send(userToInsert)
                     //check status code
                     .expect(statusCodes.SUCCESS)
                     // check presence
@@ -55,7 +57,13 @@ describe('Tests for users', () => {
                             }
                         });
 
-                        userExists(res.body.user).then(() => {
+                        userExists(res.body.user).then((user) => {
+
+                            should(user.email).be.exactly(userToInsert.email);
+                            should(user.firstName).be.exactly(userToInsert.firstName);
+                            should(user.lastName).be.exactly(userToInsert.lastName);
+                            should(user.speciality.toString()).be.exactly(userToInsert.speciality);
+
                             userIsExisting = true;
                             if (tokenIsExisting && userIsExisting) {
                                 done();
