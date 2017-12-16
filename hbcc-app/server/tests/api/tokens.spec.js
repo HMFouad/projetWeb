@@ -2,7 +2,7 @@ const routerServer = require('../../router');
 const request = require('supertest');
 
 /**
- * Execute test on tokens controller/
+ * Execute test on tokens controller.
  */
 describe('Tests for tokens', () => {
 

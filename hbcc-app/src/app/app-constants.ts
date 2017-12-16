@@ -10,7 +10,7 @@ export class AppConstants {
      * Name of localStorage field of the expiration date of the auth token.
      * @type {string}
      */
-    public static readonly AUTH_TOKEN_EXPIRATION_NAME: string = 'AUTH_TOKEN_VALUE';
+    public static readonly AUTH_TOKEN_EXPIRATION_NAME: string = 'AUTH_TOKEN_EXPIRATION';
 
     /**
      * Name of localStorage field of the user id.

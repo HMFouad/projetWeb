@@ -6,6 +6,7 @@ import {AppConstants} from '@app/app-constants';
 @Injectable()
 export class UnAuthGuard implements CanActivate {
     public constructor (private router: Router) {}
+
     public get result (): boolean {
         return !localStorage.getItem(AppConstants.AUTH_TOKEN_VALUE_NAME) &&
                !localStorage.getItem(AppConstants.AUTH_TOKEN_EXPIRATION_NAME) &&

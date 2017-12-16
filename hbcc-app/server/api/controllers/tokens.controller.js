@@ -4,6 +4,7 @@ const User = require("../../mongoose/model/user.model");
 const statusCodes = require("../../status-codes");
 const Token = require("../../mongoose/model/token.model");
 const constants = require("../../constants");
+const checkAuth = require('../utils/check-auth');
 const throwInternalServerError = require("../utils/throw-internal-server-error");
 const encrypt = require("../utils/encrypt");
 const generateToken = require('../utils/generate-token');
@@ -41,7 +42,7 @@ router.post("/tokens", (req, res) => {
 
     if (!user.email || !user.password) {
         res.status(statusCodes.BAD_REQUEST)
-           .json({ success: false, message: "Missing email or password" });
+           .json({ success: false, message: "L'email et le mot de passe sont requis." });
     }
     else {
         User.findOne({ email: user.email, password: encrypt(user.password) }, function(err, user) {
@@ -49,8 +50,8 @@ router.post("/tokens", (req, res) => {
                 throwInternalServerError(res);
             }
             else if (!user) {
-                res.status(statusCodes.UNAUTHORIZED)
-                   .json({ success: false, message: 'Invalid login or password.' });
+                res.status(statusCodes.BAD_REQUEST)
+                   .json({ success: false, message: `L'email et le mot de passe ne correspondent pas.` });
             }
             else {
                 createToken(res, (tokenValue) => {
@@ -103,13 +104,13 @@ router.post("/tokens", (req, res) => {
  * TODO
  */
 router.delete("/tokens", (req, res) => {
-    // TODO implements
-    res
-        .status(statusCodes.BAD_REQUEST)
-        .json({
-            success: false,
-            message: "Service not implemented"
+    checkAuth(req, res, (user) => {
+        Token.remove({ _id: user.authToken._id }, (err, token) => {
+            console.log (err)
+            console.log (token)
         });
+    })
+
 });
 
 module.exports = router;

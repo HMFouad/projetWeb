@@ -49,7 +49,7 @@ router.post('/users', (req, res) => {
         !givenLastName ||
         !givenSpecialityId) {
         res.status(statusCodes.BAD_REQUEST)
-           .json({ success: false, message: 'un paramètre est manquant.', body: req.body });
+           .json({ success: false, message: 'Un paramètre est manquant.', body: req.body });
     }
     else if (!validator.isEmail(givenEmail)) {
         res.status(statusCodes.BAD_REQUEST)
@@ -73,7 +73,7 @@ router.post('/users', (req, res) => {
                     }
                     else if (!speciality) {
                         res.status(statusCodes.BAD_REQUEST)
-                            .json({ success: false, message: 'La spécialité est inconnue.' });
+                            .json({ success: false, message: 'La spécialité donnée est inconnue.' });
                     }
                     else {
                         // we create user
