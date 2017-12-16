@@ -79,7 +79,7 @@ router.post('/users', (req, res) => {
                         // we create user
                         const user = new User({
                             email: givenEmail,
-                            password: encrypt(givenPassword.toString()  ),
+                            password: encrypt(givenPassword.toString()),
                             firstName: givenFirstName,
                             lastName: givenLastName,
                             speciality: speciality._id

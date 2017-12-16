@@ -14,17 +14,18 @@ const userExists = require('../utils/user-exists');
 describe('Tests for users', () => {
 
     const apiPath = '/api';
+    let counter = 0;
 
     /**
-     * Test of POST /tokens api route.
+     * Tests of POST /tokens api route.
      */
     describe('POST /users', () => {
         const servicePath = `${apiPath}/users`;
 
-        it('Test: successful request', (done) => {
+        it('Successful request', (done) => {
             getOneSpeciality().then((speciality) => {
                 const userToInsert = {
-                    email: "test@test.fr",
+                    email: `test${++counter}@test.fr`,
                     password: 123,
                     firstName: "Bernard",
                     lastName: "Toc",
@@ -71,6 +72,93 @@ describe('Tests for users', () => {
                         });
                     });
             });
+        });
+
+        it('Bad request (email already exists)', (done) => {
+            getOneSpeciality().then((speciality) => {
+                const userToInsert = {
+                    email: `test${++counter}@test.fr`,
+                    password: 123,
+                    firstName: "Bernard",
+                    lastName: "Toc",
+                    speciality: `${speciality._id}`
+                };
+
+                request(routerServer)
+                    .post(servicePath)
+                    .send(userToInsert)
+                    //check status code
+                    .expect(statusCodes.SUCCESS)
+                    // check presence
+                    .end((err, res) => {
+                        request(routerServer)
+                            .post(servicePath)
+                            .send(userToInsert)
+                            //check status code
+                            .expect(statusCodes.BAD_REQUEST)
+                            // check presence
+                            .end(() => {
+                                done();
+                            });
+                    });
+            });
+        });
+        it('Bad request (invalid email)', (done) => {
+            getOneSpeciality().then((speciality) => {
+                const userToInsert = {
+                    email: `test${++counter}`,
+                    password: 123,
+                    firstName: "TEST 2",
+                    lastName: "Toc",
+                    speciality: `${speciality._id}`
+                };
+
+                request(routerServer)
+                    .post(servicePath)
+                    .send(userToInsert)
+                    //check status code
+                    .expect(statusCodes.BAD_REQUEST)
+                    // check presence
+                    .end(() => {
+                        done();
+                    });
+            });
+        });
+        it('Bad request (unknown speciality)', (done) => {
+            const userToInsert = {
+                email: `test${++counter}`,
+                password: 123,
+                firstName: "TEST 2",
+                lastName: "Toc",
+                speciality: `C'est une specialité invalide`
+            };
+
+            request(routerServer)
+                .post(servicePath)
+                .send(userToInsert)
+                //check status code
+                .expect(statusCodes.BAD_REQUEST)
+                // check presence
+                .end(() => {
+                    done();
+                });
+        });
+        it('Bad request (params missing)', (done) => {
+            const userToInsert = {
+                email: `test${++counter}@test.fr`,
+                password: 123,
+                firstName: "TEST",
+            };
+
+            request(routerServer)
+                .post(servicePath)
+                .send(userToInsert)
+                //check status code
+                .expect(statusCodes.BAD_REQUEST)
+                // check presence
+                .end(() => {
+                    done();
+                });
         });
     });
 });
