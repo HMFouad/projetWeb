@@ -11,12 +11,12 @@ const User = require('../../mongoose/model/user.model');
  */
 function userExists (id) {
     return new Promise((resolve) => {
-        User.findOne({ _id: id }, (err, res) => {
-            if (err || !res) {
+        User.findOne({ _id: id }, (err, user) => {
+            if (err || !user) {
                 throw new Error('not exists');
             }
             else {
-                resolve();
+                resolve(user);
             }
         });
     });
