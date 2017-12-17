@@ -127,6 +127,8 @@ router.post("/tokens", (req, res) => {
  * The access token must be given in header Authorization field.
  */
 router.delete("/tokens", (req, res) => {
+
+
     checkAuth(req)
         .then((user) => {
             Token.remove({ _id: user.authToken._id }, (err) => {
@@ -134,7 +136,6 @@ router.delete("/tokens", (req, res) => {
                     throwInternalServerError(res);
                 }
                 else {
-
                     res.status(statusCodes.SUCCESS)
                         .json({ success: true, message: "SUCCESS" });
                 }

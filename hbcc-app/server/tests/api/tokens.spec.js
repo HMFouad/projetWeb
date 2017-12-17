@@ -127,22 +127,51 @@ describe('Tests for tokens', () => {
         const servicePath = `${apiPath}/tokens`;
 
         it('Successful request', (done) => {
-            const userToken = {
-                email: "test@test.fr",
-                password: `${123}`
-            };
-
+            getOneSpeciality().then((speciality) => {
+                const userToInsert = {
+                    email: `test@test.fr`,
+                    password: 123,
+                    firstName: "Bernard",
+                    lastName: "Toc",
+                    speciality: `${speciality._id}`
+                };
             request(routerServer)
-                .delete(servicePath)
-                .send(userToken)
-                //check status code
-                .expect(statusCodes.SUCCESS)
-                // check presence
+                .post(`${apiPath}/users`)
+                .send(userToInsert)
                 .end(() => {
-                    done();
+                    const userToken = {
+                        email: "test@test.fr",
+                        password: 123
+                    };
+                    request(routerServer)
+                        .post(`${apiPath}/users`)
+                        .send(userToken)
+                        //check status code
+                        .expect(statusCodes.SUCCESS)
+                        // check presence
+                        .end((err, res) => {
+                            request(routerServer)
+                                .delete(servicePath)
+                                .send(userToken)
+                                //check status code
+                                .expect(statusCodes.SUCCESS)
+                                // check presence
+                                .end(() => {
+                                    done();
+                            });
+                        });
+
+
                 });
+            });
+
 
         });
 
     });
 });
+
+
+
+
+
