@@ -38,10 +38,10 @@ router.post("/tokens", (req, res) => {
         email: req.body.email,
         password: `${req.body.password}`
     };
-
+    //console.log(">>>>>"+user.email+"//"+user.password+":::::"+(user.password==null));
     if (!user.email || !user.password) {
         res.status(statusCodes.BAD_REQUEST)
-           .json({ success: false, message: "Missing email or password" });
+           .json({ success: false, message: "Email ou mot de passe manquant" });
     }
     else {
         User.findOne({ email: user.email, password: encrypt(user.password) }, function(err, user) {
@@ -49,9 +49,8 @@ router.post("/tokens", (req, res) => {
                 throwInternalServerError(res);
             }
             else if (!user) {
-                console.log("RHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
                 res.status(statusCodes.UNAUTHORIZED)
-                   .json({ success: false, message: 'Invalid login or password.' });
+                   .json({ success: false, message: 'Email ou mot de passe invalide' });
             }
             else {
                 createToken(res, (tokenValue) => {
@@ -78,6 +77,7 @@ router.post("/tokens", (req, res) => {
                                     throwInternalServerError(res);
                                 }
                                 else {
+                                    console.log("CA MAAAAAAAAAAAAAAAAAAAAARCHE");
                                     res
                                         .status(statusCodes.SUCCESS)
                                         .json({

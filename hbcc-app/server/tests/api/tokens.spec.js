@@ -34,51 +34,90 @@ describe('Tests for tokens', () => {
                     lastName: "Toc",
                     speciality: `${speciality._id}`
                 };
-            console.log(userToken.email);
-            console.log(userToken.password);
-            console.log(userToInsert.email);
-            console.log(userToInsert.password);
             request(routerServer)
                 .post(`${apiPath}/users`)
-                .send(userToInsert);
+                .send(userToInsert)
+                .end(() => {
+
+
+                    const userToken = {
+                        email: "test@test.fr",
+                        password: `${123}`
+                    };
+
+                    request(routerServer)
+                        .post(servicePath)
+                        .send(userToken)
+                        //check status code
+                        .expect(statusCodes.SUCCESS)
+                        // check presence
+                        .end((err, res) => {
+                            should(res.body.success).be.ok();
+                            should(res.body.user).be.a.String();
+                            should(res.body.authToken).be.a.Object();
+                            should(res.body.authToken.value).be.a.String();
+                            should(res.body.authToken.expiresAt).be.a.String();
+
+                            let tokenIsExisting = false;
+                            let userIsExisting = false;
+
+                            userExists(res.body.user).then(() => {
+                                userIsExisting = true;
+                                if (userIsExisting && tokenIsExisting) {
+                                    done();
+                                }
+                            });
+
+                            tokenExists(res.body.authToken.value, res.body.authToken.expiresAt).then(() => {
+
+                                tokenIsExisting = true;
+                                if (userIsExisting && tokenIsExisting) {
+                                    done();
+                                }
+                            });
+                        });
+
+
+                });
             });
 
+
+            });
+
+            it('Bad request (param missing)', (done) => {
                 const userToken = {
-                    email: "test@test.fr",
+                    email: "test@test.fr"
+                };
+
+
+                    request(routerServer)
+                        .post(servicePath)
+                        .send(userToken)
+                        //check status code
+                        .expect(statusCodes.BAD_REQUEST)
+                        // check presence
+                        .end(() => {
+                            done();
+                        });
+
+            });
+
+            it('Unauthorized (invalid param)', (done) => {
+                const userToken = {
+                    email: "test",
                     password: `${123}`
                 };
 
-                request(routerServer)
-                    .post(servicePath)
-                    .send(userToken)
-                    //check status code
-                    .expect(statusCodes.SUCCESS)
-                    // check presence
-                    .end((err, res) => {
-                        should(res.body.success).be.ok();
-                        should(res.body.user).be.a.String();
-                        should(res.body.authToken).be.a.Object();
-                        should(res.body.authToken.value).be.a.String();
-                        should(res.body.authToken.expiresAt).be.a.String();
-
-                        let tokenIsExisting = false;
-                        let userIsExisting = false;
-
-                        userExists(res.body.user).then(() => {
-                            userIsExisting = true;
-                            if (userIsExisting && tokenIsExisting) {
-                                done();
-                            }
+                    request(routerServer)
+                        .post(servicePath)
+                        .send(userToken)
+                        //check status code
+                        .expect(statusCodes.UNAUTHORIZED)
+                        // check presence
+                        .end(() => {
+                            done();
                         });
 
-                        tokenExists(res.body.authToken.value, res.body.authToken.expiresAt).then(() => {
-
-                            tokenIsExisting = true;
-                            if (userIsExisting && tokenIsExisting) {
-                                done();
-                            }
-                        });
-                    });
             });
         });
     });
