@@ -21,7 +21,7 @@ if [[ "$1" == "dev" || "$1" == "prod" ]]; then
         done
     else
         # build angular app with prod mode
-        ng build -prod
+        ng build --aot -prod
 
         # deploy express app
         node server/server
