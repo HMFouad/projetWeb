@@ -41,7 +41,7 @@ describe('Tests for tokens', () => {
 
                     const userToken = {
                         email: "test@test.fr",
-                        password: `${123}`
+                        password: 123
                     };
 
                     request(routerServer)
@@ -60,7 +60,9 @@ describe('Tests for tokens', () => {
                             let tokenIsExisting = false;
                             let userIsExisting = false;
 
-                            userExists(res.body.user).then(() => {
+                            userExists(res.body.user).then((user) => {
+                                should(user.email).be.exactly(userToken.email);
+                                should(user.password).be.exactly(userToken.password);
                                 userIsExisting = true;
                                 if (userIsExisting && tokenIsExisting) {
                                     done();
