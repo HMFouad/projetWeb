@@ -102,6 +102,7 @@ describe('Tests for users', () => {
                     });
             });
         });
+
         it('Bad request (invalid email)', (done) => {
             getOneSpeciality().then((speciality) => {
                 const userToInsert = {
