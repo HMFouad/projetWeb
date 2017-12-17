@@ -39,11 +39,13 @@ router.post("/tokens", (req, res) => {
     const givenPassword = `${req.body.password}`;
 
 
-    if (!givenEmail || !givenPassword) {
+
+    if (!req.body.email || !req.body.password) {
         res.status(statusCodes.BAD_REQUEST)
            .json({ success: false, message: "L'email et le mot de passe sont requis." });
     }
     else {
+
         User.findOne({ email: givenEmail }, (errErr, user) => {
             if (errErr) {
                 throwInternalServerError(res);
@@ -132,6 +134,7 @@ router.delete("/tokens", (req, res) => {
                     throwInternalServerError(res);
                 }
                 else {
+
                     res.status(statusCodes.SUCCESS)
                         .json({ success: true, message: "SUCCESS" });
                 }

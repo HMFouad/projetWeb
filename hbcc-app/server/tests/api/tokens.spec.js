@@ -62,7 +62,6 @@ describe('Tests for tokens', () => {
 
                             userExists(res.body.user).then((user) => {
                                 should(user.email).be.exactly(userToken.email);
-                                should(user.password).be.exactly(userToken.password);
                                 userIsExisting = true;
                                 if (userIsExisting && tokenIsExisting) {
                                     done();
@@ -87,7 +86,8 @@ describe('Tests for tokens', () => {
 
             it('Bad request (param missing)', (done) => {
                 const userToken = {
-                    email: "test@test.fr"
+                    email: "test@test.fr",
+                    password: 123
                 };
                     request(routerServer)
                         .post(servicePath)
@@ -119,4 +119,30 @@ describe('Tests for tokens', () => {
 
             });
         });
+
+            /**
+     * Test of DELETE /tokens api route.
+     */
+    describe('DELETE /tokens', () => {
+        const servicePath = `${apiPath}/tokens`;
+
+        it('Successful request', (done) => {
+            const userToken = {
+                email: "test@test.fr",
+                password: `${123}`
+            };
+
+            request(routerServer)
+                .delete(servicePath)
+                .send(userToken)
+                //check status code
+                .expect(statusCodes.SUCCESS)
+                // check presence
+                .end(() => {
+                    done();
+                });
+
+        });
+
     });
+});
