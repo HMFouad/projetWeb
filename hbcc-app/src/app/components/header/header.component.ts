@@ -44,8 +44,7 @@ export class HeaderComponent implements OnInit {
     public logout () {
         const authToken = localStorage.getItem(AppConstants.AUTH_TOKEN_VALUE_NAME);
         this.httpClient.delete('/api/tokens', {
-            headers: (new HttpHeaders()).set('Authorization', `${authToken}`),
-            responseType: 'json'
+            headers: (new HttpHeaders()).set('Authorization', `Bearer ${authToken}`)
         }).subscribe(() => {
             this.doLocalLogout();
         }, () => {

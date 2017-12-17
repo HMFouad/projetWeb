@@ -1,14 +1,14 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
 import {EventData} from 'app/model/event-data.model';
 import {AppConstants} from '@app/app-constants';
+import {SecureHttpClientService} from '@app/services/secure-http-client.service';
 
 @Component({
-  selector: 'hbcc-user-planning',
-  templateUrl: './user-planning.component.html',
-  styleUrls: ['./user-planning.component.css']
+  selector: 'hbcc-planning',
+  templateUrl: './planning.component.html',
+  styleUrls: ['./planning.component.css']
 })
-export class UserPlanningComponent implements OnInit {
+export class PlanningComponent implements OnInit {
 
     private static readonly PastClass = 'fc-past';
     private static readonly TodayClass = 'fc-today';
@@ -31,7 +31,7 @@ export class UserPlanningComponent implements OnInit {
     public locale: string;
     public displayedEvents: EventData[];
 
-    public constructor(private httpClient: HttpClient) {
+    public constructor(private httpClient: SecureHttpClientService) {
         this.apiServiceLoading = false;
         this.currentDayDelta = 0;
         this.apiresponseReceived = false;
@@ -68,15 +68,15 @@ export class UserPlanningComponent implements OnInit {
 
             // set right current date
             $(this)
-                .removeClass(UserPlanningComponent.PastClass)
-                .removeClass(UserPlanningComponent.TodayClass)
-                .removeClass(UserPlanningComponent.FutureClass);
+                .removeClass(PlanningComponent.PastClass)
+                .removeClass(PlanningComponent.TodayClass)
+                .removeClass(PlanningComponent.FutureClass);
 
             $(this)
                 .addClass(
-                    (Number(now.getDate()) > Number(newDayLabelSplitted[1])) ?  UserPlanningComponent.PastClass :
-                    (Number(now.getDate()) === Number(newDayLabelSplitted[1])) ?  UserPlanningComponent.TodayClass :
-                        UserPlanningComponent.FutureClass // (Number(now.getDate()) < Number(newDayLabelSplitted[1]))
+                    (Number(now.getDate()) > Number(newDayLabelSplitted[1])) ?  PlanningComponent.PastClass :
+                    (Number(now.getDate()) === Number(newDayLabelSplitted[1])) ?  PlanningComponent.TodayClass :
+                        PlanningComponent.FutureClass // (Number(now.getDate()) < Number(newDayLabelSplitted[1]))
                 );
 
         });
@@ -114,9 +114,7 @@ export class UserPlanningComponent implements OnInit {
             1 :
             (1 + (this.currentDayDelta % 7));
 
-        beginDate.setHours(1)
-        console.log (beginDate)
-        console.log (beginDate.toISOString())
+        beginDate.setHours(1);
 
         // $ doesn't have fullCalendar method
         $plainningFcContainer
@@ -157,16 +155,16 @@ export class UserPlanningComponent implements OnInit {
 
                         // remove all classes
                         $(this)
-                            .removeClass(UserPlanningComponent.ClassHilightDay1)
-                            .removeClass(UserPlanningComponent.ClassHilightDay2);
+                            .removeClass(PlanningComponent.ClassHilightDay1)
+                            .removeClass(PlanningComponent.ClassHilightDay2);
 
                         const dateCurrentTd = new Date($(this).data('date'));
 
                         if (dateCurrentTd.getDate() === now.getDate() &&
                             dateCurrentTd.getMonth() === now.getMonth() &&
                             dateCurrentTd.getFullYear() === now.getFullYear()) {
-                            $(this).addClass(UserPlanningComponent.ClassHilightDay1)
-                                   .addClass(UserPlanningComponent.ClassHilightDay2);
+                            $(this).addClass(PlanningComponent.ClassHilightDay1)
+                                   .addClass(PlanningComponent.ClassHilightDay2);
                         }
                     });
 
@@ -184,16 +182,20 @@ export class UserPlanningComponent implements OnInit {
 
     private callEventsService(firstDisplayedDay: Date, lastDisplayedDay: Date): void {
         this.apiServiceLoading = true;
-        this.httpClient.get('/api/events', {
-            headers: {
-                responseType: 'json',
-                Authorization: `Bearer ${localStorage.getItem(AppConstants.AUTH_TOKEN_VALUE_NAME)}`
-            },
-            params: {
-                beginDate: firstDisplayedDay.toISOString(),
-                endDate: lastDisplayedDay.toISOString()
+        this.httpClient.request(
+            'get',
+            '/api/events',
+            {
+                headers: {
+                    responseType: 'json',
+                    Authorization: `Bearer ${localStorage.getItem(AppConstants.AUTH_TOKEN_VALUE_NAME)}`
+                },
+                params: {
+                    beginDate: firstDisplayedDay.toISOString(),
+                    endDate: lastDisplayedDay.toISOString()
+                }
             }
-        }).subscribe((events: Array<any>) => {
+        ).subscribe((events: Array<any>) => {
             this.apiServiceLoading = false;
             this.apiresponseReceived = true;
             this.handleEventsResponse(events, firstDisplayedDay);
@@ -215,15 +217,15 @@ export class UserPlanningComponent implements OnInit {
             const nbMilliSecondsInDay = 60 * 60 * 24 * 1000;
 
             const firstDisplayedDay = new Date(
-                UserPlanningComponent.GetMonday(now).getTime() +
+                PlanningComponent.GetMonday(now).getTime() +
                 this.currentDayDelta * nbMilliSecondsInDay);
             firstDisplayedDay.setHours(0);
             firstDisplayedDay.setMinutes(0);
 
             // we add 6 days to the monday to get sunday.
             const lastDisplayedDay = new Date(firstDisplayedDay.getTime() + 6 * nbMilliSecondsInDay);
-            lastDisplayedDay.setHours(23)
-            lastDisplayedDay.setMinutes(59)
+            lastDisplayedDay.setHours(23);
+            lastDisplayedDay.setMinutes(59);
 
             this.callEventsService(firstDisplayedDay, lastDisplayedDay);
         }

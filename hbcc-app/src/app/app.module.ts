@@ -6,18 +6,18 @@ import { MapComponent } from './components/map/map.component';
 import { ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {AppRoutingModule} from './app-routing.module';
-import { EventsComponent } from './components/events/events.component';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import {AuthGuard} from './guards/auth.guard';
 import {RegistrationComponent} from './components/registration/registration.component';
 import { UserComponent } from './components/user/user.component';
-import {UserProfileComponent} from '@app/components/user/user-profile/user-profile.component';
-import {UserPlanningComponent} from '@app/components/user/user-planning/user-planning.component';
 import {UnAuthGuard} from '@app/guards/un-auth.guard';
-import { EventFormComponent } from './event-form/event-form.component';
 import { Ng2DatetimePickerModule } from 'ng2-datetime-picker';
 import { FormsModule } from '@angular/forms';
+import {SecureHttpClientService} from '@app/services/secure-http-client.service';
+import {CreateEventComponent} from '@app/components/user/create-event/create-event.component';
+import {ProfileComponent} from '@app/components/user/profile/profile.component';
+import {PlanningComponent} from '@app/components/user/planning/planning.component';
 
 @NgModule({
     imports: [
@@ -30,20 +30,20 @@ import { FormsModule } from '@angular/forms';
     ],
     declarations: [
         AppComponent,
-        EventsComponent,
+        CreateEventComponent,
         RegistrationComponent,
-        UserProfileComponent,
+        ProfileComponent,
         AboutComponent,
         MapComponent,
         HeaderComponent,
         FooterComponent,
-        UserPlanningComponent,
-        UserComponent,
-        EventFormComponent
+        PlanningComponent,
+        UserComponent
     ],
     providers: [
         AuthGuard,
-        UnAuthGuard
+        UnAuthGuard,
+        SecureHttpClientService
     ],
     bootstrap: [AppComponent]
 })
