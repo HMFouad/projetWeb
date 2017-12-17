@@ -59,7 +59,6 @@ describe('Tests for users', () => {
                         });
 
                         userExists(res.body.user).then((user) => {
-
                             should(user.email).be.exactly(userToInsert.email);
                             should(user.firstName).be.exactly(userToInsert.firstName);
                             should(user.lastName).be.exactly(userToInsert.lastName);
