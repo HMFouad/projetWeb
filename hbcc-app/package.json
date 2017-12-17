@@ -2,6 +2,7 @@
     "name": "hbcc-app",
     "version": "0.0.0",
     "license": "MIT",
+    "main": "server.js",
     "scripts": {
         "start": "./RUN.sh prod",
         "start:prod": "./RUN.sh prod",
@@ -10,6 +11,10 @@
         "build:app:dev": "ng build -dev --watch",
         "test:app": "ng e2e --no-serve",
         "test:api": "mocha --reporter spec --timeout 10000 ./server/tests/setup.js ./server/tests/**/*.spec.js"
+    },
+    "engines": {
+        "node": "^8.9.1",
+        "npm":"^5.5.1"
     },
     "private": true,
     "dependencies": {
