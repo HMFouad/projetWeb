@@ -24,6 +24,10 @@
     height: 599px !important;
 }
 
+:host ::ng-deep .planning-header table.table-bordered {
+    border-top-width: 0;
+}
+
 :host ::ng-deep td.fc-time {
     border-top: 0;
 }
@@ -38,31 +42,48 @@
     opacity: 0;
 }
 
-:host ::ng-deep .planning-header th:first-child {
+:host ::ng-deep .fc-header-table th:first-child {
     width: 37px !important;
+    border-top-width: 0;
+    border-left-width: 0;
 }
-:host ::ng-deep .planning-header th.fc-day-header {
+:host ::ng-deep .fc-header-table th.fc-day-header {
     text-align: left;
     padding: 12px 12px 12px 20px;
+    border-top-width: 1px;
 }
-:host ::ng-deep .planning-header th.fc-day-header * {
+
+:host ::ng-deep .fc-header-table th.fc-day-header.fc-today {
+    color: #4285f4;
+}
+
+:host ::ng-deep .fc-header-table th.fc-day-header * {
     font-weight: normal;
     line-height: 20px;
 }
-:host ::ng-deep .planning-header th.fc-day-header :first-child {
+
+:host ::ng-deep .fc-header-table th.fc-day-header :first-child {
     font-size: 12px;
     margin: 0;
 }
-:host ::ng-deep .planning-header th.fc-day-header :last-child {
+:host ::ng-deep .fc-header-table th.fc-day-header :last-child {
     font-size: 40px;
+}
+:host ::ng-deep table.fc-header-table {
+    border-bottom: 1px solid #e9ecef;
+    border-right: 1px solid #e9ecef;
+    border-left-width: 0;
+    table-layout: fixed;
 }
 
 :host ::ng-deep .planning-header {
     position: fixed;
     z-index: 11;
     background-color: white;
-    border-bottom: 1px solid #e9ecef;
-    border-right: 1px solid #e9ecef;
+}
+
+:host ::ng-deep .planning-header > * {
+    margin-top: 16px
 }
 
 @media (min-width: 576px) {
@@ -94,7 +115,7 @@
     border-top-width: 0;
 }
 :host ::ng-deep .fc-view-container {
-    margin-top: 104px;
+    margin-top: 177px;
 }
 
 /* remove body scroller */

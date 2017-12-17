@@ -13,9 +13,9 @@ import {AuthGuard} from '@app/guards/auth.guard';
 export class HeaderComponent implements OnInit {
 
 
-    private loginForm;
+    public loginForm;
 
-    private userConnected: boolean;
+    public userConnected: boolean;
 
     public constructor(private httpClient: HttpClient,
                        private router: Router,
