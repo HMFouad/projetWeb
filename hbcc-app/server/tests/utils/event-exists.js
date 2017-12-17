@@ -1,4 +1,6 @@
 const Event = require('../../mongoose/model/event.model');
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Schema.Types.ObjectId;
 
 // TODO change name : get-event
 
@@ -11,12 +13,19 @@ const Event = require('../../mongoose/model/event.model');
  */
 function eventExists (id) {
     return new Promise((resolve) => {
-        Event.findAll({ userId: id }, (err, event) => {
-            if (err || !event) {
-                throw new Error('Event not exists');
+        Event.find({ userId: ObjectId(id) }, (err, events) => {
+            if (err || !events) {
+                throw new Error('Fail find in db');
             }
             else {
-                resolve(event);
+                if (events.length === 1) {
+                    resolve(events[0]);
+                }
+                else {
+                    console.log(events);
+                    throw new Error('Event not exists or too much events added.');
+                }
+
             }
         });
     });

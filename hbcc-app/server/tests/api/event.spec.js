@@ -5,8 +5,6 @@ const routerServer = require('../../router');
 const statusCodes = require('../../status-codes');
 
 const getOneSpeciality = require ('../utils/get-one-speciality');
-const tokenExists = require('../utils/token-exists');
-const userExists = require('../utils/user-exists');
 const eventExists = require('../utils/event-exists');
 
 /**
@@ -16,69 +14,67 @@ describe('Tests for events', () => {
 
     const apiPath = '/api';
     let counter = 0;
+    const addUserPath = `${apiPath}/users`;
+    let authTokenValue;
+    let userId;
 
-    /**
-     * Tests of POST /tokens api route.
-     */
-    describe('POST /event', () => {
-        const servicePath = `${apiPath}/event`;
-        const addUserPath = `${apiPath}/user`;
-
-        beforeEach(function () {
-            getOneSpeciality().then((speciality) => {
-                const userToInsert = {
-                    email: `test${++counter}@test.fr`,
-                    password: 123,
-                    firstName: "Bernard",
-                    lastName: "Toc",
-                    speciality: `${speciality._id}`
-                };
-
-                request(routerServer)
-                    .post(addUserPath)
-                    .send(userToInsert);
-            });
+    beforeEach(function (done) {
+        getOneSpeciality().then((speciality) => {
+            const userToInsert = {
+                email: `test${++counter}@test.fr`,
+                password: 123,
+                firstName: "Bernard",
+                lastName: "Toc",
+                speciality: `${speciality._id}`
+            };
+            request(routerServer)
+                .post(addUserPath)
+                .send(userToInsert)
+                .expect(statusCodes.SUCCESS)
+                .end((err, res) => {
+                    console.log( res.body.user);
+                    userId = res.body.user;
+                    authTokenValue = res.body.authToken.value;
+                    done();
+                });
         });
+    });
+    /**
+     * Tests of POST /event api route.
+     */
+    describe('POST /events', () => {
+        const servicePath = `${apiPath}/events`;
+
+
 
         it('Successful request', (done) => {
                 const eventToInsert = {
                     description: "Soutien de Maths",
                     location: "Ici",
                     start: new Date("2017-12-17T16:00:00"),
-                    end: new Date("1995-12-17T18:00:00")}
+                    end: new Date("2017-12-17T18:00:00") };
 
-
+                console.log("EVENT " + eventToInsert.userId);
                 request(routerServer)
                     .post(servicePath)
+                    .set({ Authorization: `Bearer ${authTokenValue}` })
                     .send(eventToInsert)
                     //check status code
                     .expect(statusCodes.SUCCESS)
                     // check presence
                     .end((err, res) => {
+
                         should(res.body.success).be.ok();
+                        console.log("Success " + res.body.success);
 
-                        let eventIsExisting = false;
+                        eventExists(userId).then((event) => {
+                            console.log("EVENT " + event);
+                            should(event.description).be.exactly(eventToInsert.description);
+                            should(event.location).be.exactly(eventToInsert.location);
+                            should(event.start).be.exactly(eventToInsert.start);
+                            should(event.end).be.exactly(eventToInsert.end);
 
-                        eventExists(
-                            res.body.authToken.value,
-                            res.body.authToken.expiresAt
-                        ).then(() => {
-                            tokenIsExisting = true;
-                            if (tokenIsExisting && userIsExisting) {
-                                done();
-                            }
-                        });
-
-                        userExists(res.body.user).then((user) => {
-                            should(user.email).be.exactly(userToInsert.email);
-                            should(user.firstName).be.exactly(userToInsert.firstName);
-                            should(user.lastName).be.exactly(userToInsert.lastName);
-                            should(user.speciality.toString()).be.exactly(userToInsert.speciality);
-
-                            userIsExisting = true;
-                            if (tokenIsExisting && userIsExisting) {
-                                done();
-                            }
+                            done();
                         });
                     });
             });

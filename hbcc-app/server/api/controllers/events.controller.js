@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const icalParser = require('ical');
 const Event = require('../../mongoose/model/event.model');
+const User = require('../../mongoose/model/user.model');
 const Speciality = require('../../mongoose/model/speciality.model');
 const statusCodes = require('../../status-codes');
 const checkAuth = require ('../utils/check-auth');
@@ -111,23 +112,37 @@ router.post('/events', (req, res) => {
         checkAuth(req)
             .then((user) => {
                 //Create event
-                const event = new Event({
-                    description: req.body.description,
-                    location: req.body.location,
-                    start: req.body.start,
-                    end: req.body.end,
-                    userId: user._id
-                });
-                //Insert in db
-                event.save(function (err) {
-                    if (err) {
+                User.findOne({ _id: user._id }, (userErr, user) => {
+                    if (userErr) {
                         throwInternalServerError(res);
                     }
+                    else if (!user) {
+                        res.status(statusCodes.BAD_REQUEST)
+                            .json({ success: false, message: "L'utilisateur auquel atitré l'évènement est inconnu." });
+                    }
                     else {
-                        res.status(statusCodes.SUCCESS)
-                            .json({
-                                success: true,
-                                message: "SUCCESS" } );
+                        const event = new Event({
+                            description: req.body.description,
+                            location: req.body.location,
+                            start: req.body.start,
+                            end: req.body.end,
+                            userId: user._id
+                        });
+                        console.log(user);
+                        console.log(event);
+                        //Insert in db
+                        event.save(function (err) {
+                            if (err) {
+                                throwInternalServerError(res);
+                            }
+                            else {
+                                res.status(statusCodes.SUCCESS)
+                                    .json({
+                                        success: true,
+                                        message: "SUCCESS"
+                                    });
+                            }
+                        });
                     }
                 });
             })
