@@ -1,5 +1,5 @@
 const express = require("express");
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt-nodejs');
 const router = express.Router();
 const User = require("../../mongoose/model/user.model");
 const statusCodes = require("../../status-codes");
