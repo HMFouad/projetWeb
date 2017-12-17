@@ -56,9 +56,11 @@
         "rxjs": "^5.5.0",
         "validator": "^9.2.0",
         "zone.js": "^0.8.4",
-        "typescript": "~2.4.2"
+        "typescript": "~2.4.2",
+        "@types/node": "~6.0.60"
     },
     "devDependencies": {
+        "@angular/cli": "^1.6.1",
         "@angular/compiler-cli": "^5.0.0",
         "@angular/language-service": "^5.0.0",
         "@types/jasmine": "~2.5.53",
