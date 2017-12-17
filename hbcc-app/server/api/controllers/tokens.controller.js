@@ -49,6 +49,7 @@ router.post("/tokens", (req, res) => {
                 throwInternalServerError(res);
             }
             else if (!user) {
+                console.log("RHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
                 res.status(statusCodes.UNAUTHORIZED)
                    .json({ success: false, message: 'Invalid login or password.' });
             }

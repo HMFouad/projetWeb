@@ -1,5 +1,14 @@
-const routerServer = require('../../router');
 const request = require('supertest');
+const should = require('should/as-function');
+
+const routerServer = require('../../router');
+const statusCodes = require('../../status-codes');
+const encrypt = require("../../api/utils/encrypt");
+
+const getOneSpeciality = require ('../utils/get-one-speciality');
+const tokenExists = require('../utils/token-exists');
+const userExists = require('../utils/user-exists');
+
 
 /**
  * Execute test on tokens controller/
@@ -8,6 +17,7 @@ describe('Tests for tokens', () => {
 
     const apiPath = '/api';
 
+
     /**
      * Test of POST /tokens api route.
      */
@@ -15,12 +25,60 @@ describe('Tests for tokens', () => {
         const servicePath = `${apiPath}/tokens`;
 
         it('Successful request', (done) => {
+
+            getOneSpeciality().then((speciality) => {
+                const userToInsert = {
+                    email: `test@test.fr`,
+                    password: 123,
+                    firstName: "Bernard",
+                    lastName: "Toc",
+                    speciality: `${speciality._id}`
+                };
+            console.log(userToken.email);
+            console.log(userToken.password);
+            console.log(userToInsert.email);
+            console.log(userToInsert.password);
             request(routerServer)
-                .post(servicePath)
-                .end((err, res) => {
-                    // TODO
-                    done();
-                });
+                .post(`${apiPath}/users`)
+                .send(userToInsert);
+            });
+
+                const userToken = {
+                    email: "test@test.fr",
+                    password: `${123}`
+                };
+
+                request(routerServer)
+                    .post(servicePath)
+                    .send(userToken)
+                    //check status code
+                    .expect(statusCodes.SUCCESS)
+                    // check presence
+                    .end((err, res) => {
+                        should(res.body.success).be.ok();
+                        should(res.body.user).be.a.String();
+                        should(res.body.authToken).be.a.Object();
+                        should(res.body.authToken.value).be.a.String();
+                        should(res.body.authToken.expiresAt).be.a.String();
+
+                        let tokenIsExisting = false;
+                        let userIsExisting = false;
+
+                        userExists(res.body.user).then(() => {
+                            userIsExisting = true;
+                            if (userIsExisting && tokenIsExisting) {
+                                done();
+                            }
+                        });
+
+                        tokenExists(res.body.authToken.value, res.body.authToken.expiresAt).then(() => {
+
+                            tokenIsExisting = true;
+                            if (userIsExisting && tokenIsExisting) {
+                                done();
+                            }
+                        });
+                    });
+            });
         });
     });
-});
