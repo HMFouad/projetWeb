@@ -16,13 +16,16 @@
                     <label for="startDate">Date et heure de début</label>
                     <input [(ngModel)]="start" ng2-datetime-picker
                            date-format="DD-MM-YYYY hh:mm"
-                           [close-on-select]="false" name="startDate" id="startDate" required>
+                           [close-on-select]="false"
+                           name="startDate" id="startDate" required>
                 </div>
                 <div class="form-group">
                     <label for="endDate">Date et heure de fin</label>
                     <input [(ngModel)]="end" ng2-datetime-picker
                            date-format="DD-MM-YYYY hh:mm"
-                           [close-on-select]="false" name="endDate" id="endDate" required>
+                           [close-on-select]="false"
+                           min-date="start"
+                           name="endDate" id="endDate" required>
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-success" [disabled]="!eventForm.form.valid">Save</button>
