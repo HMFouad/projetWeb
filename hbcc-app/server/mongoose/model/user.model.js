@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-// TODO Vérifier que les clés étrangère fonctionne
 const userSchema = new Schema({
     firstName: String,
     lastName: String,

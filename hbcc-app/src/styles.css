@@ -1,3 +1,14 @@
+/* form validations */
+.validation-messages-list {
+    padding-right: 0;
+    padding-left: 0;
+    margin-top: .5rem;
+}
+
+.validation-messages-list > .validation-message ~ .validation-message {
+    display: none;
+}
+
 /* custom scroll bar */
 ::-webkit-scrollbar {
     width: 8px;

@@ -1,31 +1,33 @@
 const express = require('express');
 const router = express.Router();
-
+const statusCodes = require("../../status-codes");
 const Speciality = require('../../mongoose/model/speciality.model');
+const throwInternalServerError = require("../utils/throw-internal-server-error");
+
 
 // Get users
-router.get('/specialities', (req, res, next) => {
-    Speciality.find((err, specialities) => {
-        // TODO gestion d'erreur
-        if (err) {
-            console.log("err");
-            return next(err);
+router.get('/specialities', (req, res) => {
+    Speciality.find({}, (err, specialities) => {
+        if (err || !specialities) {
+            throwInternalServerError(res);
         }
+        else {
+            const returned = [];
 
-        const returned = [];
+            for (const spe of specialities) {
+                returned.push({
+                    name: spe.name,
+                    _id: spe._id
+                });
+            }
 
-        for (const spe of specialities) {
-            returned.push({
-                name: spe.name,
-                _id: spe._id
-            });
+            res.status(statusCodes.SUCCESS)
+               .json(returned);
         }
-
-        res.json(returned);
     });
 });
-
-/*router.post('/specialities', (req, res) => {
+/*
+router.post('/specialities',(req,res)=>{
     const tab = [ { name: "4TGL901S", url: "https://hackjack.info/et/Master2_4TGL901S/ical" },
                   { name: "INF501 A", url: "https://hackjack.info/et/INF501_A/ical" },
                   { name: "INF501 A1 ", url: "https://hackjack.info/et/INF501_A1/ical" },
@@ -53,7 +55,7 @@ router.get('/specialities', (req, res, next) => {
         }
         res.status(200).json({success: true, message: "SUCCESS" });
 
-});
-*/
+});*/
+
 
 module.exports = router;

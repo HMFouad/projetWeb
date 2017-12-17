@@ -1,5 +1,7 @@
 const Token = require('../../mongoose/model/token.model');
 
+// TODO change name get-token ?
+
 /**
  * Check if the token exists: then of the returned promise is the success handler.
  *

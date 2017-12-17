@@ -11,7 +11,7 @@ const userExists = require('../utils/user-exists');
 
 
 /**
- * Execute test on tokens controller/
+ * Execute test on tokens controller.
  */
 describe('Tests for tokens', () => {
 

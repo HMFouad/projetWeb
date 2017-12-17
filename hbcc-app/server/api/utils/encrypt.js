@@ -1,17 +1,27 @@
-
-const crypto = require('crypto');
-
-const algorithm = 'aes-256-ctr',
-      pass = 'd6F3Efeq';
+const bcrypt = require('bcrypt');
 
 /**
- * Encrypt the given text.
- * @param {string} plainValue Text to encrypt.
- * @return {string}
+ * Encrypt a password
+ * Encrypted password givent to the success handler of the promise.
+ * @param {string} text
+ *
+ * @return {Promise}
  */
-module.exports = (plainValue) => {
-    const cipher = crypto.createCipher(algorithm, pass);
-    let crypted = cipher.update(plainValue, 'utf8', 'hex');
-    crypted += cipher.final('hex');
-    return crypted;
+module.exports = (text) => {
+    const rounds = 10;
+    return new Promise((resolve, reject) => {
+        bcrypt.genSalt(rounds, (err, salt) => {
+            if (err) {
+                reject(err);
+            }
+
+            bcrypt.hash(text, salt, (err, hash) => {
+                if (err) {
+                    reject(err);
+                }
+
+                resolve(hash);
+            });
+        });
+    });
 };

@@ -15,7 +15,7 @@
     "rules": {
         "mocha/no-exclusive-tests": "error",
         "no-console": "off",
-        "prefer-const": ["error",{
+        "prefer-const": ["error", {
             "destructuring": "any",
             "ignoreReadBeforeAssign": false
         }],
@@ -104,7 +104,7 @@
         "no-void": 2,
         "no-warning-comments": 2,
         "no-with": 2,
-        "prefer-promise-reject-errors": 2,
+        "prefer-promise-reject-errors": "off",
         "radix": 2,
         "require-await": 2,
         "wrap-iife": 2,

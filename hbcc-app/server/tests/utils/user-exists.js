@@ -1,5 +1,7 @@
 const User = require('../../mongoose/model/user.model');
 
+// TODO change name : get-user
+
 /**
  * Check if the user exists: then of the returned promise is the success handler.
  *
