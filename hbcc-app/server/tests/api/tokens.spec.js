@@ -3,7 +3,6 @@ const should = require('should/as-function');
 
 const routerServer = require('../../router');
 const statusCodes = require('../../status-codes');
-const encrypt = require("../../api/utils/encrypt");
 
 const getOneSpeciality = require ('../utils/get-one-speciality');
 const tokenExists = require('../utils/token-exists');
@@ -88,8 +87,6 @@ describe('Tests for tokens', () => {
                 const userToken = {
                     email: "test@test.fr"
                 };
-
-
                     request(routerServer)
                         .post(servicePath)
                         .send(userToken)
@@ -102,9 +99,9 @@ describe('Tests for tokens', () => {
 
             });
 
-            it('Unauthorized (invalid param)', (done) => {
+            it('Bad request (invalid param)', (done) => {
                 const userToken = {
-                    email: "test",
+                    email: "test@test.fr",
                     password: `${123}`
                 };
 
@@ -112,7 +109,7 @@ describe('Tests for tokens', () => {
                         .post(servicePath)
                         .send(userToken)
                         //check status code
-                        .expect(statusCodes.UNAUTHORIZED)
+                        .expect(statusCodes.BAD_REQUEST)
                         // check presence
                         .end(() => {
                             done();

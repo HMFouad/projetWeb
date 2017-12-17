@@ -35,16 +35,6 @@ function createToken (serviceRes, handleCreation) {
  *  * body -> email (string), password (string)
  */
 router.post("/tokens", (req, res) => {
-<<<<<<< HEAD
-    const user = {
-        email: req.body.email,
-        password: `${req.body.password}`
-    };
-    //console.log(">>>>>"+user.email+"//"+user.password+":::::"+(user.password==null));
-    if (!user.email || !user.password) {
-        res.status(statusCodes.BAD_REQUEST)
-           .json({ success: false, message: "Email ou mot de passe manquant" });
-=======
     const givenEmail = req.body.email;
     const givenPassword = `${req.body.password}`;
 
@@ -52,7 +42,6 @@ router.post("/tokens", (req, res) => {
     if (!givenEmail || !givenPassword) {
         res.status(statusCodes.BAD_REQUEST)
            .json({ success: false, message: "L'email et le mot de passe sont requis." });
->>>>>>> e7a057eaeef6210d20cb58885bf388fcccf387b7
     }
     else {
         User.findOne({ email: givenEmail }, (errErr, user) => {
@@ -60,16 +49,11 @@ router.post("/tokens", (req, res) => {
                 throwInternalServerError(res);
             }
             else if (!user) {
-<<<<<<< HEAD
-                res.status(statusCodes.UNAUTHORIZED)
-                   .json({ success: false, message: 'Email ou mot de passe invalide' });
-=======
                 res.status(statusCodes.BAD_REQUEST)
                     .json({
                         success: false,
                         message: `L'email et le mot de passe ne correspondent pas.`
                     });
->>>>>>> e7a057eaeef6210d20cb58885bf388fcccf387b7
             }
             else {
                 bcrypt.compare(givenPassword, user.password, (errPassword, isRightPassword) => {
@@ -101,20 +85,6 @@ router.post("/tokens", (req, res) => {
                                     throwInternalServerError(res);
                                 }
                                 else {
-<<<<<<< HEAD
-                                    console.log("CA MAAAAAAAAAAAAAAAAAAAAARCHE");
-                                    res
-                                        .status(statusCodes.SUCCESS)
-                                        .json({
-                                            success: true,
-                                            message: "SUCCESS",
-                                            authToken: {
-                                                value: token.value,
-                                                expiresAt: token.expiresAt
-                                            },
-                                            user: user._id
-                                        });
-=======
                                     User.update({ _id: user._id }, {
                                         authToken: token._id
                                     }, (userUpdateErr, userUpdated) => {
@@ -135,7 +105,6 @@ router.post("/tokens", (req, res) => {
                                                 });
                                         }
                                     });
->>>>>>> e7a057eaeef6210d20cb58885bf388fcccf387b7
                                 }
                             });
 
