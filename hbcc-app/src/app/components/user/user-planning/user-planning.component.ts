@@ -10,14 +10,22 @@ import {AppConstants} from '@app/app-constants';
 })
 export class UserPlanningComponent implements OnInit {
 
+    private static readonly PastClass = 'fc-past';
+    private static readonly TodayClass = 'fc-today';
+    private static readonly FutureClass = 'fc-future';
+    private static readonly ClassHilightDay1 = 'alert';
+    private static readonly ClassHilightDay2 = 'alert-info';
+
     @ViewChild('rootElement')
     private rootElement: ElementRef;
 
     private apiServiceLoading: boolean;
 
+    private firstLaunched: boolean;
+
     public apiresponseReceived: boolean;
 
-    public currentWeekDelta: number;
+    public currentDayDelta: number;
 
     public viewDate: Date;
     public locale: string;
@@ -25,8 +33,9 @@ export class UserPlanningComponent implements OnInit {
 
     public constructor(private httpClient: HttpClient) {
         this.apiServiceLoading = false;
-        this.currentWeekDelta = 0;
+        this.currentDayDelta = 0;
         this.apiresponseReceived = false;
+        this.firstLaunched = true;
     }
 
     private static GetMonday(date: Date) {
@@ -41,11 +50,6 @@ export class UserPlanningComponent implements OnInit {
 
     private customizeJQueryHeader ($header: any) {
         const now = new Date();
-        const currentWeekDay = (now.getDay() || 7) - 1;
-
-        const pastClass = 'fc-past';
-        const todayClass = 'fc-today';
-        const futureClass = 'fc-future';
 
         $header.find('th.fc-day-header').each(function() {
             const newDayLabelSplitted = $(this)
@@ -64,14 +68,16 @@ export class UserPlanningComponent implements OnInit {
 
             // set right current date
             $(this)
-                .removeClass(pastClass)
-                .removeClass(todayClass)
-                .removeClass(futureClass);
+                .removeClass(UserPlanningComponent.PastClass)
+                .removeClass(UserPlanningComponent.TodayClass)
+                .removeClass(UserPlanningComponent.FutureClass);
 
-            /*$(this)
+            $(this)
                 .addClass(
-                    (currentWeekDay ===)
-                )*/
+                    (Number(now.getDate()) > Number(newDayLabelSplitted[1])) ?  UserPlanningComponent.PastClass :
+                    (Number(now.getDate()) === Number(newDayLabelSplitted[1])) ?  UserPlanningComponent.TodayClass :
+                        UserPlanningComponent.FutureClass // (Number(now.getDate()) < Number(newDayLabelSplitted[1]))
+                );
 
         });
 
@@ -80,6 +86,10 @@ export class UserPlanningComponent implements OnInit {
     }
 
     private handleEventsResponse (events: Array<any>, beginDate: Date) {
+        const now = new Date();
+        const $mainContainer = $('.main-container');
+        const oldScrollTop = $mainContainer.scrollTop();
+
         this.displayedEvents = [];
         for (const eventObj of events) {
             this.displayedEvents.push({
@@ -100,13 +110,21 @@ export class UserPlanningComponent implements OnInit {
             .children('.planning-container')
             .children('.plainning-fc');
 
+        const firstDayCalendar = (this.currentDayDelta === 0) ?
+            1 :
+            (1 + (this.currentDayDelta % 7));
+
+        beginDate.setHours(1)
+        console.log (beginDate)
+        console.log (beginDate.toISOString())
+
         // $ doesn't have fullCalendar method
         $plainningFcContainer
             .fullCalendar('destroy')
             .fullCalendar({
                 header: false,
                 footer: false,
-                firstDay: 1,
+                firstDay: (firstDayCalendar < 0) ? (firstDayCalendar + 7) : firstDayCalendar,
                 defaultView: 'agendaWeek',
                 locale: 'fr',
                 allDaySlot: false,
@@ -134,11 +152,32 @@ export class UserPlanningComponent implements OnInit {
                         .find('.fc-head')
                         .remove();
 
-                    // scroll to the current hour
-                    const now = new Date();
-                    const $mainContainer = $('.main-container');
-                    const maxScrollTop = $mainContainer.prop('scrollHeight') - $mainContainer.outerHeight();
-                    $mainContainer.scrollTop((now.getHours() * maxScrollTop) / 23);
+                    // color right current day
+                    $calendar.el.find('.fc-bg td.fc-day').each(function () {
+
+                        // remove all classes
+                        $(this)
+                            .removeClass(UserPlanningComponent.ClassHilightDay1)
+                            .removeClass(UserPlanningComponent.ClassHilightDay2);
+
+                        const dateCurrentTd = new Date($(this).data('date'));
+
+                        if (dateCurrentTd.getDate() === now.getDate() &&
+                            dateCurrentTd.getMonth() === now.getMonth() &&
+                            dateCurrentTd.getFullYear() === now.getFullYear()) {
+                            $(this).addClass(UserPlanningComponent.ClassHilightDay1)
+                                   .addClass(UserPlanningComponent.ClassHilightDay2);
+                        }
+                    });
+
+                    if (this.firstLaunched) {
+                        this.firstLaunched = false;
+                        const maxScrollTop = $mainContainer.prop('scrollHeight') - $mainContainer.outerHeight();
+                        $mainContainer.scrollTop((now.getHours() * maxScrollTop) / 23);
+                    }
+                    else {
+                        $mainContainer.scrollTop(oldScrollTop);
+                    }
                 }
             });
     }
@@ -166,21 +205,25 @@ export class UserPlanningComponent implements OnInit {
 
     /**
      * Change the current display week;
-     * @param {number} weekDelta
+     * @param {0|-1|1} dayDelta
      */
-    public setWeek(weekDelta: number) {
+    public setPlanning(dayDelta: 0|-1|1) {
         if (!this.apiServiceLoading) {
-            this.currentWeekDelta = weekDelta;
+            this.currentDayDelta = (dayDelta === 0) ? 0 : (this.currentDayDelta + dayDelta);
 
             const now = new Date();
-            const nbMilliSecondsInWeek = 60 * 60 * 24 * 7 * 1000;
+            const nbMilliSecondsInDay = 60 * 60 * 24 * 1000;
 
-            const dateAppliedDelta = now.getTime() + weekDelta * nbMilliSecondsInWeek;
-
-            const firstDisplayedDay = UserPlanningComponent.GetMonday(new Date(dateAppliedDelta));
+            const firstDisplayedDay = new Date(
+                UserPlanningComponent.GetMonday(now).getTime() +
+                this.currentDayDelta * nbMilliSecondsInDay);
+            firstDisplayedDay.setHours(0);
+            firstDisplayedDay.setMinutes(0);
 
             // we add 6 days to the monday to get sunday.
-            const lastDisplayedDay = new Date(firstDisplayedDay.getTime() + 6 * (60 * 60 * 24 * 1000));
+            const lastDisplayedDay = new Date(firstDisplayedDay.getTime() + 6 * nbMilliSecondsInDay);
+            lastDisplayedDay.setHours(23)
+            lastDisplayedDay.setMinutes(59)
 
             this.callEventsService(firstDisplayedDay, lastDisplayedDay);
         }
@@ -191,6 +234,6 @@ export class UserPlanningComponent implements OnInit {
         this.viewDate = new Date();
         this.displayedEvents = [];
 
-        this.setWeek(0);
+        this.setPlanning(0);
     }
 }
