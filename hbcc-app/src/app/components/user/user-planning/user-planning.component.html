@@ -10,11 +10,11 @@
                                 (click)="setWeek(0)">Auhourd'hui</button>
                         <div class="btn-group" role="group">
                             <button class="btn btn-light goto-next"
-                                    (click)="setWeek(currentWeekDelta - 1)">
+                                    (click)="setWeek(-1)">
                                 <i class="fa fa-chevron-left" aria-hidden="true"></i>
                             </button>
                             <button class="btn btn-light goto-previous"
-                                    (click)="setWeek(currentWeekDelta + 1)">
+                                    (click)="setWeek(1)">
                                 <i class="fa fa-chevron-right" aria-hidden="true"></i>
                             </button>
                         </div>
