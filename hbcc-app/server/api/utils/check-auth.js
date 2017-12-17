@@ -46,7 +46,7 @@ function checkAuth (req) {
                             else if (!user) {
                                 reject((res) => {
                                     res.status(statusCodes.UNAUTHORIZED)
-                                       .json({ success: false, message: "Le token d'authentification est invalide." });
+                                        .json({ success: false, message: "Le token d'authentification est invalide." });
                                 });
                             }
                             else {
@@ -57,35 +57,9 @@ function checkAuth (req) {
                     else { // token invalid
                         reject((res) => {
                             res.status(statusCodes.UNAUTHORIZED)
-                               .json({ success: false, message: "Le token d'authentification est invalide." });
+                                .json({ success: false, message: "Le token d'authentification est invalide." });
                         });
                     }
-        const token = splittedAuthorization[1];
-        Token.findOne({ value: token }, (tokenErr, token) => {
-            if (tokenErr) {
-                internalServerError(res);
-            }
-            else if (!token) {
-                res.status(statusCodes.FORBIDDEN).json({ success: false, message: "Can't access" });
-            }
-            else {
-                const tokenExpiration = new Date (token.expiresAt);
-                const now = new Date ();
-                if (tokenExpiration.getTime() > now.getTime()) {
-                    User.findOne({ authToken: token._id }, (userError, user) => {
-                        if (userError) {
-                            internalServerError(res);
-                        }
-                        else if (!user) {
-                            res.status(statusCodes.FORBIDDEN).json({ success: false, message: "Can't access" });
-                        }
-                        else {
-                            success_handler(user);
-                        }
-                    });
-                }
-                else { // token invalid
-                    res.status(statusCodes.FORBIDDEN).json({ success: false, message: "Token has expired" });
                 }
             });
         }
