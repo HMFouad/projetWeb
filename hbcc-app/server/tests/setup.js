@@ -21,7 +21,7 @@ beforeEach((done) => {
         .then(() => {
             resetSpecialities().then(() => {
                 done();
-            })
+            });
         });
 });
 

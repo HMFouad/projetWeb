@@ -21,6 +21,8 @@ export class UserPlanningComponent implements OnInit {
 
     private apiServiceLoading: boolean;
 
+    private firstLaunched: boolean;
+
     public apiresponseReceived: boolean;
 
     public currentDayDelta: number;
@@ -33,6 +35,7 @@ export class UserPlanningComponent implements OnInit {
         this.apiServiceLoading = false;
         this.currentDayDelta = 0;
         this.apiresponseReceived = false;
+        this.firstLaunched = true;
     }
 
     private static GetMonday(date: Date) {
@@ -84,6 +87,8 @@ export class UserPlanningComponent implements OnInit {
 
     private handleEventsResponse (events: Array<any>, beginDate: Date) {
         const now = new Date();
+        const $mainContainer = $('.main-container');
+        const oldScrollTop = $mainContainer.scrollTop();
 
         this.displayedEvents = [];
         for (const eventObj of events) {
@@ -108,6 +113,10 @@ export class UserPlanningComponent implements OnInit {
         const firstDayCalendar = (this.currentDayDelta === 0) ?
             1 :
             (1 + (this.currentDayDelta % 7));
+
+        beginDate.setHours(1)
+        console.log (beginDate)
+        console.log (beginDate.toISOString())
 
         // $ doesn't have fullCalendar method
         $plainningFcContainer
@@ -161,9 +170,14 @@ export class UserPlanningComponent implements OnInit {
                         }
                     });
 
-                    const $mainContainer = $('.main-container');
-                    const maxScrollTop = $mainContainer.prop('scrollHeight') - $mainContainer.outerHeight();
-                    $mainContainer.scrollTop((now.getHours() * maxScrollTop) / 23);
+                    if (this.firstLaunched) {
+                        this.firstLaunched = false;
+                        const maxScrollTop = $mainContainer.prop('scrollHeight') - $mainContainer.outerHeight();
+                        $mainContainer.scrollTop((now.getHours() * maxScrollTop) / 23);
+                    }
+                    else {
+                        $mainContainer.scrollTop(oldScrollTop);
+                    }
                 }
             });
     }
@@ -193,19 +207,23 @@ export class UserPlanningComponent implements OnInit {
      * Change the current display week;
      * @param {0|-1|1} dayDelta
      */
-    public setWeek(dayDelta: 0|-1|1) {
+    public setPlanning(dayDelta: 0|-1|1) {
         if (!this.apiServiceLoading) {
             this.currentDayDelta = (dayDelta === 0) ? 0 : (this.currentDayDelta + dayDelta);
 
             const now = new Date();
             const nbMilliSecondsInDay = 60 * 60 * 24 * 1000;
 
-            const dateAppliedDelta = now.getTime() + this.currentDayDelta * nbMilliSecondsInDay;
-
-            const firstDisplayedDay = UserPlanningComponent.GetMonday(new Date(dateAppliedDelta));
+            const firstDisplayedDay = new Date(
+                UserPlanningComponent.GetMonday(now).getTime() +
+                this.currentDayDelta * nbMilliSecondsInDay);
+            firstDisplayedDay.setHours(0);
+            firstDisplayedDay.setMinutes(0);
 
             // we add 6 days to the monday to get sunday.
-            const lastDisplayedDay = new Date(firstDisplayedDay.getTime() + 6 * (60 * 60 * 24 * 1000));
+            const lastDisplayedDay = new Date(firstDisplayedDay.getTime() + 6 * nbMilliSecondsInDay);
+            lastDisplayedDay.setHours(23)
+            lastDisplayedDay.setMinutes(59)
 
             this.callEventsService(firstDisplayedDay, lastDisplayedDay);
         }
@@ -216,6 +234,6 @@ export class UserPlanningComponent implements OnInit {
         this.viewDate = new Date();
         this.displayedEvents = [];
 
-        this.setWeek(0);
+        this.setPlanning(0);
     }
 }
