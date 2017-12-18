@@ -126,7 +126,7 @@ router.post("/tokens", (req, res) => {
 router.delete("/tokens", (req, res) => {
     checkAuth(req)
         .then((user) => {
-            Token.remove({ _id: user.authToken._id }, (err) => {
+            Token.remove({ _id: user.authToken }, (err) => {
                 if (err) {
                     throwInternalServerError(res);
                 }

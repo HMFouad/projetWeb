@@ -15,8 +15,6 @@ const throwInternalServerError = require("../utils/throw-internal-server-error")
  *  * endDate (ISO Date) (optional)
  */
 router.get('/events', (req, res) => {
-    console.log('Api service call: GET events');
-
     const ICS_TYPE_WANTED = 'VEVENT';
 
     // TODO GET User events
@@ -99,7 +97,6 @@ router.get('/events', (req, res) => {
 
 
 router.post('/events', (req, res) => {
-    console.log ('Api service call: POST events');
     if (!req.body.description ||
         !req.body.start ||
         !req.body.end) {
