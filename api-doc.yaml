@@ -3,14 +3,16 @@ info:
   description: ''
   version: 1.0.0
   title: HBCC Time Table
-host: localhost
-basePath: /api
+# host: localhost
+# basePath: /api
 tags:
   - name: access_tokens
     description: ''
   - name: users
     description: ''
   - name: events
+    description: ''
+  - name: specialities
     description: ''
 paths:
   /users:
@@ -33,9 +35,172 @@ paths:
           schema:
             $ref: '#/definitions/User'
         '400':
-          description: Bad request
+          description: "Bad request"
           schema:
             $ref: '#/definitions/ApiResponse'
+        '500':
+          description: "Internal Server Error"
+          schema:
+            $ref: '#/definitions/ApiResponse'
+  /users/{id}:
+    get:
+      tags:
+      - users
+      summary: Get user by id
+      description: ''
+      operationId: getUser
+      parameters:
+        - name: id
+          in: path
+          description: id of the user to get
+          required: true
+          type: string
+      responses:
+        '200':
+          description: "Success: token deleted"
+          schema:
+            $ref: '#/definitions/Access_token'
+        '401':
+          description: "Unauthorized"
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        '500':
+          description: "Internal Server Error"
+          schema:
+            $ref: '#/definitions/ApiResponse'
+  /tokens:
+    post:
+      tags:
+      - access_tokens
+      summary: Create a new token
+      description: ''
+      operationId: addToken
+      parameters:
+        - name: body
+          in: body
+          description: Information about the user who needs a token
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        '200':
+          description: "Success: token created"
+          schema:
+            $ref: '#/definitions/Access_token'
+        '400':
+          description: "Bad request"
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        '500':
+          description: "Internal Server Error"
+          schema:
+            $ref: '#/definitions/ApiResponse'
+    delete:
+      tags:
+      - access_tokens
+      summary: Delete a token
+      description: ''
+      operationId: deleteToken
+      parameters:
+        - name: token
+          in: query
+          description: The token to delete
+          required: true
+          type: string
+      responses:
+        '200':
+          description: "Success: token deleted"
+          schema:
+            $ref: '#/definitions/Access_token'
+        '401':
+          description: "Unauthorized"
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        '500':
+          description: "Internal Server Error"
+          schema:
+            $ref: '#/definitions/ApiResponse'
+  /specialities:
+    get:
+      tags:
+      - specialities
+      summary: Get specialities
+      description: ''
+      operationId: getSpeciality
+      parameters: []
+      responses:
+        '200':
+          description: "Success: token created"
+          schema:
+            $ref: '#/definitions/Access_token'
+        '500':
+          description: "Internal Server Error"
+          schema:
+            $ref: '#/definitions/ApiResponse'
+  /events:
+    post:
+      tags:
+      - events
+      summary: Create an event
+      description: ''
+      operationId: addEvents
+      parameters:
+        - name: body
+          in: body
+          description: Information about the new event
+          required: true
+          schema:
+            $ref: '#/definitions/Event'
+      responses:
+        '200':
+          description: "Success: token created"
+          schema:
+            $ref: '#/definitions/Access_token'
+        '400':
+          description: "Bad request"
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        '401':
+          description: "Unauthorized"
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        '500':
+          description: "Internal Server Error"
+          schema:
+            $ref: '#/definitions/ApiResponse'
+    get:
+      tags:
+      - events
+      summary: Get the events of the user
+      description: ''
+      operationId: getEvents
+      parameters:
+        - name: user
+          in: query
+          description: Information about the user
+          required: true
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: "Success: token created"
+          schema:
+            $ref: '#/definitions/Access_token'
+        '400':
+          description: "Bad request"
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        '401':
+          description: "Unauthorized"
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        '500':
+          description: "Internal Server Error"
+          schema:
+            $ref: '#/definitions/ApiResponse'
+    
+      
 definitions:
   User:
     type: object
@@ -66,39 +231,68 @@ definitions:
     properties:
       name:
         type: string
+        description: "The name of the speciality"
+        example: "4TGL901S"
       url:
         type: string
+        description: "The url where the speciality's timetable is"
+        example: "https://hackjack.info/et/Master2_4TGL901S/ical"
   Event:
     type: object
     properties:
       id:
         type: integer
         format: int64
+        description: "The id of the event"
+        example: "5a357e9eba36da18101e5418"
       title:
         type: string
+        description: "The description of the event"
+        example: "Cours"
       location:
         type: string
+        description: "The location of the event"
+        example: "Batiment 1 Amphi 1"
       beginDate:
         type: string
+        description: "The beginning date of the event"
+        example: "2017-12-10T20:14:00.000Z"
       endDate:
         type: string
+        description: "The ending date of the event"
+        example: "2017-12-11T20:14:00.000Z"
   Access_token:
     type: object
     properties:
-      token:
+      value:
         type: string
+        description: "The value of the token"
+        example: "6b0VbirHIXZexIT3Az6nPb3EB4NXnBO5y4jkyoID"
       expires_at:
         type: string
+        description: "The expiration date of the token"
+        example: "2017-12-17T13:15:35.757Z"
   ApiResponse:
     type: object
     properties:
       code:
         type: integer
         format: int32
+        description: "The code of the response"
+        example: "200"
       type:
         type: string
+        description: "The type of the response"
+        example: "success"
       message:
         type: string
+        description: "The message of the response"
+        example: "SUCCESS"
 externalDocs:
   description: Find out more about Swagger
   url: 'http://swagger.io'
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /web5/web/1.0.0
+schemes:
+ - https
