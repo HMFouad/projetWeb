@@ -4,14 +4,14 @@
     "license": "MIT",
     "main": "server/server.js",
     "scripts": {
-        "start": "ng serve",
+        "start": "node server/server",
         "start:prod": "./RUN.sh prod",
         "start:dev": "./RUN.sh dev",
         "start:api:dev": "cd server && pm2-dev start server.js",
         "build:app:dev": "ng build -dev --watch",
         "test:app": "ng e2e --no-serve",
         "test:api": "mocha --reporter spec --timeout 10000 ./server/tests/setup.js ./server/tests/**/*.spec.js",
-        "postinstall": "ng build --aot -prod"
+        "postinstall": "ng build --aot --trager=production"
     },
     "engines": {
         "node": "^8.9.1",
