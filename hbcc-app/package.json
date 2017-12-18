@@ -11,11 +11,11 @@
         "build:app:dev": "ng build -dev --watch",
         "test:app": "ng e2e --no-serve",
         "test:api": "mocha --reporter spec --timeout 10000 ./server/tests/setup.js ./server/tests/**/*.spec.js",
-        "postinstall": "ng build -dev"
+        "postinstall": "ng build --aot -prod"
     },
     "engines": {
         "node": "^8.9.1",
-        "npm":"^5.5.1"
+        "npm": "^5.5.1"
     },
     "private": true,
     "dependencies": {
