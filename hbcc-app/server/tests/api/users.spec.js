@@ -9,7 +9,7 @@ const tokenExists = require('../utils/token-exists');
 const userExists = require('../utils/user-exists');
 
 /**
- * Execute test on tokens controller/
+ * Execute test on users controller/
  */
 describe('Tests for users', () => {
 
@@ -17,7 +17,7 @@ describe('Tests for users', () => {
     let counter = 0;
 
     /**
-     * Tests of POST /tokens api route.
+     * Tests of POST /users api route.
      */
     describe('POST /users', () => {
         const servicePath = `${apiPath}/users`;
@@ -35,10 +35,10 @@ describe('Tests for users', () => {
                 request(routerServer)
                     .post(servicePath)
                     .send(userToInsert)
-                    //check status code
-                    .expect(statusCodes.SUCCESS)
                     // check presence
                     .end((err, res) => {
+                        should(res.status).be.exactly(statusCodes.SUCCESS);
+
                         should(res.body.success).be.ok();
                         should(res.body.user).be.a.String();
                         should(res.body.authToken).be.a.Object();
@@ -83,20 +83,19 @@ describe('Tests for users', () => {
                     speciality: `${speciality._id}`
                 };
 
+                // we insert the user two times
                 request(routerServer)
                     .post(servicePath)
                     .send(userToInsert)
-                    //check status code
-                    .expect(statusCodes.SUCCESS)
                     // check presence
                     .end((err, res) => {
+                        should(res.status).be.exactly(statusCodes.SUCCESS);
                         request(routerServer)
                             .post(servicePath)
                             .send(userToInsert)
-                            //check status code
-                            .expect(statusCodes.BAD_REQUEST)
                             // check presence
-                            .end(() => {
+                            .end((err, res) => {
+                                should(res.status).be.exactly(statusCodes.BAD_REQUEST);
                                 done();
                             });
                     });
@@ -116,10 +115,9 @@ describe('Tests for users', () => {
                 request(routerServer)
                     .post(servicePath)
                     .send(userToInsert)
-                    //check status code
-                    .expect(statusCodes.BAD_REQUEST)
                     // check presence
-                    .end(() => {
+                    .end((err, res) => {
+                        should(res.status).be.exactly(statusCodes.BAD_REQUEST);
                         done();
                     });
             });
@@ -136,10 +134,9 @@ describe('Tests for users', () => {
             request(routerServer)
                 .post(servicePath)
                 .send(userToInsert)
-                //check status code
-                .expect(statusCodes.BAD_REQUEST)
                 // check presence
-                .end(() => {
+                .end((err, res) => {
+                    should(res.status).be.exactly(statusCodes.BAD_REQUEST);
                     done();
                 });
         });
@@ -153,12 +150,12 @@ describe('Tests for users', () => {
             request(routerServer)
                 .post(servicePath)
                 .send(userToInsert)
-                //check status code
-                .expect(statusCodes.BAD_REQUEST)
                 // check presence
-                .end(() => {
+                .end((err, res) => {
+                    should(res.status).be.exactly(statusCodes.BAD_REQUEST);
                     done();
                 });
         });
     });
+
 });

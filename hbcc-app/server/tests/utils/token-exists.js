@@ -1,7 +1,5 @@
 const Token = require('../../mongoose/model/token.model');
 
-// TODO change name get-token ?
-
 /**
  * Check if the token exists: then of the returned promise is the success handler.
  *
@@ -11,10 +9,10 @@ const Token = require('../../mongoose/model/token.model');
  * @return {Promise}
  */
 function tokenExists (tokenValue, tokenExpiration) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         Token.findOne({ value: tokenValue, expiresAt: tokenExpiration }, (err, res) => {
             if (err || !res) {
-                throw new Error('not exists');
+                reject(new Error('not exists'));
             }
             else {
                 resolve();

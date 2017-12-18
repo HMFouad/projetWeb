@@ -3,6 +3,8 @@ const User = require('../../mongoose/model/user.model');
 const Token = require('../../mongoose/model/token.model');
 const throwInternalServerError = require('./throw-internal-server-error');
 
+const ERROR_MESSAGE = "Le token d'authentification est invalide.";
+
 /**
  * Check given authentication token and return throw error if invalid.
  *
@@ -31,7 +33,7 @@ function checkAuth (req) {
                     reject((res) => {
                         res.status(statusCodes.UNAUTHORIZED).json({
                             success: false,
-                            message: "Le token d'authentification est invalide."
+                            message: ERROR_MESSAGE
                         });
                     });
                 }
@@ -46,7 +48,7 @@ function checkAuth (req) {
                             else if (!user) {
                                 reject((res) => {
                                     res.status(statusCodes.UNAUTHORIZED)
-                                        .json({ success: false, message: "Le token d'authentification est invalide." });
+                                       .json({ success: false, message: ERROR_MESSAGE });
                                 });
                             }
                             else {
@@ -55,9 +57,16 @@ function checkAuth (req) {
                         });
                     }
                     else { // token invalid
-                        reject((res) => {
-                            res.status(statusCodes.UNAUTHORIZED)
-                                .json({ success: false, message: "Le token d'authentification est invalide." });
+                        Token.remove({ _id: token._id }, (errRemovetoken) => {
+                            if (errRemovetoken) {
+                                reject(throwInternalServerError);
+                            }
+                            else {
+                                reject((res) => {
+                                    res.status(statusCodes.UNAUTHORIZED)
+                                        .json({ success: false, message: ERROR_MESSAGE });
+                                });
+                            }
                         });
                     }
                 }

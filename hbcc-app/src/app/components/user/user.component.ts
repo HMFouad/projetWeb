@@ -1,15 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
-  selector: 'hbcc-user',
-  templateUrl: './user.component.html',
-  styleUrls: ['./user.component.css']
+    selector: 'hbcc-user',
+    templateUrl: './user.component.html',
+    styleUrls: ['./user.component.css']
 })
 export class UserComponent implements OnInit {
 
-  constructor() { }
+    public constructor() {}
 
-  ngOnInit() {
-  }
+    public ngOnInit(): void {}
 
 }

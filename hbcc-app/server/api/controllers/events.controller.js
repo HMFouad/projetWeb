@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const icalParser = require('ical');
 const Event = require('../../mongoose/model/event.model');
-const User = require('../../mongoose/model/user.model');
 const Speciality = require('../../mongoose/model/speciality.model');
 const statusCodes = require('../../status-codes');
 const checkAuth = require ('../utils/check-auth');
@@ -16,11 +15,8 @@ const throwInternalServerError = require("../utils/throw-internal-server-error")
  *  * endDate (ISO Date) (optional)
  */
 router.get('/events', (req, res) => {
-    console.log('Api service call: GET events');
-
     const ICS_TYPE_WANTED = 'VEVENT';
 
-    // TODO GET User events
     checkAuth(req).then((user) => {
         const beginRequestedDate = new Date(req.query.beginDate);
         const endRequestedDate = new Date(req.query.endDate);
@@ -84,8 +80,22 @@ router.get('/events', (req, res) => {
                                 }
                             }
 
-                            // send result
-                            res.json(events);
+                            Event.find({ userId: user._id }, (errEvent, userEvents) => {
+                                if (errEvent) {
+                                    throwInternalServerError(res);
+                                }
+                                else {
+                                    if (userEvents && userEvents.length > 0) {
+                                        for (const e of userEvents) {
+                                            delete e.userId;
+                                            events.push(e);
+                                        }
+                                    }
+
+                                    // send result
+                                    res.json(events);
+                                }
+                            });
                         }
                     });
                 }
@@ -100,55 +110,46 @@ router.get('/events', (req, res) => {
 
 
 router.post('/events', (req, res) => {
-    console.log ('Api service call: POST events');
-    if (!req.body.description || !req.body.start || !req.body.end ) {
+    if (!req.body.description ||
+        !req.body.start ||
+        !req.body.end) {
         res.status(statusCodes.BAD_REQUEST)
             .json({
                 success: false,
-                message: "Mauvaise réception des données de l'évènement."
+                message: "Un paramètre de formulaire est manquant."
             });
     }
     else {
-        checkAuth(req)
-            .then((user) => {
-                //Create event
-                User.findOne({ _id: user._id }, (userErr, user) => {
-                    if (userErr) {
-                        throwInternalServerError(res);
-                    }
-                    else if (!user) {
-                        res.status(statusCodes.BAD_REQUEST)
-                            .json({ success: false, message: "L'utilisateur auquel atitré l'évènement est inconnu." });
-                    }
-                    else {
-                        const event = new Event({
-                            description: req.body.description,
-                            location: req.body.location,
-                            start: req.body.start,
-                            end: req.body.end,
-                            userId: user._id
-                        });
-                        console.log(user);
-                        console.log(event);
-                        //Insert in db
-                        event.save(function (err) {
-                            if (err) {
-                                throwInternalServerError(res);
-                            }
-                            else {
-                                res.status(statusCodes.SUCCESS)
-                                    .json({
-                                        success: true,
-                                        message: "SUCCESS"
-                                    });
-                            }
-                        });
-                    }
-                });
-            })
-            .catch((throwError) => {
-                throwError(res);
+        checkAuth(req).then((user) => {
+            const event = new Event({
+                description: req.body.description,
+                start: req.body.start,
+                end: req.body.end,
+                userId: user._id
             });
+
+            // insert the location if it is defined
+            if (req.body.location) {
+                event.location = req.body.location;
+            }
+
+            //Insert in db
+            event.save((err) => {
+                if (err) {
+                    throwInternalServerError(res);
+                }
+                else {
+                    res.status(statusCodes.SUCCESS)
+                        .json({
+                            success: true,
+                            message: "SUCCESS"
+                        });
+                }
+            });
+        })
+        .catch((throwError) => {
+            throwError(res);
+        });
     }
 });
 

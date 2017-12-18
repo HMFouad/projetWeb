@@ -15,7 +15,7 @@ module.exports = (text) => {
                 reject(err);
             }
 
-            bcrypt.hash(text, salt, (err, hash) => {
+            bcrypt.hash(text, salt, null, (err, hash) => {
                 if (err) {
                     reject(err);
                 }
