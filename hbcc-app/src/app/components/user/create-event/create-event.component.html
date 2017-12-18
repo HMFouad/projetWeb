@@ -14,14 +14,15 @@
                 </div>
                 <div class="form-group">
                     <label for="startDate">Date et heure de début</label>
-                    <input [(ngModel)]="start" ng2-datetime-picker
+                    <input [(ngModel)]="start" ng2-datetime-picke
                            date-format="DD-MM-YYYY hh:mm"
                            [close-on-select]="false" name="startDate" id="startDate" required>
                 </div>
                 <div class="form-group">
                     <label for="endDate">Date et heure de fin</label>
-                    <input [(ngModel)]="end" ng2-datetime-picker
+                    <input  [(ngModel)]="end" ng2-datetime-picker
                            date-format="DD-MM-YYYY hh:mm"
+                           min-date="start"
                            [close-on-select]="false" name="endDate" id="endDate" required>
                 </div>
                 <div class="form-group">
