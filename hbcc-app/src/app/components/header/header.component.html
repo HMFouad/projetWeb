@@ -1,16 +1,31 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" routerLink="/home">HBCC app</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbar-mobile"
+            aria-controls="navbar-mobile"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div class="collapse navbar-collapse" id="navbar-mobile">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" routerLink="/home">Home</a>
+            <li class="nav-item">
+                <a class="nav-link" routerLink="user/planning">
+                    Mon planning
+                </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" routerLink="/about">About</a>
+                <a class="nav-link" routerLink="user/create-event">
+                    Ajouter un évènement
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLink="user/profile">
+                    Mes paramètres
+                </a>
             </li>
         </ul>
         <form *ngIf="!userConnected"

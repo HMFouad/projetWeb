@@ -22,8 +22,8 @@ export class CreateEventComponent  {
 
         const body: any = {
             description: this.description,
-            start: this.start,
-            end: this.end
+            start: new Date(this.start).toISOString(),
+            end: new Date(this.end).toISOString()
         };
 
         if  (this.location) {

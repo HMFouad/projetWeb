@@ -1,8 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './components/app/app.component';
-import { AboutComponent } from './components/about/about.component';
-import { MapComponent } from './components/map/map.component';
 import { ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {AppRoutingModule} from './app-routing.module';
@@ -18,6 +16,7 @@ import {SecureHttpClientService} from '@app/services/secure-http-client.service'
 import {CreateEventComponent} from '@app/components/user/create-event/create-event.component';
 import {ProfileComponent} from '@app/components/user/profile/profile.component';
 import {PlanningComponent} from '@app/components/user/planning/planning.component';
+import {VerticalNavbarComponent} from '@app/components/vertical-navbar/vertical-navbar.component';
 
 @NgModule({
     imports: [
@@ -33,12 +32,11 @@ import {PlanningComponent} from '@app/components/user/planning/planning.componen
         CreateEventComponent,
         RegistrationComponent,
         ProfileComponent,
-        AboutComponent,
-        MapComponent,
         HeaderComponent,
         FooterComponent,
         PlanningComponent,
-        UserComponent
+        UserComponent,
+        VerticalNavbarComponent
     ],
     providers: [
         AuthGuard,

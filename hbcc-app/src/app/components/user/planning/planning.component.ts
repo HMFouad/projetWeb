@@ -4,9 +4,9 @@ import {AppConstants} from '@app/app-constants';
 import {SecureHttpClientService} from '@app/services/secure-http-client.service';
 
 @Component({
-  selector: 'hbcc-planning',
-  templateUrl: './planning.component.html',
-  styleUrls: ['./planning.component.css']
+    selector: 'hbcc-planning',
+    templateUrl: './planning.component.html',
+    styleUrls: ['./planning.component.css']
 })
 export class PlanningComponent implements OnInit {
 
@@ -175,7 +175,7 @@ export class PlanningComponent implements OnInit {
                             dateCurrentTd.getMonth() === now.getMonth() &&
                             dateCurrentTd.getFullYear() === now.getFullYear()) {
                             $(this).addClass(PlanningComponent.ClassHilightDay1)
-                                   .addClass(PlanningComponent.ClassHilightDay2);
+                                .addClass(PlanningComponent.ClassHilightDay2);
                         }
                     });
 

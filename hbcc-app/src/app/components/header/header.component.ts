@@ -67,6 +67,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
                 localStorage.setItem(AppConstants.AUTH_TOKEN_EXPIRATION_NAME, response.authToken.expiresAt);
                 localStorage.setItem(AppConstants.USER_ID_NAME, response.user);
                 this.secureHttpClient.userHasBeenUpdated.next(true);
+                this.loginForm.reset();
                 this.router.navigate(['user/planning']);
             }, (error) => { // error
                 console.log (error);

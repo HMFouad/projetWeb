@@ -1,7 +1,11 @@
-<div class="container"
-     #rootElement>
+<div #rootElement>
+    <div [hidden]="apiresponseReceived"
+         id="loader"
+         class="text-center">
+        <i class="ld ld-spin ld-ring"></i>
+    </div>
     <div class="planning-container row">
-        <div class="planning-header col-12">
+        <div class="planning-header col-9">
             <div class="row justify-content-md-start justify-content-center"
                  *ngIf="apiresponseReceived">
                 <div class="col-1"></div>
@@ -22,7 +26,7 @@
                     </div>
                 </div>
                 <div class="col-md-5 col-12 text-center text-md-left displayed-month">
-                        {{ currentMonth }}
+                    {{ currentMonth }}
                 </div>
             </div>
             <div class="planning-header-fc-container row"></div>

@@ -30,7 +30,6 @@ describe('Tests for events', () => {
             request(routerServer)
                 .post(addUserPath)
                 .send(userToInsert)
-                .expect(statusCodes.SUCCESS)
                 .end((err, res) => {
                     userId = res.body.user;
                     authTokenValue = res.body.authToken.value;
@@ -61,6 +60,7 @@ describe('Tests for events', () => {
                 .send(eventToInsert)
                 // check presence
                 .end((err, res) => {
+                    should(res.status).be.exactly(statusCodes.SUCCESS);
                     should(res.body.success).be.ok();
                     should(res.status).be.exactly(statusCodes.SUCCESS);
                     eventExists(userId).then((event) => {
