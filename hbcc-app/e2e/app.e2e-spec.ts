@@ -1,14 +1,13 @@
-import { AppPage } from './app.po';
 
-describe('tpm-web-app App', () => {
-  let page: AppPage;
+import { browser, by, element } from 'protractor';
+const Serveur = require('../server/server');
 
-  beforeEach(() => {
-    page = new AppPage();
+describe('Hbcc App', () => {
+
+
+  it('Should find inscription title', () => {
+         browser.get('http://localhost:8080/');
+          expect(browser.driver.findElement(by.css('InscriptionTitle')).getText()).toEqual("S'inscrire");
   });
 
-  it('should display welcome message', () => {
-    page.navigateTo();
-    expect(page.getParagraphText()).toEqual('Welcome to app!');
-  });
 });

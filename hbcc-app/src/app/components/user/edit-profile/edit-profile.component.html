@@ -2,14 +2,14 @@
     <div class="row">
         <div class="col-md-8 col-lg-6 mx-auto">
             <div class="card card-body">
-                <h3 class="text-center mb-4" id ="InscriptionTitle">S'inscrire</h3>
+                <h3 class="text-center mb-4">Modifier ses paramètres utilisateur.</h3>
                 <div class="alert alert-danger"
                      *ngIf="apiMessage">
                     {{ apiMessage }}
                 </div>
                 <form class="formGroup"
                       novalidate
-                      [formGroup]="signUpForm">
+                      [formGroup]="editProfileForm">
                     <div class="form-group row justify-content-center">
                         <label class="col-form-label col-md-4"
                                for="field-first-name">Prénom</label>
@@ -19,10 +19,10 @@
                                    id="field-first-name"
                                    name="firstName"
                                    class="form-control"
-                                   [ngClass]="{'is-invalid': firstName.invalid && (firstName.touched || signUpFormSubmitted)}"
+                                   [ngClass]="{'is-invalid': firstName.invalid && (firstName.touched || editProfileFormSubmitted)}"
                                    formControlName="firstName"/>
 
-                            <div *ngIf="firstName.invalid && (firstName.touched || signUpFormSubmitted)"
+                            <div *ngIf="firstName.invalid && (firstName.touched || editProfileFormSubmitted)"
                                  class="text-danger col-12 validation-messages-list">
                                 <div *ngIf="firstName.errors.required">Votre prénom est requis.</div>
                             </div>
@@ -36,10 +36,10 @@
                                    id="field-last-name"
                                    name="lastName"
                                    class="form-control"
-                                   [ngClass]="{'is-invalid': lastName.invalid && (lastName.touched || signUpFormSubmitted)}"
+                                   [ngClass]="{'is-invalid': lastName.invalid && (lastName.touched || editProfileFormSubmitted)}"
                                    formControlName="lastName"/>
 
-                            <div *ngIf="lastName.invalid && (lastName.touched || signUpFormSubmitted)"
+                            <div *ngIf="lastName.invalid && (lastName.touched || editProfileFormSubmitted)"
                                  class="text-danger col-12 validation-messages-list">
                                 <div *ngIf="lastName.errors.required">Votre nom est requis.</div>
                             </div>
@@ -53,11 +53,11 @@
                             <input id="field-email"
                                    type="email"
                                    name="email"
-                                   [ngClass]="{'is-invalid': email.invalid && (email.touched || signUpFormSubmitted)}"
+                                   [ngClass]="{'is-invalid': email.invalid && (email.touched || editProfileFormSubmitted)}"
                                    class="form-control"
                                    formControlName="email"/>
 
-                            <div *ngIf="email.invalid && (email.touched || signUpFormSubmitted)"
+                            <div *ngIf="email.invalid && (email.touched || editProfileFormSubmitted)"
                                  class="text-danger col-12 validation-messages-list">
                                 <div *ngIf="email.errors.required"
                                      class="validation-message">
@@ -77,12 +77,12 @@
                         <div class="col-md-7">
                             <select name="speciality"
                                     id="field-speciality"
-                                    [ngClass]="{'is-invalid': speciality.invalid && (speciality.touched || signUpFormSubmitted)}"
+                                    [ngClass]="{'is-invalid': speciality.invalid && (speciality.touched || editProfileFormSubmitted)}"
                                     class="form-control custom-select"
                                     [formControlName]="'speciality'">
                                 <option *ngFor="let speciality of specialities" [value]="speciality._id">{{ speciality.name }}</option>
                             </select>
-                            <div *ngIf="speciality.invalid && (speciality.touched || signUpFormSubmitted)"
+                            <div *ngIf="speciality.invalid && (speciality.touched || editProfileFormSubmitted)"
                                  class="text-danger col-12 validation-messages-list">
                                 <div *ngIf="speciality.errors.required"
                                      class="validation-message">
@@ -94,18 +94,18 @@
 
                     <div class="form-group row justify-content-center">
                         <label class="col-form-label col-md-4"
-                               for="field-password">Mot de passe</label>
+                               for="field-newPassword">Nouveau mot de passe</label>
                         <div class="col-md-7">
                             <input type="password"
-                                   name="password"
+                                   name="newPassword"
                                    class="form-control"
-                                   [ngClass]="{'is-invalid': password.invalid && (password.touched || signUpFormSubmitted)}"
-                                   id="field-password"
-                                   formControlName="password"/>
+                                   [ngClass]="{'is-invalid': newPassword.invalid && (newPassword.touched || editProfileFormSubmitted)}"
+                                   id="field-newPassword"
+                                   formControlName="newPassword"/>
 
-                            <div *ngIf="password.invalid && (password.touched || signUpFormSubmitted)"
+                            <div *ngIf="newPassword.invalid && (newPassword.touched || editProfileFormSubmitted)"
                                  class="text-danger col-12 validation-messages-list">
-                                <div *ngIf="password.errors.required"
+                                <div *ngIf="newPassword.errors.required"
                                      class="validation-message">
                                     Votre mot de passe est requis.
                                 </div>
@@ -115,18 +115,39 @@
 
                     <div class="form-group row justify-content-center">
                         <label class="col-form-label col-md-4"
-                               for="field-confirm-password">Confirmation de mot de passe</label>
+                               for="field-confirm-password">Confirmation du nouveau mot de passe</label>
                         <div class="col-md-7">
                             <input type="password"
-                                   name="confirmPassword"
+                                   name="confirmNewPassword"
                                    class="form-control"
-                                   [ngClass]="{'is-invalid': confirmPassword.invalid && (confirmPassword.touched || signUpFormSubmitted)}"
+                                   [ngClass]="{'is-invalid': confirmNewPassword.invalid && (confirmNewPassword.touched || editProfileFormSubmitted)}"
                                    id="field-confirm-password"
-                                   formControlName="confirmPassword"/>
+                                   formControlName="confirmNewPassword"/>
 
-                            <div *ngIf="confirmPassword.invalid && (confirmPassword.touched || signUpFormSubmitted)"
+                            <div *ngIf="confirmNewPassword.invalid && (confirmNewPassword.touched || editProfileFormSubmitted)"
                                  class="text-danger col-12 validation-messages-list">
-                                <div *ngIf="confirmPassword.errors.required"
+                                <div *ngIf="confirmNewPassword.errors.required"
+                                     class="validation-message">
+                                    Une confirmation de mot de passe est requise.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row justify-content-center">
+                        <label class="col-form-label col-md-4"
+                               for="field-password">Ancien mot de passe</label>
+                        <div class="col-md-7">
+                            <input type="password"
+                                   name="password"
+                                   class="form-control"
+                                   [ngClass]="{'is-invalid': (password.invalid && (password.touched || editProfileFormSubmitted)) }"
+                                   id="field-password"
+                                   formControlName="password"/>
+
+                            <div *ngIf="password.invalid && (password.touched || editProfileFormSubmitted)"
+                                 class="text-danger col-12 validation-messages-list">
+                                <div *ngIf="password.errors.required"
                                      class="validation-message">
                                     Une confirmation de mot de passe est requise.
                                 </div>
@@ -138,14 +159,14 @@
                         <div class="col-auto">
                             <button class="btn btn-success"
                                     name="createAccount"
-                                    (click)="submitSignUpForm()">
+                                    (click)="submitEditProfileForm()">
                                 S'inscrire
                             </button>
                         </div>
                         <div class="col-auto">
                             <button class="btn btn-danger col-auto"
                                     name="reset"
-                                    (click)="resetSignUpForm()">
+                                    (click)="resetEditProfileForm()">
                                 Réinitialiser
                             </button>
                         </div>
