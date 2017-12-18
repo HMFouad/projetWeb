@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {AppConstants} from "@app/app-constants";
-import {UnAuthGuard} from "@app/guards/un-auth.guard";
+import {AppConstants} from '@app/app-constants';
+import {UnAuthGuard} from '@app/guards/un-auth.guard';
+import {SecureHttpClientService} from '@app/services/secure-http-client.service';
 
 @Component({
     selector: 'hbcc-registration',
@@ -21,7 +22,8 @@ export class RegistrationComponent implements OnInit {
     public signUpFormLoading: boolean;
 
     public constructor(private httpClient: HttpClient,
-                       private unAuthGuard: UnAuthGuard) {
+                       private unAuthGuard: UnAuthGuard,
+                       private secureHttpClient: SecureHttpClientService) {
         this.signUpFormSubmitted = false;
         this.signUpFormLoading = false;
     }
@@ -79,11 +81,12 @@ export class RegistrationComponent implements OnInit {
                     localStorage.setItem(AppConstants.AUTH_TOKEN_VALUE_NAME, response.authToken.value);
                     localStorage.setItem(AppConstants.AUTH_TOKEN_EXPIRATION_NAME, response.authToken.expiresAt);
                     localStorage.setItem(AppConstants.USER_ID_NAME, response.user);
+                    this.secureHttpClient.userHasBeenUpdated.next(true);
                     this.signUpForm.reset();
                     this.unAuthGuard.canActivate();
                 }, (response) => { // error
                     this.signUpFormLoading = false;
-                    this.apiMessage = response.error.message || 'Veuillez essayer ultérieurement.'
+                    this.apiMessage = response.error.message || 'Veuillez essayer ultérieurement.';
                 });
         }
     }
