@@ -17,7 +17,6 @@ const throwInternalServerError = require("../utils/throw-internal-server-error")
 router.get('/events', (req, res) => {
     const ICS_TYPE_WANTED = 'VEVENT';
 
-    // TODO GET User events
     checkAuth(req).then((user) => {
         const beginRequestedDate = new Date(req.query.beginDate);
         const endRequestedDate = new Date(req.query.endDate);
@@ -81,8 +80,22 @@ router.get('/events', (req, res) => {
                                 }
                             }
 
-                            // send result
-                            res.json(events);
+                            Event.find({ userId: user._id }, (errEvent, userEvents) => {
+                                if (errEvent) {
+                                    throwInternalServerError(res);
+                                }
+                                else {
+                                    if (userEvents && userEvents.length > 0) {
+                                        for (const e of userEvents) {
+                                            delete e.userId;
+                                            events.push(e);
+                                        }
+                                    }
+
+                                    // send result
+                                    res.json(events);
+                                }
+                            });
                         }
                     });
                 }
