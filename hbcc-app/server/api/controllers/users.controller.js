@@ -121,9 +121,10 @@ router.get('/users/:id', (req, res) => {
             res.status(statusCodes.UNAUTHORIZED)
                 .json({ success: false, message: `Current user is not allowed to see other users` });
         }
-    }).catch((throwErr) => {
-        throwErr(res);
-    });
+    })
+        .catch((throwErr) => {
+            throwErr(res);
+        });
 });
 
 /**
@@ -151,6 +152,9 @@ router.patch('/users/:id', (req, res) => {
     const givenPassword = body.password;
 
     const userIdToChange = req.params.id;
+
+
+    // TODO import bcrypt et checkAuth
 
     checkAuth(req).then((user) => {
         if (`${user._id}` === `${userIdToChange}`) {
