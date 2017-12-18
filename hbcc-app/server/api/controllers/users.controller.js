@@ -153,9 +153,6 @@ router.patch('/users/:id', (req, res) => {
 
     const userIdToChange = req.params.id;
 
-
-    // TODO import bcrypt et checkAuth
-
     checkAuth(req).then((user) => {
         if (`${user._id}` === `${userIdToChange}`) {
 
