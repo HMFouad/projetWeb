@@ -77,7 +77,7 @@ export class EditProfileComponent implements OnInit {
         if (this.editProfileForm.valid && !this.editProfileFormLoading) {
             this.editProfileFormLoading = true;
                 this.httpClient.request('patch',
-                                        '/api/users' + localStorage.getItem(AppConstants.USER_ID_NAME),
+                                        '/api/users/' + localStorage.getItem(AppConstants.USER_ID_NAME),
                     {
                         headers: {
                             responseType: 'json',
