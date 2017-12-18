@@ -104,23 +104,22 @@ router.get('/events', (req, res) => {
     }).catch((throwErr) => {
         throwErr(res);
     });
-
 });
 
 
 
 router.post('/events', (req, res) => {
-    if (!req.body.description ||
-        !req.body.start ||
-        !req.body.end) {
-        res.status(statusCodes.BAD_REQUEST)
-            .json({
-                success: false,
-                message: "Un paramètre de formulaire est manquant."
-            });
-    }
-    else {
-        checkAuth(req).then((user) => {
+    checkAuth(req).then((user) => {
+        if (!req.body.description ||
+            !req.body.start ||
+            !req.body.end) {
+            res.status(statusCodes.BAD_REQUEST)
+                .json({
+                    success: false,
+                    message: "Un paramètre de formulaire est manquant."
+                });
+        }
+        else {
             const event = new Event({
                 description: req.body.description,
                 start: req.body.start,
@@ -140,17 +139,17 @@ router.post('/events', (req, res) => {
                 }
                 else {
                     res.status(statusCodes.SUCCESS)
-                        .json({
-                            success: true,
-                            message: "SUCCESS"
-                        });
+                       .json({
+                           success: true,
+                           message: "SUCCESS"
+                       });
                 }
             });
-        })
-        .catch((throwError) => {
-            throwError(res);
-        });
-    }
+        }
+    })
+    .catch((throwError) => {
+        throwError(res);
+    });
 });
 
 

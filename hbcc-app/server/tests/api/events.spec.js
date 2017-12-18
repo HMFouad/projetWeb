@@ -30,7 +30,6 @@ describe('Tests for events', () => {
             request(routerServer)
                 .post(addUserPath)
                 .send(userToInsert)
-                .expect(statusCodes.SUCCESS)
                 .end((err, res) => {
                     userId = res.body.user;
                     authTokenValue = res.body.authToken.value;
@@ -57,12 +56,11 @@ describe('Tests for events', () => {
 
             request(routerServer)
                 .post(servicePath)
-                .set({Authorization: `Bearer ${authTokenValue}`})
+                .set({ Authorization: `Bearer ${authTokenValue}` })
                 .send(eventToInsert)
-                //check status code
-                .expect(statusCodes.SUCCESS)
                 // check presence
                 .end((err, res) => {
+                    should(res.status).be.exactly(statusCodes.SUCCESS);
                     should(res.body.success).be.ok();
 
                     eventExists(userId).then((event) => {

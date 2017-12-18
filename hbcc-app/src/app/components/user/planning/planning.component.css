@@ -84,35 +84,12 @@
 :host ::ng-deep .planning-header {
     position: fixed;
     z-index: 11;
-    background-color: white;
+    padding-right: 0;
 }
 
 :host ::ng-deep .planning-header > * {
-    margin-top: 16px
-}
-
-@media (min-width: 576px) {
-    :host ::ng-deep .planning-header {
-        max-width: 540px;
-    }
-}
-
-@media (min-width: 768px) {
-    :host ::ng-deep .planning-header {
-        max-width: 720px;
-    }
-}
-
-@media (min-width: 992px) {
-    :host ::ng-deep .planning-header {
-        max-width: 960px;
-    }
-}
-
-@media (min-width: 1200px) {
-    :host ::ng-deep .planning-header {
-        max-width: 1140px;
-    }
+    padding-top: 16px;
+    background-color: white;
 }
 
 :host ::ng-deep .fc-view-container > .fc-view > .table-bordered,
@@ -128,4 +105,17 @@
     height: 100% !important;
     overflow-x: auto !important;
     overflow-y: auto !important;
+}
+
+:host ::ng-deep .fc-bg .fc-axis,
+:host ::ng-deep .fc-slats .fc-axis {
+    width: 28px !important;
+}
+
+#loader {
+    padding-top: 3rem;
+}
+
+#loader > .ld.ld-spin {
+    font-size: 3rem;
 }

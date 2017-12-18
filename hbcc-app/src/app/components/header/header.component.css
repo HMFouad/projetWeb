@@ -1,0 +1,11 @@
+@media (min-width: 1248px) {
+    #navbar-mobile > .navbar-nav {
+        opacity: 0;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1248px) {
+    #navbar-mobile > .navbar-nav {
+        display: none;
+    }
+}

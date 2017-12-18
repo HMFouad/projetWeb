@@ -1,3 +1,8 @@
+/* util class */
+.pointer-cursor {
+    cursor: pointer;
+}
+
 /* add the font */
 @font-face {
     font-family: "Roboto";

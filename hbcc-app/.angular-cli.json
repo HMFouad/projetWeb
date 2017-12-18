@@ -22,6 +22,8 @@
                 "../node_modules/bootstrap/dist/css/bootstrap.min.css",
                 "../node_modules/fullcalendar/dist/fullcalendar.min.css",
                 "../node_modules/font-awesome/css/font-awesome.min.css",
+                "assets/css/loading.css",
+                "assets/css/loading-btn.css",
                 "styles.css"
             ],
             "scripts": [

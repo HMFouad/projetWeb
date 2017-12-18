@@ -15,19 +15,18 @@ const router = express.Router();
 
 // Get users
 router.get('/users/:id', (req, res) => {
-    checkAuth(req)
-        .then((user) => {
-            if (user._id === req.params.id) {
-                res.json(user);
-            }
-            else {
-                res.status(statusCodes.UNAUTHORIZED)
-                    .json({ success: false, message: `Current user is not allowed to see other users` });
-            }
-        })
-        .catch((throwErr) => {
-            throwErr(res);
-        });
+    checkAuth(req).then((user) => {
+        if (user._id === req.params.id) {
+            res.json(user);
+        }
+        else {
+            res.status(statusCodes.UNAUTHORIZED)
+               .json({ success: false, message: `Current user is not allowed to see other users` });
+        }
+    })
+    .catch((throwErr) => {
+        throwErr(res);
+    });
 });
 
 /**
@@ -93,7 +92,7 @@ router.post('/users', (req, res) => {
                                 speciality: speciality._id
                             });
 
-                            user.save(function (userErr, results) {
+                            user.save((userErr, results) => {
                                 if (userErr || !results) {
                                     throwInternalServerError(res);
                                 }
