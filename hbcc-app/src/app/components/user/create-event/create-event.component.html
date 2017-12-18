@@ -1,36 +1,64 @@
 
 <div class="container" >
-    <h1>Ajouter un évènement :</h1>
+    <h2>Ajouter un évènement</h2>
     <div class="row">
         <div class="col-md-6">
-            <form (ngSubmit)="saveEvent()" #eventForm="ngForm">
+            <form novalidate
+                  [formGroup]="createEventForm">
                 <div class="form-group">
-                    <label for="title">Description</label>
-                    <input type="text" class="form-control" [(ngModel)]="description" name="title" id="title" required>
+                    <label for="description">Description</label>
+                    <input type="text"
+                           class="form-control"
+                           formControlName="description"
+                           name="description"
+                           [ngClass]="{'is-invalid': description.invalid && (description.touched || createEventSubmitted)}"
+                           id="description"/>
+
+                    <div *ngIf="description.invalid && (description.touched || createEventSubmitted)"
+                         class="text-danger col-12 validation-messages-list">
+                        <div *ngIf="description.errors.required" class="validation-message">La description de l'évènement est requise.</div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="location">Localisation</label>
-                    <input type="text" class="form-control" [(ngModel)]="location" name="location" id="location">
+                    <input type="text" class="form-control" formControlName="location" name="location" id="location">
                 </div>
                 <div class="form-group">
                     <label for="startDate">Date et heure de début</label>
-                    <input [(ngModel)]="start"
+                    <input formControlName="start"
                            class="form-control"
                            type="datetime-local"
-                           name="startDate" id="startDate" required>
+                           [ngClass]="{'is-invalid': start.invalid && (start.touched || createEventSubmitted)}"
+                           name="startDate" id="startDate" />
+                    <div *ngIf="start.invalid && (start.touched || createEventSubmitted)"
+                         class="text-danger col-12 validation-messages-list">
+                        <div *ngIf="start.errors.required" class="validation-message">La date et l'heure de début sont requises.</div>
+                        <div *ngIf="start.errors.date" class="validation-message">Ce champ est invalide.</div>
+                        <div *ngIf="start.errors.minDate" class="validation-message">L'évènement ne doit pas être dans le passé.</div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="endDate">Date et heure de fin</label>
-                    <input  [(ngModel)]="end"
+                    <input  formControlName="end"
                             class="form-control"
                             type="datetime-local"
-                            name="endDate" id="endDate" required>
+                            [ngClass]="{'is-invalid': end.invalid && (end.touched || createEventSubmitted)}"
+                            name="endDate" id="endDate">
+                    <div *ngIf="end.invalid && (end.touched || createEventSubmitted)"
+                         class="text-danger col-12 validation-messages-list">
+                        <div *ngIf="end.errors.required" class="validation-message">La date et l'heure de fin sont requises.</div>
+                        <div *ngIf="end.errors.date" class="validation-message">Ce champ est invalide.</div>
+                        <div *ngIf="end.errors.minDate" class="validation-message">La date de fin ne doit pas être inférieure à la date de début.</div>
+                    </div>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-success" [disabled]="!eventForm.form.valid">Save</button>
+                    <button type="submit" class="btn btn-success"
+                            (click)="saveEvent()">
+                        Enregistrer l'évènement
+                    </button>
                 </div>
                 <div class="form-group">
-                    <a [routerLink]="['/#/user/planning']" class="btn btn-danger">Cancel</a>
+                    <a routerLink="planning" class="btn btn-danger">Annuler</a>
                 </div>
             </form>
         </div>
