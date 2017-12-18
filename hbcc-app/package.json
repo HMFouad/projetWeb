@@ -2,7 +2,7 @@
     "name": "hbcc-app",
     "version": "0.0.0",
     "license": "MIT",
-    "main": "server.js",
+    "main": "server/server.js",
     "scripts": {
         "start": "ng server",
         "start:prod": "./RUN.sh prod",
