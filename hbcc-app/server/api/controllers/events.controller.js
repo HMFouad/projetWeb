@@ -93,7 +93,8 @@ router.get('/events', (req, res) => {
                                     }
 
                                     // send result
-                                    res.json(events);
+                                    res.status(statusCodes.SUCCESS)
+                                        .json(events);
                                 }
                             });
                         }

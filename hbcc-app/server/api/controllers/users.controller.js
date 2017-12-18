@@ -37,7 +37,7 @@ router.post('/users', (req, res) => {
         !givenLastName ||
         !givenSpecialityId) {
         res.status(statusCodes.BAD_REQUEST)
-            .json({ success: false, message: 'Un paramètre est manquant.', body: req.body });
+           .json({ success: false, message: 'Un paramètre est manquant.', body: req.body });
     }
     else if (!validator.isEmail(givenEmail)) {
         res.status(statusCodes.BAD_REQUEST)
@@ -51,7 +51,7 @@ router.post('/users', (req, res) => {
             }
             else if (user) {
                 res.status(statusCodes.BAD_REQUEST)
-                    .json({ success: false, message: `L'email choisi existe déjà.` });
+                   .json({ success: false, message: `L'email choisi existe déjà.` });
             }
             else {
                 // check if the given speciality is a right speciality
@@ -115,7 +115,8 @@ router.get('/users/:id', (req, res) => {
     checkAuth(req).then((user) => {
         if (user._id === req.params.id) {
             delete user.password;
-            res.json(user);
+            res.status(statusCodes.SUCCESS)
+               .json(user);
         }
         else {
             res.status(statusCodes.UNAUTHORIZED)
