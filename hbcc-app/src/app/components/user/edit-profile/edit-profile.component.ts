@@ -1,99 +1,106 @@
 import {Component, OnInit} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {AppConstants} from '@app/app-constants';
-import {UnAuthGuard} from '@app/guards/un-auth.guard';
+import {Router} from '@angular/router';
 import {SecureHttpClientService} from '@app/services/secure-http-client.service';
 
 @Component({
-    selector: 'hbcc-registration',
-    templateUrl: './registration.component.html',
-    styleUrls: ['./registration.component.css']
+    selector: 'hbcc-edit-profile',
+    templateUrl: './edit-profile.component.html',
+    styleUrls: ['./edit-profile.component.css']
 })
-export class RegistrationComponent implements OnInit {
+export class EditProfileComponent implements OnInit {
 
-    public signUpForm: FormGroup;
+    public editProfileForm: FormGroup;
 
     public specialities: any;
 
     public apiMessage: string;
 
-    public signUpFormSubmitted: boolean;
-    public signUpFormLoading: boolean;
+    public editProfileFormSubmitted: boolean;
+    public editProfileFormLoading: boolean;
 
-    public constructor(private httpClient: HttpClient,
-                       private unAuthGuard: UnAuthGuard,
-                       private secureHttpClient: SecureHttpClientService) {
-        this.signUpFormSubmitted = false;
-        this.signUpFormLoading = false;
+    public constructor(private httpClient: SecureHttpClientService, private router: Router) {
+        this.editProfileFormSubmitted = false;
+        this.editProfileFormLoading = false;
     }
 
     public ngOnInit(): void {
-        this.signUpForm = new FormGroup({
-            firstName: new FormControl('', [Validators.required]),
-            lastName: new FormControl('', [Validators.required]),
-            email: new FormControl('', [Validators.required, Validators.email]),
+        this.editProfileForm = new FormGroup({
+            firstName: new FormControl('', []),
+            lastName: new FormControl('', []),
+            email: new FormControl('', [Validators.email]),
             speciality: new FormControl('', [Validators.required]),
-            password: new FormControl('', [Validators.required]),
-            confirmPassword: new FormControl('', [Validators.required])
+            newPassword: new FormControl('', [Validators.required]),
+            confirmNewPassword: new FormControl('', [Validators.required]),
+            password: new FormControl('', [Validators.required])
         });
 
         this.speciality.setValue(null);
-        this.httpClient.get('/api/specialities').subscribe(data => {
+        this.httpClient.request('get',
+                                '/api/specialities',
+                                { headers: {responseType: 'json'}}
+        ).subscribe(data => {
             this.specialities = data;
         });
     }
 
     public get firstName() {
-        return this.signUpForm.get('firstName');
+        return this.editProfileForm.get('firstName');
     }
 
     public get lastName() {
-        return this.signUpForm.get('lastName');
+        return this.editProfileForm.get('lastName');
     }
 
     public get email() {
-        return this.signUpForm.get('email');
+        return this.editProfileForm.get('email');
     }
 
     public get speciality() {
-        return this.signUpForm.get('speciality');
+        return this.editProfileForm.get('speciality');
     }
 
+    public get newPassword() {
+        return this.editProfileForm.get('newPassword');
+    }
+
+    public get confirmNewPassword() {
+        return this.editProfileForm.get('confirmNewPassword');
+    }
     public get password() {
-        return this.signUpForm.get('password');
+        return this.editProfileForm.get('password');
     }
 
-    public get confirmPassword() {
-        return this.signUpForm.get('confirmPassword');
-    }
-
-    public submitSignUpForm() {
-        this.signUpFormSubmitted = true;
-        if (this.signUpForm.valid && !this.signUpFormLoading) {
-            this.signUpFormLoading = true;
-            this.httpClient.post('/api/users',
-                this.signUpForm.value,
-                { responseType: 'json' })
+    public submitEditProfileForm() {
+        this.editProfileFormSubmitted = true;
+        if (this.editProfileForm.valid && !this.editProfileFormLoading) {
+            this.editProfileFormLoading = true;
+                this.httpClient.request('patch',
+                                        '/api/users' + localStorage.getItem(AppConstants.USER_ID_NAME),
+                    {
+                        headers: {
+                            responseType: 'json',
+                            Authorization: `Bearer ${localStorage.getItem(AppConstants.AUTH_TOKEN_VALUE_NAME)}`
+                        },
+                        body: this.editProfileForm.value
+                    })
                 .subscribe((response: any) => {
-                    this.signUpFormLoading = false;
+                    this.editProfileFormLoading = false;
                     this.apiMessage = null;
-                    localStorage.setItem(AppConstants.AUTH_TOKEN_VALUE_NAME, response.authToken.value);
-                    localStorage.setItem(AppConstants.AUTH_TOKEN_EXPIRATION_NAME, response.authToken.expiresAt);
-                    localStorage.setItem(AppConstants.USER_ID_NAME, response.user);
-                    this.secureHttpClient.userHasBeenUpdated.next(true);
-                    this.signUpForm.reset();
-                    this.unAuthGuard.canActivate();
+                    this.httpClient.userHasBeenUpdated.next(true);
+                    this.editProfileForm.reset();
+                    this.router.navigate(['/user/planning']);
                 }, (response) => { // error
-                    this.signUpFormLoading = false;
+                    this.editProfileFormLoading = false;
                     this.apiMessage = response.error.message || 'Veuillez essayer ultérieurement.';
                 });
         }
     }
 
-    public resetSignUpForm() {
-        this.signUpForm.reset();
-        this.signUpFormSubmitted = false;
+    public resetEditProfileForm() {
+        this.editProfileForm.reset();
+        this.editProfileFormSubmitted = false;
         this.apiMessage = null;
     }
 }

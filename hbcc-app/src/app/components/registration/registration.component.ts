@@ -49,6 +49,7 @@ export class RegistrationComponent implements OnInit {
     }
 
     public get lastName() {
+        this.signUpForm.get('lastName');
         return this.signUpForm.get('lastName');
     }
 

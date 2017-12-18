@@ -6,6 +6,7 @@ import {UnAuthGuard} from '@app/guards/un-auth.guard';
 import {ProfileComponent} from '@app/components/user/profile/profile.component';
 import {CreateEventComponent} from '@app/components/user/create-event/create-event.component';
 import {PlanningComponent} from '@app/components/user/planning/planning.component';
+import {EditProfileComponent} from '@app/components/user/edit-profile/edit-profile.component';
 
 const appRoutes: Routes = [
     { path: 'registration', canActivate: [UnAuthGuard], component: RegistrationComponent },
@@ -13,7 +14,8 @@ const appRoutes: Routes = [
         path: 'user', component: UserComponent, canActivate: [AuthGuard], children: [
             { path: 'planning', component: PlanningComponent },
             { path: 'profile', component: ProfileComponent },
-            { path: 'create-event', component: CreateEventComponent }
+            { path: 'create-event', component: CreateEventComponent },
+            { path: 'edit-profile', component: EditProfileComponent }
         ]
     },
     { path: '', redirectTo: '/registration', pathMatch: 'full' },
