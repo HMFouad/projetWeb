@@ -18,7 +18,7 @@ import {SecureHttpClientService} from '@app/services/secure-http-client.service'
 import {CreateEventComponent} from '@app/components/user/create-event/create-event.component';
 import {ProfileComponent} from '@app/components/user/profile/profile.component';
 import {PlanningComponent} from '@app/components/user/planning/planning.component';
-import {VerticalNavbarComponent} from "@app/components/vertical-navbar/vertical-navbar.component";
+import {VerticalNavbarComponent} from "@app/components/user/vertical-navbar/vertical-navbar.component";
 
 @NgModule({
     imports: [
