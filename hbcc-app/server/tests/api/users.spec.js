@@ -9,7 +9,7 @@ const tokenExists = require('../utils/token-exists');
 const userExists = require('../utils/user-exists');
 
 /**
- * Execute test on tokens controller/
+ * Execute test on users controller/
  */
 describe('Tests for users', () => {
 
@@ -17,7 +17,7 @@ describe('Tests for users', () => {
     let counter = 0;
 
     /**
-     * Tests of POST /tokens api route.
+     * Tests of POST /users api route.
      */
     describe('POST /users', () => {
         const servicePath = `${apiPath}/users`;
@@ -161,4 +161,5 @@ describe('Tests for users', () => {
                 });
         });
     });
+
 });

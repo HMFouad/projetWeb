@@ -38,7 +38,7 @@ router.post("/tokens", (req, res) => {
     const givenEmail = req.body.email;
     const givenPassword = `${req.body.password}`;
 
-    if (!givenEmail || !givenPassword) {
+    if (!req.body.email || !req.body.password) {
         res.status(statusCodes.BAD_REQUEST)
            .json({ success: false, message: "L'email et le mot de passe sont requis." });
     }
