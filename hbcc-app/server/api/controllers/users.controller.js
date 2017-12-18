@@ -18,7 +18,8 @@ router.get('/users/:id', (req, res) => {
     checkAuth(req)
         .then((user) => {
             if (user._id === req.params.id) {
-                res.json(user);
+                res.status(statusCodes.SUCCESS)
+                    .json(user);
             }
             else {
                 res.status(statusCodes.UNAUTHORIZED)
