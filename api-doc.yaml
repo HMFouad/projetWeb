@@ -43,6 +43,32 @@ paths:
           schema:
             $ref: '#/definitions/ApiResponse'
   /users/{id}:
+    patch:
+      tags:
+        - users
+      summary: Update a user
+      description: ''
+      operationId: updateUser
+      parameters:
+        - name: body
+          in: body
+          description: Information about new user
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        '200':
+          description: 'Success: user added'
+          schema:
+            $ref: '#/definitions/User'
+        '400':
+          description: "Bad request"
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        '500':
+          description: "Internal Server Error"
+          schema:
+            $ref: '#/definitions/ApiResponse'
     get:
       tags:
       - users
