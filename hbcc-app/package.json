@@ -2,15 +2,16 @@
     "name": "hbcc-app",
     "version": "0.0.0",
     "license": "MIT",
-    "main": "server.js",
+    "main": "server/server.js",
     "scripts": {
-        "start": "./RUN.sh prod",
+        "start": "node server/server.js",
         "start:prod": "./RUN.sh prod",
         "start:dev": "./RUN.sh dev",
         "start:api:dev": "cd server && pm2-dev start server.js",
         "build:app:dev": "ng build -dev --watch",
         "test:app": "ng e2e --no-serve",
-        "test:api": "mocha --reporter spec --timeout 10000 ./server/tests/setup.js ./server/tests/**/*.spec.js"
+        "test:api": "mocha --reporter spec --timeout 10000 ./server/tests/setup.js ./server/tests/**/*.spec.js",
+        "postinstall": "ng build --aot --target=production"
     },
     "engines": {
         "node": "^8.9.1",
@@ -78,6 +79,6 @@
         "supertest": "^3.0.0",
         "ts-node": "~3.2.0",
         "tslint": "~5.7.0",
-        "typescript": "2.4.2"
+        "typescript": "~2.4.2"
     }
 }
