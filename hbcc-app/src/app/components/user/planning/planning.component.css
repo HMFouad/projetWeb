@@ -1,4 +1,9 @@
 
+.displayed-month {
+    padding: .375rem .75rem;
+    font-size: 18px;
+}
+
 :host ::ng-deep .fc-event {
     color: #fff !important;
     cursor: pointer;

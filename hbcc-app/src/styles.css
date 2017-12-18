@@ -1,3 +1,13 @@
+/* add the font */
+@font-face {
+    font-family: "Roboto";
+    src: url('/assets/fonts/Roboto/Roboto-Regular.ttf');
+}
+
+* {
+    font-family: Roboto, Arial, sans-serif;
+}
+
 /* form validations */
 .validation-messages-list {
     padding-right: 0;

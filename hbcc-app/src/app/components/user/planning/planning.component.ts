@@ -16,6 +16,12 @@ export class PlanningComponent implements OnInit {
     private static readonly ClassHilightDay1 = 'alert';
     private static readonly ClassHilightDay2 = 'alert-info';
 
+    private static readonly AllMonths = [
+        'Janvier', 'Février', 'Mars', 'Avril', 'Mai',
+        'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre',
+        'Novembre', 'Décembre'
+    ];
+
     @ViewChild('rootElement')
     private rootElement: ElementRef;
 
@@ -24,6 +30,8 @@ export class PlanningComponent implements OnInit {
     private firstLaunched: boolean;
 
     public apiresponseReceived: boolean;
+
+    public currentMonth: string;
 
     public currentDayDelta: number;
 
@@ -50,6 +58,7 @@ export class PlanningComponent implements OnInit {
 
     private customizeJQueryHeader ($header: any) {
         const now = new Date();
+        const self = this;
 
         $header.find('th.fc-day-header').each(function() {
             const newDayLabelSplitted = $(this)
@@ -72,12 +81,14 @@ export class PlanningComponent implements OnInit {
                 .removeClass(PlanningComponent.TodayClass)
                 .removeClass(PlanningComponent.FutureClass);
 
-            $(this)
-                .addClass(
-                    (Number(now.getDate()) > Number(newDayLabelSplitted[1])) ?  PlanningComponent.PastClass :
-                    (Number(now.getDate()) === Number(newDayLabelSplitted[1])) ?  PlanningComponent.TodayClass :
-                        PlanningComponent.FutureClass // (Number(now.getDate()) < Number(newDayLabelSplitted[1]))
+            // if the delta is less than a week, we highlight the current month day
+            if (Math.abs(self.currentDayDelta) < 7) {
+                $(this).addClass(
+                    (Number(now.getDate()) > Number(newDayLabelSplitted[1])) ? PlanningComponent.PastClass :
+                        (Number(now.getDate()) === Number(newDayLabelSplitted[1])) ? PlanningComponent.TodayClass :
+                            PlanningComponent.FutureClass // (Number(now.getDate()) < Number(newDayLabelSplitted[1]))
                 );
+            }
 
         });
 
@@ -205,13 +216,44 @@ export class PlanningComponent implements OnInit {
         });
     }
 
+    private setCurrentMonth () {
+        const nbMilliSecondsInDay = 60 * 60 * 24 * 1000;
+        const firstDayDisplayed = PlanningComponent.GetMonday(new Date());
+        if (this.currentDayDelta !== 0) {
+            firstDayDisplayed.setDate(firstDayDisplayed.getDate() + this.currentDayDelta);
+        }
+
+        const lastDayDisplayed = new Date(firstDayDisplayed.getTime() + 6 * nbMilliSecondsInDay);
+
+        // fi it's on the same month
+        if (firstDayDisplayed.getMonth() === lastDayDisplayed.getMonth()) {
+            this.currentMonth = `${PlanningComponent.AllMonths[firstDayDisplayed.getMonth()]} ${firstDayDisplayed.getFullYear()}`;
+        }
+        else { // two different month
+            const firstMonth = PlanningComponent.AllMonths[firstDayDisplayed.getMonth()];
+            const firstYear = firstDayDisplayed.getFullYear();
+
+            const lastMonth = PlanningComponent.AllMonths[lastDayDisplayed.getMonth()];
+            const lastYear = lastDayDisplayed.getFullYear();
+
+            if (firstYear === lastYear) {
+                this.currentMonth = `${firstMonth} – ${lastMonth} ${firstYear}`;
+            }
+            else {
+                this.currentMonth = `${firstMonth} ${firstYear} – ${lastMonth} ${lastYear}`;
+            }
+        }
+    }
+
     /**
-     * Change the current display week;
+     * Change the current display week.
      * @param {0|-1|1} dayDelta
      */
     public setPlanning(dayDelta: 0|-1|1) {
         if (!this.apiServiceLoading) {
             this.currentDayDelta = (dayDelta === 0) ? 0 : (this.currentDayDelta + dayDelta);
+
+            this.setCurrentMonth();
 
             const now = new Date();
             const nbMilliSecondsInDay = 60 * 60 * 24 * 1000;

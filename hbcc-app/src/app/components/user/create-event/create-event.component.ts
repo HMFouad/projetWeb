@@ -19,16 +19,22 @@ export class CreateEventComponent  {
                        private router: Router) {}
 
     public saveEvent(): void {
+
+        const body: any = {
+            description: this.description,
+            start: this.start,
+            end: this.end
+        };
+
+        if  (this.location) {
+            body.location = this.location;
+        }
+
         this.http.request(
             'post',
             '/api/events',
             {
-                body: {
-                    description: this.description,
-                    location: this.location,
-                    start: this.start,
-                    end: this.end
-                },
+                body,
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem(AppConstants.AUTH_TOKEN_VALUE_NAME)}`
                 }
