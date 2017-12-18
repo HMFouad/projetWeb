@@ -79,6 +79,7 @@ export class RegistrationComponent implements OnInit {
                     localStorage.setItem(AppConstants.AUTH_TOKEN_VALUE_NAME, response.authToken.value);
                     localStorage.setItem(AppConstants.AUTH_TOKEN_EXPIRATION_NAME, response.authToken.expiresAt);
                     localStorage.setItem(AppConstants.USER_ID_NAME, response.user);
+                    this.signUpForm.reset();
                     this.unAuthGuard.canActivate();
                 }, (response) => { // error
                     this.signUpFormLoading = false;
