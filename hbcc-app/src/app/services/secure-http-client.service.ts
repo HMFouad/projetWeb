@@ -4,6 +4,7 @@ import {ReplaySubject} from 'rxjs/ReplaySubject';
 import {AuthGuard} from '@app/guards/auth.guard';
 import {AppConstants} from '@app/app-constants';
 import {Observable} from "rxjs/Observable";
+import {Subject} from "rxjs/Subject";
 
 /**
  * Let us to handle all unauthorized response from api.
@@ -11,8 +12,16 @@ import {Observable} from "rxjs/Observable";
 @Injectable()
 export class SecureHttpClientService {
 
+    private updateUserSubject: Subject<boolean>;
+
     public constructor (private httpClient: HttpClient,
-                        private authGuard: AuthGuard) {}
+                        private authGuard: AuthGuard) {
+        this.updateUserSubject = new Subject<boolean>();
+    }
+
+    public get userHasBeenUpdated (): Subject<boolean> {
+        return this.updateUserSubject;
+    }
 
     /**
      * Send api request with given parameter.
@@ -51,6 +60,8 @@ export class SecureHttpClientService {
                     localStorage.removeItem(AppConstants.AUTH_TOKEN_VALUE_NAME);
                     localStorage.removeItem(AppConstants.AUTH_TOKEN_EXPIRATION_NAME);
                     localStorage.removeItem(AppConstants.USER_ID_NAME);
+
+                    this.updateUserSubject.next(true);
                     this.authGuard.canActivate();
                 }
                 else {
