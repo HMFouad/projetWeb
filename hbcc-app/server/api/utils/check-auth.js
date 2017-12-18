@@ -2,6 +2,7 @@ const statusCodes = require('../../status-codes');
 const User = require('../../mongoose/model/user.model');
 const Token = require('../../mongoose/model/token.model');
 const throwInternalServerError = require('./throw-internal-server-error');
+const constants = require('../../constants');
 
 const ERROR_MESSAGE = "Le token d'authentification est invalide.";
 
@@ -52,7 +53,21 @@ function checkAuth (req) {
                                 });
                             }
                             else {
-                                resolve(user);
+                                const expiresAt = new Date();
+
+                                // one second in milliseconds
+                                const oneSecond = 1000;
+
+                                Token.updateOne ({ _id: token._id }, {
+                                    expiresAt: new Date(expiresAt.getTime() + constants.TOKEN_DELAY * oneSecond)
+                                }, (err, tokenUpdated) => {
+                                   if (err || !tokenUpdated) {
+                                       reject(throwInternalServerError);
+                                   }
+                                   else {
+                                       resolve(user);
+                                   }
+                                });
                             }
                         });
                     }
