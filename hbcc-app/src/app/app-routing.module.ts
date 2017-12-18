@@ -8,7 +8,7 @@ import {CreateEventComponent} from '@app/components/user/create-event/create-eve
 import {PlanningComponent} from '@app/components/user/planning/planning.component';
 
 const appRoutes: Routes = [
-    { path: 'registration', canActivate: [UnAuthGuard], component: RegistrationComponent},
+    { path: 'registration', canActivate: [UnAuthGuard], component: RegistrationComponent },
     {
         path: 'user', component: UserComponent, canActivate: [AuthGuard], children: [
             { path: 'planning', component: PlanningComponent },
