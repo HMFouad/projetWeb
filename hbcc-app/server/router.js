@@ -15,6 +15,11 @@ router.use(express.static(path.join(__dirname, '../dist')));
 // API location
 router.use('/api', apiRouting);
 
+// Display api doc
+router.get('/api-doc', (req, res) => {
+    res.sendFile(path.join(__dirname, 'api-doc/api-swagger.html'));
+});
+
 // Send all other requests to the Angular router
 router.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../dist'));
