@@ -20,12 +20,32 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     public userConnected: boolean;
 
+    public userEmail: string|null;
+
     public constructor(private httpClient: HttpClient,
                        private router: Router,
                        private authGuard: AuthGuard,
                        private secureHttpClient: SecureHttpClientService) {
         this.userSubscription = this.secureHttpClient.userHasBeenUpdated.subscribe(() => {
             this.userConnected = this.authGuard.result;
+
+            if (this.userConnected) {
+
+                const authToken = localStorage.getItem(AppConstants.AUTH_TOKEN_VALUE_NAME);
+                const userId = localStorage.getItem(AppConstants.USER_ID_NAME);
+
+                this.secureHttpClient.request(
+                    'get',
+                    `/api/users/${userId}`,
+                    { headers: (new HttpHeaders()).set('Authorization', `Bearer ${authToken}`) }
+                ).subscribe((user) => {
+                    this.userEmail = user.email;
+                });
+            }
+            else {
+                this.userEmail = null;
+            }
+
         });
     }
 

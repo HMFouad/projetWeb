@@ -113,7 +113,7 @@ router.post('/users', (req, res) => {
 // Get users
 router.get('/users/:id', (req, res) => {
     checkAuth(req).then((user) => {
-        if (user._id === req.params.id) {
+        if (`${user._id}` === `${req.params.id}`) {
             delete user.password;
             res.status(statusCodes.SUCCESS)
                .json(user);
@@ -122,10 +122,9 @@ router.get('/users/:id', (req, res) => {
             res.status(statusCodes.UNAUTHORIZED)
                 .json({ success: false, message: `Current user is not allowed to see other users` });
         }
-    })
-        .catch((throwErr) => {
-            throwErr(res);
-        });
+    }).catch((throwErr) => {
+        throwErr(res);
+    });
 });
 
 /**
