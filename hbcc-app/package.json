@@ -4,7 +4,7 @@
     "license": "MIT",
     "main": "server/server.js",
     "scripts": {
-        "start": "ng server",
+        "start": "ng serve",
         "start:prod": "./RUN.sh prod",
         "start:dev": "./RUN.sh dev",
         "start:api:dev": "cd server && pm2-dev start server.js",
