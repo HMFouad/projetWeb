@@ -1,0 +1,159 @@
+<div class="container py-3">
+    <div class="row">
+        <div class="col-md-8 col-lg-6 mx-auto">
+            <div class="card card-body">
+                <h3 class="text-center mb-4" id ="InscriptionTitle">S'inscrire</h3>
+                <div class="alert alert-danger"
+                     *ngIf="apiMessage">
+                    {{ apiMessage }}
+                </div>
+                <form class="formGroup"
+                      novalidate
+                      [formGroup]="signUpForm">
+                    <div class="form-group row justify-content-center">
+                        <label class="col-form-label col-md-4"
+                               for="field-first-name">Prénom</label>
+
+                        <div class="col-md-7">
+                            <input type="text"
+                                   id="field-first-name"
+                                   name="firstName"
+                                   class="form-control"
+                                   [ngClass]="{'is-invalid': firstName.invalid && (firstName.touched || signUpFormSubmitted)}"
+                                   formControlName="firstName"/>
+
+                            <div *ngIf="firstName.invalid && (firstName.touched || signUpFormSubmitted)"
+                                 class="text-danger col-12 validation-messages-list">
+                                <div *ngIf="firstName.errors.required">Votre prénom est requis.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row justify-content-center">
+                        <label class="col-form-label col-md-4"
+                               for="field-last-name">Nom</label>
+                        <div class="col-md-7">
+                            <input type="text"
+                                   id="field-last-name"
+                                   name="lastName"
+                                   class="form-control"
+                                   [ngClass]="{'is-invalid': lastName.invalid && (lastName.touched || signUpFormSubmitted)}"
+                                   formControlName="lastName"/>
+
+                            <div *ngIf="lastName.invalid && (lastName.touched || signUpFormSubmitted)"
+                                 class="text-danger col-12 validation-messages-list">
+                                <div *ngIf="lastName.errors.required">Votre nom est requis.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row justify-content-center">
+                        <label class="col-form-label col-md-4"
+                               for="field-email">Email</label>
+                        <div class="col-md-7">
+                            <input id="field-email"
+                                   type="email"
+                                   name="email"
+                                   [ngClass]="{'is-invalid': email.invalid && (email.touched || signUpFormSubmitted)}"
+                                   class="form-control"
+                                   formControlName="email"/>
+
+                            <div *ngIf="email.invalid && (email.touched || signUpFormSubmitted)"
+                                 class="text-danger col-12 validation-messages-list">
+                                <div *ngIf="email.errors.required"
+                                     class="validation-message">
+                                    Votre email est requis.
+                                </div>
+                                <div *ngIf="email.errors.email"
+                                     class="validation-message">
+                                    L'email entré est invalide.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row justify-content-center">
+                        <label class="col-form-label col-md-4"
+                               for="field-speciality">Filière</label>
+                        <div class="col-md-7">
+                            <select name="speciality"
+                                    id="field-speciality"
+                                    [ngClass]="{'is-invalid': speciality.invalid && (speciality.touched || signUpFormSubmitted)}"
+                                    class="form-control custom-select"
+                                    [formControlName]="'speciality'">
+                                <option *ngFor="let speciality of specialities" [value]="speciality._id">{{ speciality.name }}</option>
+                            </select>
+                            <div *ngIf="speciality.invalid && (speciality.touched || signUpFormSubmitted)"
+                                 class="text-danger col-12 validation-messages-list">
+                                <div *ngIf="speciality.errors.required"
+                                     class="validation-message">
+                                    Votre filière est requise.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row justify-content-center">
+                        <label class="col-form-label col-md-4"
+                               for="field-password">Mot de passe</label>
+                        <div class="col-md-7">
+                            <input type="password"
+                                   name="password"
+                                   class="form-control"
+                                   [ngClass]="{'is-invalid': password.invalid && (password.touched || signUpFormSubmitted)}"
+                                   id="field-password"
+                                   formControlName="password"/>
+
+                            <div *ngIf="password.invalid && (password.touched || signUpFormSubmitted)"
+                                 class="text-danger col-12 validation-messages-list">
+                                <div *ngIf="password.errors.required"
+                                     class="validation-message">
+                                    Votre mot de passe est requis.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row justify-content-center">
+                        <label class="col-form-label col-md-4"
+                               for="field-confirm-password">Confirmation de mot de passe</label>
+                        <div class="col-md-7">
+                            <input type="password"
+                                   name="confirmPassword"
+                                   class="form-control"
+                                   [ngClass]="{'is-invalid': confirmPassword.invalid && (confirmPassword.touched || signUpFormSubmitted)}"
+                                   id="field-confirm-password"
+                                   formControlName="confirmPassword"/>
+
+                            <div *ngIf="confirmPassword.invalid && (confirmPassword.touched || signUpFormSubmitted)"
+                                 class="text-danger col-12 validation-messages-list">
+                                <div *ngIf="confirmPassword.errors.required"
+                                     class="validation-message">
+                                    Une confirmation de mot de passe est requise.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <div class="col-auto">
+                            <button class="btn btn-success"
+                                    name="createAccount"
+                                    (click)="submitSignUpForm()">
+                                S'inscrire
+                            </button>
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-danger col-auto"
+                                    name="reset"
+                                    (click)="resetSignUpForm()">
+                                Réinitialiser
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hbcc-footer></hbcc-footer>
