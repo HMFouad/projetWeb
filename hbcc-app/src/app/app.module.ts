@@ -14,7 +14,6 @@ import { Ng2DatetimePickerModule } from 'ng2-datetime-picker';
 import { FormsModule } from '@angular/forms';
 import {SecureHttpClientService} from '@app/services/secure-http-client.service';
 import {CreateEventComponent} from '@app/components/user/create-event/create-event.component';
-import {EditProfileComponent} from '@app/components/user/edit-profile/edit-profile.component';
 import {ProfileComponent} from '@app/components/user/profile/profile.component';
 import {PlanningComponent} from '@app/components/user/planning/planning.component';
 import {VerticalNavbarComponent} from '@app/components/vertical-navbar/vertical-navbar.component';
@@ -32,7 +31,6 @@ import {VerticalNavbarComponent} from '@app/components/vertical-navbar/vertical-
     declarations: [
         AppComponent,
         CreateEventComponent,
-        EditProfileComponent,
         RegistrationComponent,
         ProfileComponent,
         HeaderComponent,
