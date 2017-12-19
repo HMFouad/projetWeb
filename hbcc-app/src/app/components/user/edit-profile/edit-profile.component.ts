@@ -14,11 +14,17 @@ export class EditProfileComponent implements OnInit {
     public editProfileForm: FormGroup;
 
     public specialities: any;
+    public defaultFirstName: any;
+    public defaultLastName: any;
+    public defaultEmail: any;
+    public defaultSpeciality: any;
 
     public apiMessage: string;
 
     public editProfileFormSubmitted: boolean;
     public editProfileFormLoading: boolean;
+
+
 
     public constructor(private httpClient: SecureHttpClientService, private router: Router) {
         this.editProfileFormSubmitted = false;
@@ -30,7 +36,7 @@ export class EditProfileComponent implements OnInit {
             firstName: new FormControl('', []),
             lastName: new FormControl('', []),
             email: new FormControl('', [Validators.email]),
-            speciality: new FormControl('', [Validators.required]),
+            speciality: new FormControl('', []),
             newPassword: new FormControl('', [Validators.required]),
             confirmNewPassword: new FormControl('', [Validators.required]),
             password: new FormControl('', [Validators.required])
@@ -42,6 +48,22 @@ export class EditProfileComponent implements OnInit {
                                 { headers: {responseType: 'json'}}
         ).subscribe(data => {
             this.specialities = data;
+        });
+        this.httpClient.request('get',
+            '/api/users/' + localStorage.getItem(AppConstants.USER_ID_NAME),
+            { headers: {
+                    responseType: 'json',
+                    Authorization: `Bearer ${localStorage.getItem(AppConstants.AUTH_TOKEN_VALUE_NAME)}`
+                }}
+        ).subscribe(data => {
+            this.defaultFirstName = data.firstName;
+            this.defaultLastName = data.lastName;
+            this.defaultEmail = data.email;
+            for (const spe of this.specialities) {
+                if (spe._id === data.speciality) {
+                    this.defaultSpeciality = spe.name;
+                }
+            }
         });
     }
 
@@ -103,4 +125,5 @@ export class EditProfileComponent implements OnInit {
         this.editProfileFormSubmitted = false;
         this.apiMessage = null;
     }
+
 }

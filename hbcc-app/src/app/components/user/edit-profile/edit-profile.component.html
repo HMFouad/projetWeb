@@ -20,7 +20,7 @@
                                    name="firstName"
                                    class="form-control"
                                    [ngClass]="{'is-invalid': firstName.invalid && (firstName.touched || editProfileFormSubmitted)}"
-                                   formControlName="firstName"/>
+                                   formControlName="firstName" [value]="defaultFirstName"/>
 
                             <div *ngIf="firstName.invalid && (firstName.touched || editProfileFormSubmitted)"
                                  class="text-danger col-12 validation-messages-list">
@@ -37,7 +37,7 @@
                                    name="lastName"
                                    class="form-control"
                                    [ngClass]="{'is-invalid': lastName.invalid && (lastName.touched || editProfileFormSubmitted)}"
-                                   formControlName="lastName"/>
+                                   formControlName="lastName" [value]="defaultLastName"/>
 
                             <div *ngIf="lastName.invalid && (lastName.touched || editProfileFormSubmitted)"
                                  class="text-danger col-12 validation-messages-list">
@@ -55,7 +55,7 @@
                                    name="email"
                                    [ngClass]="{'is-invalid': email.invalid && (email.touched || editProfileFormSubmitted)}"
                                    class="form-control"
-                                   formControlName="email"/>
+                                   formControlName="email" [value]="defaultEmail"/>
 
                             <div *ngIf="email.invalid && (email.touched || editProfileFormSubmitted)"
                                  class="text-danger col-12 validation-messages-list">
@@ -80,7 +80,7 @@
                                     [ngClass]="{'is-invalid': speciality.invalid && (speciality.touched || editProfileFormSubmitted)}"
                                     class="form-control custom-select"
                                     [formControlName]="'speciality'">
-                                <option *ngFor="let speciality of specialities" [value]="speciality._id">{{ speciality.name }}</option>
+                                <option *ngFor="let speciality of specialities" [value]="speciality._id" [selected]="speciality.name == defaultSpeciality">{{ speciality.name }}</option>
                             </select>
                             <div *ngIf="speciality.invalid && (speciality.touched || editProfileFormSubmitted)"
                                  class="text-danger col-12 validation-messages-list">
@@ -160,7 +160,7 @@
                             <button class="btn btn-success"
                                     name="createAccount"
                                     (click)="submitEditProfileForm()">
-                                S'inscrire
+                                Enregistrer
                             </button>
                         </div>
                         <div class="col-auto">
