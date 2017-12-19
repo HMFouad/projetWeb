@@ -9,13 +9,18 @@
     cursor: pointer;
 }
 
-:host ::ng-deep .fc-event >  .fc-content {
+:host ::ng-deep .fc-event > .fc-content {
     display: flex;
     flex-flow: column;
 }
 
-:host ::ng-deep .fc-event > .fc-content > .fc-title { order: 1 }
-:host ::ng-deep .fc-event > .fc-content > .fc-time { order: 2 }
+:host ::ng-deep .fc-event > .fc-content > .fc-title {
+    order: 1
+}
+
+:host ::ng-deep .fc-event > .fc-content > .fc-time {
+    order: 2
+}
 
 :host ::ng-deep .fc-event .fc-title {
     font-weight: bold;
@@ -52,6 +57,7 @@
     border-top-width: 0;
     border-left-width: 0;
 }
+
 :host ::ng-deep .fc-header-table th.fc-day-header {
     text-align: left;
     padding: 12px 12px 12px 20px;
@@ -71,9 +77,11 @@
     font-size: 12px;
     margin: 0;
 }
+
 :host ::ng-deep .fc-header-table th.fc-day-header :last-child {
     font-size: 40px;
 }
+
 :host ::ng-deep table.fc-header-table {
     border-bottom: 1px solid #e9ecef;
     border-right: 1px solid #e9ecef;
@@ -96,6 +104,7 @@
 :host ::ng-deep .fc-view-container .fc-body > tr > td {
     border-top-width: 0;
 }
+
 :host ::ng-deep .fc-view-container {
     margin-top: 177px;
 }
